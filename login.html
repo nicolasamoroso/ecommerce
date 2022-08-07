@@ -9,6 +9,12 @@
   <link href="https://fonts.googleapis.com/css?family=Raleway:300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
   <link href="css/bootstrap.min.css" rel="stylesheet">
   <link href="css/styles.css" rel="stylesheet">
+  <link href="css/font-awesome.min.css" rel="stylesheet">
+
+  <meta name="google-signin-scope" content="profile email">
+  
+    <meta name="google-signin-client_id" content="51387124380-ntmebd3np4jqgmps0flvm63vn08ooau5.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
   <style>
     body {
       background-color: rgb(248, 249, 250);
@@ -17,11 +23,24 @@
 </head>
 
 <body>
-  <main class="mt-5">
-    <div class="container">
-      <div class="alert alert-danger text-center" role="alert">
-        <h4 class="alert-heading">Funcionalidad en desarrollo</h4>
-      </div>
+  
+  <main class="mt-5 cont">
+    <div class="container text-center">
+      <img src="img/login.png" class="img-fluid">
+      <form class="form-signin">
+        <p class="mb-3">Inicio de Sesión</p>
+        <div data-onsuccess="onSignIn" data-theme="dark" class="g-signin2 d-inline-flex" type="button"></div>
+        <p class="mt-3">ó</p> 
+        <div class="mb-4">
+
+          <p>Email</p>
+          <input type="email" id="inputEmail" class="mb-4 form-control" placeholder="Email" required="" autofocus="">
+          
+          <p>Contraseña</p>
+          <input type="password" id="inputPassword" class="form-control" placeholder="Contraseña" required="">
+        </div>
+        <button class="p-2 bg-primary btn btn-success btn-block" type="submit">Ingresar</button>
+      </form>
     </div>
   </main>
   <footer class="text-muted">
@@ -35,6 +54,22 @@
     </div>
   </footer>
   <script src="js/login.js"></script>
+    <script>
+      function onSignIn(googleUser) {
+        // Useful data for your client-side scripts:
+        var profile = googleUser.getBasicProfile();
+        console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+        console.log('Full Name: ' + profile.getName());
+        console.log('Given Name: ' + profile.getGivenName());
+        console.log('Family Name: ' + profile.getFamilyName());
+        console.log("Image URL: " + profile.getImageUrl());
+        console.log("Email: " + profile.getEmail());
+
+        // The ID token you need to pass to your backend:
+        var id_token = googleUser.getAuthResponse().id_token;
+        console.log("ID Token: " + id_token);
+      }
+    </script>
 </body>
 
 </html>

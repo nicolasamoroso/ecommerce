@@ -188,3 +188,10 @@ a.custom-card:hover {
 .checked {
   color: orange;
 }
+
+/* login css */
+
+.cont {
+  max-width: 20%;
+  margin: auto;
+}

@@ -2,11 +2,8 @@ let categoriesArray = [];
 
 function showCategoriesList(array, cat_name){
     let htmlContentToAppend = "";
-
-    let htmlContentToAppend2 = "";
-    htmlContentToAppend2 += `
-        <p class="mb-4">Verás aquí todos los productos de la categoría ${cat_name}</p>
-    `
+    
+    document.getElementById("subtitulo").innerHTML = `<p class="mb-4">Verás aquí todos los productos de la categoría ${cat_name}</p>`;
     for(let i = 0; i < array.length; i++){ 
         let category = array[i];
         htmlContentToAppend += `
@@ -29,7 +26,6 @@ function showCategoriesList(array, cat_name){
         </div>
         `
         document.getElementById("cat-list-container").innerHTML = htmlContentToAppend;
-        document.getElementById("subtitulo").innerHTML = htmlContentToAppend2;
     }
 }
 
