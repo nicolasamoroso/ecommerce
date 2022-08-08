@@ -192,6 +192,10 @@ a.custom-card:hover {
 /* login css */
 
 .cont {
-  max-width: 20%;
+  max-width: 400px;
   margin: auto;
+}
+
+.formulario {
+  margin-bottom: -10px;
 }
