@@ -1,2 +1,1 @@
-# workspace-inicial
- JAP
+# Proyecto JAP e-commerce
