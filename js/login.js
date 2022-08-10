@@ -1,10 +1,12 @@
 //google oauth
 
+//obtiene el perfil de google y redirecciona a inicio + el parametro del nombre
 function handleCredentialResponse(response) {
   const responsePayload = decodeJwtResponse(response.credential);
-  window.location.href = "inicio.html?name=" + responsePayload.name
+  window.location.href = "inicio.html?name=" + responsePayload.name;
 }
 
+//Puede validar y decodificar la credencial JWT
 function decodeJwtResponse (token) {
   var base64Url = token.split('.')[1];
   var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -14,6 +16,7 @@ function decodeJwtResponse (token) {
 
   return JSON.parse(jsonPayload);
 };
+
 
 
 //validation email and password

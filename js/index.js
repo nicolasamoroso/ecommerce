@@ -12,3 +12,15 @@ document.addEventListener("DOMContentLoaded", function(){
         window.location = "products.html"
     });
 });
+
+
+//te da el "nombre" de perfil y agrega el nombre en el navbar
+function perfil() {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const name = urlParams.get('name');
+    const email = urlParams.get('email');
+    let user = (email) ? email.split("@").shift() : name;
+    let htmlinner = `<a href="my-profile.html" class="nav-link">Usuario: ${user} </a>`
+    document.getElementById("perfil").innerHTML = htmlinner;
+}
