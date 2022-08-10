@@ -18,9 +18,14 @@ document.addEventListener("DOMContentLoaded", function(){
 function perfil() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    const name = urlParams.get('name');
+    const name = urlParams.get('name'); 
     const email = urlParams.get('email');
-    let user = (email) ? email.split("@").shift() : name;
-    let htmlinner = `<a href="my-profile.html" class="nav-link">Usuario: ${user} </a>`
-    document.getElementById("perfil").innerHTML = htmlinner;
+    if (name || email) {
+        let user = (email) ? email.split("@").shift() : name;
+        let htmlinner = `<a href="my-profile.html" class="nav-link">Usuario: ${user} </a>`
+        document.getElementById("perfil").innerHTML = htmlinner;
+    }
+    else {
+        window.location.href = "login.html"
+    }
 }

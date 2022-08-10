@@ -3,7 +3,7 @@
 //obtiene el perfil de google y redirecciona a inicio + el parametro del nombre
 function handleCredentialResponse(response) {
   const responsePayload = decodeJwtResponse(response.credential);
-  window.location.href = "inicio.html?name=" + responsePayload.name;
+  window.location.href = "index.html?name=" + responsePayload.name;
 }
 
 //Puede validar y decodificar la credencial JWT
