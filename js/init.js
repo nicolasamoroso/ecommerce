@@ -7,41 +7,11 @@ const CART_INFO_URL = "https://japceibal.github.io/emercado-api/user_cart/";
 const CART_BUY_URL = "https://japceibal.github.io/emercado-api/cart/buy.json";
 const EXT_TYPE = ".json";
 
-// let showSpinner = function(){
-//   document.getElementById("spinner-wrapper").style.display = "block";
-// }
+//-------------------------------Lista de productos-------------------------------//
+const LIST_URL = PRODUCTS_URL + localStorage.catID + EXT_TYPE;
 
-// let hideSpinner = function(){
-//   document.getElementById("spinner-wrapper").style.display = "none";
-// }
 
-// let getJSONData = function(url){
-//     let result = {};
-//     showSpinner();
-//     return fetch(url)
-//     .then(response => {
-//       if (response.ok) {
-//         return response.json();
-//       }else{
-//         throw Error(response.statusText);
-//       }
-//     })
-//     .then(function(response) {
-//           result.status = 'ok';
-//           result.data = response;
-//           hideSpinner();
-//           return result;
-//     })
-//     .catch(function(error) {
-//         result.status = 'error';
-//         result.data = error;
-//         hideSpinner();
-//         return result;
-//     });
-// }
-
-const LIST_URL = "https://japceibal.github.io/emercado-api/cats_products/101.json";
-
+//-------------------------------"fecth"-------------------------------//
 
 function showSpinner(){
   document.getElementById("spinner-wrapper").style.display = "block"; 
@@ -74,4 +44,40 @@ const getJSONData = async (url) => {
       hideSpinner(); 
       return result;
     });
+}
+
+//-------------------------------verificación profile-------------------------------//
+
+document.addEventListener("DOMContentLoaded", function(){
+
+  const profile = JSON.parse(localStorage.getItem("profile"))
+  
+  // redirect si profile no existe
+  if (!profile) {
+      window.location.href = "login.html"
+      return
+  }
+
+
+  //-------------------------dropdown-------------------------//
+
+  let dropdown = `
+  <button class="btn nav-link dropdown-toggle dropdown" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      ${profile.name}
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      <a class="dropdown-item" href="my-profile.html">Mi Perfil</a>
+      <a class="dropdown-item" href="cart.html">Ver Carrito</a>
+      <a class="dropdown-item link-danger cursor-active" onclick="signOut()" >Cerrar sesión</a>
+  </div>
+  `
+
+  document.getElementById('dropdown').innerHTML = dropdown;
+
+});
+
+//-------------------------------Cerrar Sesión-------------------------------//
+function signOut() {
+  localStorage.setItem('profile', null);
+  window.location.href = "login.html"
 }
