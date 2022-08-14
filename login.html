@@ -20,10 +20,13 @@
 </head>
 
 <body>
+  
   <main class="mt-5 cont">
     <div class="container text-center">
+      <!-- imagen login -->
       <img src="img/login.png" class="img-fluid">
       <p class="mb-3 h4">Inicio de Sesión</p>
+      <!-- botón google oauth 2.0 -->
       <div>
         <div id="g_id_onload"
             data-client_id="51387124380-ntmebd3np4jqgmps0flvm63vn08ooau5.apps.googleusercontent.com"
@@ -31,16 +34,17 @@
         </div>
         <div class="g_id_signin text-center g-signin2 d-inline-flex" data-type="standard"></div>
       </div>
-      <form action="index.html" class="row g-3 needs-validation" novalidate>
+      <!-- form para ingresar -->
+      <form id="form" class="row g-3 needs-validation" novalidate>
         <p class="mt-5">ó</p> 
         <label class="formulario">Email</label>
-        <input type="email" class="form-control" name="email" aria-describedby="inputGroupPrepend" placeholder="Email" required>
+        <input type="email" id="email" class="form-control" aria-describedby="inputGroupPrepend" placeholder="Email" required>
         <div class="invalid-feedback">Ingresa tu email</div>
         <label class="formulario">Contraseña</label>
-        <input type="password" class="form-control" placeholder="Contraseña" minlength ="8" required>
+        <input type="password" id="password" class="form-control" placeholder="Contraseña" minlength ="8" required>
         <div class="invalid-feedback">Ingresa tu contraseña</div>
         <div class="col-12">
-          <button class="p-2 bg-primary btn btn-success btn-block" type="submit" >Ingresar</button>
+          <button class="p-2 bg-primary btn btn-success btn-block" type="submit">Ingresar</button>
         </div>
       </form>
     </div>
@@ -55,6 +59,12 @@
       <p>Clickea <a target="_blank" href="Letra.pdf">aquí</a> para descargar la letra del obligatorio.</p>
     </div>
   </footer>
+
+  <!-- alert si la contraseña tiene menos de 8 carácteres -->
+  <div class="text-center alert alert-danger alert-dismissible fade" role="alert" id="alert-danger">
+    <p>La contraseña debe de contener al menos 8 carácteres</p>
+  </div>  
+
   <script src="js/login.js"></script>
 </body>
 

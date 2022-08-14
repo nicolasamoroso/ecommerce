@@ -203,3 +203,24 @@ a.custom-card:hover {
 #perfil {
   color: white;
 }
+
+.products {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.imagen {
+  max-width: 10%;
+}
+
+.alert {
+  position: fixed;
+  width: 40%;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.dropdown:focus {
+  box-shadow: none;
+}
