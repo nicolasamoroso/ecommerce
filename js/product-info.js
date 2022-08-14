@@ -8,6 +8,7 @@ const PRODUCT_INFO = PRODUCT_INFO_URL + id + EXT_TYPE;
 //----------------------------Muestra lo que está en el producto----------------------------//
 document.addEventListener("DOMContentLoaded", async (e) => {
 
+    console.log(PRODUCT_INFO)
     const product = await getJSONData(PRODUCT_INFO);
     if (product.status === "ok") {
       showProductInfo(product.data);
@@ -24,14 +25,10 @@ function showProductInfo(data) {
 
     let htmlContentToAppend = `
         <h1 class="text-center">${data.name}</h1>
-        <strong>Descripción:</strong>
-        <p>${data.description}</p>
-        <strong>Cost:</strong>
-        <p>${data.cost}</p>
-        <strong>Sold Count:</strong>
-        <p>${data.soldCount}</p>
-        <strong>Category:</strong>
-        <p>${data.category}</p>
+        <p><strong>Descripción:</strong> ${data.description}</p>
+        <p><strong>Cost:</strong> ${data.currency} ${data.cost}</p>
+        <p><strong>Sold Count:</strong> ${data.soldCount}</p>
+        <p><strong>Category:</strong> ${data.category}</p>
 
         <div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
             <div class="carousel-indicators">

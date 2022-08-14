@@ -60,14 +60,6 @@ document.getElementById("form").addEventListener("submit", function (event) {
   }
 });
 
-//si el perfil existe (se validó el login), te envía al inicio
-document.addEventListener("DOMContentLoaded", function() {
-
-  const profile = JSON.parse(localStorage.getItem("profile"));
-  if (profile) window.location.href = "index.html"
-
-});
-
 //Alerta de contraseña menor a 8 carácteres
 //agrega show del id "alert-danger"
 //hace timeout a la alerta después de 4 segundos
@@ -80,3 +72,11 @@ function showAlertError() {
 function removeAlertError() {
   document.getElementById("alert-danger").classList.remove("show")
 }
+
+//si el perfil existe (se validó el login), te envía al inicio
+document.addEventListener("DOMContentLoaded", function() {
+
+  const profile = JSON.parse(localStorage.getItem("profile"));
+  if (profile) window.location.href = "index.html"
+
+});

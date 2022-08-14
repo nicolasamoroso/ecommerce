@@ -10,6 +10,8 @@ const EXT_TYPE = ".json";
 //-------------------------------Lista de productos-------------------------------//
 const LIST_URL = PRODUCTS_URL + localStorage.catID + EXT_TYPE;
 
+//-------------------------------media-------------------------------//
+var media = window.matchMedia("(max-width: 700px)")
 
 //-------------------------------"fecth"-------------------------------//
 
@@ -62,8 +64,9 @@ document.addEventListener("DOMContentLoaded", function(){
   //-------------------------dropdown-------------------------//
 
   let dropdown = `
-  <button class="btn nav-link dropdown-toggle dropdown" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      ${profile.name}
+  <button class="btn nav-link dropdown-toggle dropdown-btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <img id="profile_pic" src="${profile.picture}">
+    <a>${profile.name}</a>
   </button>
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
       <a class="dropdown-item" href="my-profile.html">Mi Perfil</a>

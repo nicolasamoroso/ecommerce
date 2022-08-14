@@ -20,29 +20,51 @@ function showCategoriesList(array, cat_name){
         document.getElementById("subtitulo").innerHTML = `<h3 class="mb-4 text-muted">No hay articulos para la categoría <span class="text-dark">${cat_name}</span></h3>`;
         return
     }
+    
     document.getElementById("subtitulo").innerHTML = `<h3 class="mb-4 text-muted">Verás aquí todos los productos de la categoría <span class="text-dark">${cat_name}</span></h3>`;
-    for(let i = 0; i < array.length; i++){ 
-        let category = array[i];
-        htmlContentToAppend += ` 
-        <div class="list-group-item list-group-item-action cursor-active" onclick="product_info(${category.id})">
-            <div class="row">
-                <div class="col-3">
-                    <img src=" ${category.image} " alt="product image" class="img-thumbnail">
-                </div>
-                <div class="col">
-                    <div class="d-flex w-100 justify-content-between">
-                        <div class="mb-1">
-                            <h4> ${category.name} - ${category.currency} ${category.cost} </h4> 
-                            <p mb-1> ${category.description} </p> 
+    if (!media.matches) {
+        for(let i = 0; i < array.length; i++){ 
+            let category = array[i];
+            htmlContentToAppend += ` 
+            <div class="list-group-item list-group-item-action cursor-active" onclick="product_info(${category.id})">
+                <div class="row">
+                    <div class="col-3">
+                        <img src=" ${category.image} " alt="${category.description}" class="p-0 img-thumbnail">
+                    </div>
+                    <div class="col">
+                        <div class="d-flex w-100 justify-content-between">
+                            <div class="mb-1">
+                                <h4> ${category.name} - ${category.currency} ${category.cost} </h4> 
+                                <p mb-1> ${category.description} </p> 
+                            </div>
+                            <small class="text-muted"> ${category.soldCount} artículos</small> 
                         </div>
-                        <small class="text-muted"> ${category.soldCount} artículos</small> 
                     </div>
                 </div>
             </div>
-        </div>
-        `
-        document.getElementById("cat-list-container").innerHTML = htmlContentToAppend;
+            `
+        }
     }
+    else {
+        for(let i = 0; i < array.length; i++){ 
+            let category = array[i];
+            htmlContentToAppend += ` 
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-4" onclick="product_info(${category.id})">
+                    <div class="card mb-4 shadow-sm custom-card cursor-active card_hover" id="autos">
+                        <img class="bd-placeholder-img card-img-top" src="${category.image}" alt="${category.description}">
+                        <h4 class="m-3">${category.name} - ${category.currency} ${category.cost}</h4>
+                        <div class="card-body">
+                            <p class="card-text">${category.description}</p>
+                            <small class="text-muted"> ${category.soldCount} artículos</small> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `
+        }
+    }
+    document.getElementById("cat-list-container").innerHTML = htmlContentToAppend;
 }
 
 //te envía a product-info con un id en el URL para diferenciar
