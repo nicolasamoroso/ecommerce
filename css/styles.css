@@ -204,11 +204,11 @@ a.custom-card:hover {
   color: white;
 }
 
-.products {
+/* .products {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-}
+} */
 
 .imagen {
   max-width: 10%;
@@ -224,3 +224,12 @@ a.custom-card:hover {
 .dropdown:focus {
   box-shadow: none;
 }
+
+.card_hover:hover {
+  background-color: rgb(248, 249, 250);
+}
+
+.card_hover:focus {
+  background-color: rgb(233, 236, 239);
+}
+

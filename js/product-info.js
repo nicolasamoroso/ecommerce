@@ -42,20 +42,16 @@ function showProductInfo(data) {
             </div>
             <div class="carousel-inner">
                 <div class="carousel-item active" data-bs-interval="10000">
-                <img src="${images[0]}" class="d-block w-100" alt="...">
-                
+                    <img src="${images[0]}" class="d-block w-100">
                 </div>
                 <div class="carousel-item" data-bs-interval="2000">
-                <img src="${images[1]}" class="d-block w-100" alt="...">
-                
+                    <img src="${images[1]}" class="d-block w-100">
                 </div>
                 <div class="carousel-item">
-                <img src="${images[2]}" class="d-block w-100" alt="...">
-                
+                    <img src="${images[2]}" class="d-block w-100">
                 </div>
                 <div class="carousel-item">
-                <img src="${images[3]}" class="d-block w-100" alt="...">
-                
+                    <img src="${images[3]}" class="d-block w-100">
                 </div>
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
@@ -68,18 +64,23 @@ function showProductInfo(data) {
             </button>
         </div>
 
-        <h3 class="text-center mt-5"><strong>Productos relacionados</strong></h3>
-        <div>
-            <div class="text-center mt-3 cursor-active" onclick="product_info(${relatedProducts[0].id})">
-                <h5>${relatedProducts[0].name}</h5>
-                <img src="${relatedProducts[0].image}" class="imagen">
-            </div>
-            <div class="text-center mt-3 cursor-active" onclick="product_info(${relatedProducts[1].id})">
-                <h5>${relatedProducts[1].name}</h5>
-                <img src="${relatedProducts[1].image}" class="imagen">
+        <div class="container">
+            <h3 class="text-center mt-5"><strong>Productos relacionados</strong></h3>
+            <div class="row mt-5">
+                <div class="col-md-4" onclick="product_info(${relatedProducts[0].id})">
+                    <div class="card mb-4 shadow-sm custom-card cursor-active card_hover">
+                        <img class="bd-placeholder-img card-img-top" src="${relatedProducts[0].image}">
+                        <h3 class="m-3 text-center">${relatedProducts[0].name}</h3>
+                    </div>
+                </div>
+                <div class="col-md-4" onclick="product_info(${relatedProducts[1].id})">
+                    <div class="card mb-4 shadow-sm custom-card cursor-active card_hover">
+                        <img class="bd-placeholder-img card-img-top" src="${relatedProducts[1].image}">
+                        <h3 class="m-3 text-center">${relatedProducts[1].name}</h3>
+                    </div>
+                </div>
             </div>
         </div>
-        
     `
 
     document.getElementById('product').innerHTML = htmlContentToAppend;

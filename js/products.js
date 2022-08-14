@@ -37,7 +37,6 @@ function showCategoriesList(array, cat_name){
                         </div>
                         <small class="text-muted"> ${category.soldCount} artículos</small> 
                     </div>
-
                 </div>
             </div>
         </div>
