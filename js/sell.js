@@ -146,4 +146,7 @@ document.addEventListener("DOMContentLoaded", function(e){
             });
         }
     });
+
+    const location = window.location.href;
+    localStorage.setItem("prev_location", JSON.stringify(location));
 });

@@ -56,8 +56,8 @@ document.addEventListener("DOMContentLoaded", function(){
   
   // redirect si profile no existe
   if (!profile) {
-      window.location.href = "login.html"
-      return
+    window.location.href = "login.html"
+    return
   }
 
 

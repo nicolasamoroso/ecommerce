@@ -140,4 +140,7 @@ document.addEventListener("DOMContentLoaded", function(e){
 
         showCategoriesList();
     });
+
+    const location = window.location.href;
+    localStorage.setItem("prev_location", JSON.stringify(location));
 });

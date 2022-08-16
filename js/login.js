@@ -1,3 +1,5 @@
+//-------------------------------Desafiate Entrega 1-------------------------------//
+
 //-------------------------------google oauth-------------------------------//
 
 //obtiene el perfil de google, lo guarda en localStorage y te manda a inicio
@@ -16,6 +18,11 @@ function decodeJwtResponse (token) {
   }).join(''));
   return JSON.parse(jsonPayload);
 };
+
+//----------------------------Fin Desafiate Entrega 1----------------------------//
+
+
+
 
 //-------------------------------login-------------------------------//
 
@@ -75,8 +82,10 @@ function removeAlertError() {
 
 //si el perfil existe (se validó el login), te envía al inicio
 document.addEventListener("DOMContentLoaded", function() {
-
   const profile = JSON.parse(localStorage.getItem("profile"));
-  if (profile) window.location.href = "index.html"
-
+  
+  if (profile) {
+    const location = JSON.parse(localStorage.getItem("prev_location"));
+    window.location = location;
+  }
 });

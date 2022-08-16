@@ -5,11 +5,14 @@ document.addEventListener("DOMContentLoaded", function(){
     //-------------------------perfil-------------------------//
     if (profile) {
         let perfil = `
-        <img src="${profile.picture}" class="imagen pt-5">
-        <p class="text-dark"><strong>Nombre de usuario:</strong> ${profile.name}</p>
+        <p class="text-dark mt-5"><strong>Nombre de usuario:</strong> ${profile.name}</p>
         <p class="text-dark"><strong>Email:</strong> ${profile.email}</p>
+        <img src="${profile.picture}" class="imagen">
         `
     
         document.getElementById('perfil').innerHTML = perfil;
     }
+    
+    const location = window.location.href;
+    localStorage.setItem("prev_location", JSON.stringify(location));
 });
