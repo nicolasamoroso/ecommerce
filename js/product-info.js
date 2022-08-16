@@ -89,28 +89,33 @@ function showProductInfoComments(productInfo) {
 
     let htmlContentToAppend = "";
 
-    htmlContentToAppend += `
-    <h1 class="text-center mt-5 mb-5">Comentarios</h1>
-    <hr>
-    `
-    for (let i = 0; i < productInfo.length; i++) {
-        let product = productInfo[i];
+    if(productInfo.length !== 0) {
         htmlContentToAppend += `
-        <div class="comments">
-            <div class="d-flex justify-content-between">
-                <h6>
-                    <img id="profile_pic_comments" src="../img/img_perfil.png" alt="">
-                    ${product.user}
-                </h6>
-                <small>${product.dateTime}</small>
-            </div>
-            <div class="d-flex justify-content-between pt-2">
-                <p class="pt-2">${product.description}</p>
-                <div> ${stars(product.score)} </div>
-            </div>
-        </div>
+        <h1 class="text-center mt-5 mb-5">Comentarios</h1>
         <hr>
         `
+        for (let i = 0; i < productInfo.length; i++) {
+            let product = productInfo[i];
+            htmlContentToAppend += `
+            <div class="comments">
+                <div class="d-flex justify-content-between">
+                    <h6>
+                        <img id="profile_pic_comments" src="../img/img_perfil.png" alt="">
+                        ${product.user}
+                    </h6>
+                    <small>${product.dateTime}</small>
+                </div>
+                <div class="d-flex justify-content-between pt-2">
+                    <p class="pt-2">${product.description}</p>
+                    <div> ${stars(product.score)} </div>
+                </div>
+            </div>
+            <hr>
+            `
+        }
+    }
+    else {
+        htmlContentToAppend = `<h1 class="text-center mt-5 mb-5">Se el primero en agregar un comentario</h1>`
     }
     document.getElementById('comments').innerHTML = htmlContentToAppend;
 }
