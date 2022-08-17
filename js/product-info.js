@@ -133,6 +133,10 @@ function showProductInfoComments(productComment) {
         <hr>
         `
 
+        if (!productComment.profile_pic) {
+            productComment.profile_pic = "../img/img_perfil.png";
+        }
+
         //agrega cada comentario, además de mostrar el score (estrellas) y 
         //la fecha en la q se comentó.
         for (let i = 0; i < productComment.length; i++) {
@@ -141,10 +145,10 @@ function showProductInfoComments(productComment) {
             <div class="comments">
                 <div class="d-flex justify-content-between">
                     <h6>
-                        <img id="profile_pic_comments" src="../img/img_perfil.png" alt="">
+                        <img id="profile_pic_comments" src="${productComment.profile_pic}" alt="">
                         ${product.user}
                     </h6>
-                    <small>${product.dateTime}</small>
+                    <small>${changeDayFormat(new Date(product.dateTime))}</small>
                 </div>
                 <div class="d-flex justify-content-between pt-2">
                     <p >${product.description}</p>
@@ -157,7 +161,16 @@ function showProductInfoComments(productComment) {
     }
     else htmlContentToAppend = `<h1 class="text-center mt-5 mb-5">Se el primero en agregar un comentario</h1>`
 
-    document.getElementById('comments').innerHTML = htmlContentToAppend;
+    document.getElementById('comments').innerHTML += htmlContentToAppend;
+}
+
+function changeDayFormat(date) {
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    const hour = (date.getHours() <= 9) ? "0" + date.getHours() : date.getHours();
+    const minute = (date.getMinutes() <= 9) ? "0" + date.getMinutes() : date.getMinutes();;
+    return `${hour}:${minute} - ${day}/${month}/${year}`
 }
 
 //Muestra los productos relacionados con el artículo "id"
@@ -195,4 +208,86 @@ function showProductRelated (related) {
 //cada producto diferente
 function product_info(id) {
     window.location.href = "product-info.html?id=" + id;
+}
+
+
+const ratingStars = [...document.getElementsByClassName("ratingStar")];
+
+function executeRating(stars) {
+  const starClassActive = "ratingStar fa fa-star checked";
+  const starClassInactive = "ratingStar fa fa-star";
+  const starsLength = stars.length;
+  let i;
+  stars.map((star) => {
+    star.onclick = () => {
+      i = stars.indexOf(star);
+
+      if (star.className === starClassInactive)
+        for (i; i >= 0; --i) stars[i].className = starClassActive;
+      else
+        for (i; i < starsLength; ++i) stars[i].className = starClassInactive;
+    };
+  });
+}
+
+executeRating(ratingStars);
+
+function commentScore() {
+    let j = 0;
+    for (let i = 0; i < 5; i++) {
+        if (ratingStars[i].classList.contains("checked"))
+            j++
+    }
+    return j;
+}
+
+
+
+
+function asd() {
+    
+    const comment = document.getElementById("productComment").value;
+    if (comment.length !== 0) {
+        const score = commentScore();
+        const date = changeDayFormat(new Date());
+        const profile = JSON.parse(localStorage.getItem("profile"));
+        const name = profile.name;
+        const img = profile.picture;
+
+        const comentario = {
+            user : name,
+            description : comment,
+            score : score,
+            dateTime : date,
+            profile_pic : img
+        }
+
+        localStorage.setItem("comment", JSON.stringify(comentario));
+
+        let htmlContentToAppend = `
+            <div class="comments">
+                <div class="d-flex justify-content-between">
+                    <h6>
+                        <img id="profile_pic_comments" src="${comentario.profile_pic}" alt="">
+                        ${comentario.user}
+                    </h6>
+                    <small>${comentario.dateTime}</small>
+                </div>
+                <div class="d-flex justify-content-between pt-2">
+                    <p >${comentario.description}</p>
+                    <div> ${ScoreToStars(comentario.score)} </div>
+                </div>
+            </div>
+            <hr>
+            `
+
+            document.getElementById('comments').innerHTML += htmlContentToAppend;
+
+        document.getElementById("productComment").value = "";
+    }
+    else {
+        alert("No puede dejar un comentario vacío")
+    }
+
+    // console.log(JSON.parse(localStorage.getItem("comment")))
 }

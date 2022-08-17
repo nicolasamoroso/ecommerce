@@ -258,3 +258,8 @@ textarea {
 .comments {
   margin: 0 15px
 }
+
+#rating {
+  user-select: none;
+  cursor: pointer;
+}
