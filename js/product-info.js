@@ -211,8 +211,8 @@ function ScoreToStars(score) {
 
 /* Cambia el formato de la fecha para que sea "hh:mm - dd/mm/aa" */
 function changeDayFormat(date) {
-    const day = date.getDate();
-    const month = (date.getMonth() + 1) <= 9 ? "0" + (date.getMonth() + 1) : 0;
+    const day = date.getDate() <= 9 ? "0" + date.getDate() : date.getDate();
+    const month = (date.getMonth() + 1) <= 9 ? "0" + (date.getMonth() + 1) : (date.getMonth() + 1);
     const year = date.getFullYear();
     const hour = (date.getHours() <= 9) ? "0" + date.getHours() : date.getHours();
     const minute = (date.getMinutes() <= 9) ? "0" + date.getMinutes() : date.getMinutes();
