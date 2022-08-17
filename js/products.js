@@ -73,5 +73,6 @@ function showProductsList(array, cat_name){
 //te envía a product-info con un id en el URL para diferenciar
 //cada producto diferente
 function product_info(id) {
-    window.location.href = "product-info.html?id=" + id;
+    localStorage.setItem("product-info", id);
+    window.location.href = "product-info.html"
 }

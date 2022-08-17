@@ -72,7 +72,7 @@ document.getElementById("form").addEventListener("submit", function (event) {
 //hace timeout a la alerta después de 4 segundos
 function showAlertError() {
   document.getElementById("alert-danger").classList.add("show");
-  setTimeout(removeAlertError, 4000);
+  setTimeout(removeAlertError, 3000);
 }
 
 //remueve show del id "alert-danger"
