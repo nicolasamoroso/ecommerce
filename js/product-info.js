@@ -265,45 +265,71 @@ function checkScore() {
 }
 
 
+function existe(array) {
+    return array.comentario.user === JSON.parse(localStorage.getItem("profile")).name;
+}
+
+let commentsArray = [];
+
 function Comentar() {
-    
+
     const comment = document.getElementById("productComment").value;
-    if (comment.length !== 0 && !localStorage.getItem(`product-${id}`)) {
-        const score = checkScore();
-        const date = new Date();
-        const profile = JSON.parse(localStorage.getItem("profile"));
-        const name = profile.name;
-        const img = profile.picture;
+    if (comment.length !== 0) {
 
-        const comentario = {
-            user : name,
-            description : comment,
-            score : score,
-            dateTime : date,
-            profile_pic : img
-        }
+        if (localStorage.getItem(`product-${id}`)) {
+            commentsArray = JSON.parse(localStorage.getItem(`product-${id}`));
+            const profile = JSON.parse(localStorage.getItem("profile"));
 
-        localStorage.setItem(`product-${id}`, JSON.stringify(comentario));
+            const existe_nombre = commentsArray.find(existe);
+            if (!existe_nombre) {
 
-        let htmlContentToAppend = comentarios(comentario, false)
+                const score = checkScore();
+                const date = new Date();
+                const name = profile.name;
+                const img = profile.picture;
 
-        document.getElementById('comments').innerHTML += htmlContentToAppend;
-        
-    }
-    else if (localStorage.getItem(`product-${id}`)) {
-        showAlertError();
+                const comentario = {
+                    user : name,
+                    description : comment,
+                    score : score,
+                    dateTime : date,
+                    profile_pic : img
+                }
+
+                commentsArray.push({comentario});
+                
+                localStorage.setItem(`product-${id}`, JSON.stringify(commentsArray));
+
+                let htmlContentToAppend = comentarios(comentario, false)
+
+                document.getElementById('comments').innerHTML += htmlContentToAppend;
+
+            }
+            else {
+                showAlertError();
+            }
+        } 
     }
     else {
         showAlertErrorVoid()
     }
+    
 
     document.getElementById("productComment").value = "";
 }
 
 
 function showUserComments(array) {
-    let htmlContentToAppend = comentarios(array, false);
+
+    let htmlContentToAppend = "";
+
+    for (let i = 0; i < array.length; i++) {
+        const element = array[i].comentario;
+        htmlContentToAppend += comentarios(element, false);
+    }
+
     document.getElementById('comments').innerHTML += htmlContentToAppend;
+
     if (document.getElementById('se-el-primero-en-comentar'))
         document.getElementById('se-el-primero-en-comentar').innerHTML = "Comentarios";
 }
@@ -313,11 +339,11 @@ function showUserComments(array) {
 hace timeout a la alerta después de 4 segundos */
 function showAlertErrorVoid() {
     document.getElementById("alert-danger-vacio").classList.add("show");
-    setTimeout(removeAlertError, 3000);
+    setTimeout(removeAlertErrorVoid, 3000);
 }
   
 /* remueve show del id "alert-danger" */
-function removeAlertError() {
+function removeAlertErrorVoid() {
     document.getElementById("alert-danger-vacio").classList.remove("show")
 }
 
