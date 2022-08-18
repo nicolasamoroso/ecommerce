@@ -273,12 +273,13 @@ let commentsArray = [];
 
 function Comentar() {
 
+    const profile = JSON.parse(localStorage.getItem("profile"));
     const comment = document.getElementById("productComment").value;
+
     if (comment.length !== 0) {
 
         if (localStorage.getItem(`product-${id}`)) {
             commentsArray = JSON.parse(localStorage.getItem(`product-${id}`));
-            const profile = JSON.parse(localStorage.getItem("profile"));
 
             const existe_nombre = commentsArray.find(existe);
             if (!existe_nombre) {
@@ -308,7 +309,30 @@ function Comentar() {
             else {
                 showAlertError();
             }
-        } 
+        }
+        else {
+            const score = checkScore();
+            const date = new Date();
+            const name = profile.name;
+            const img = profile.picture;
+
+            const comentario = {
+                user : name,
+                description : comment,
+                score : score,
+                dateTime : date,
+                profile_pic : img
+            }
+
+            commentsArray.push({comentario});
+            
+            localStorage.setItem(`product-${id}`, JSON.stringify(commentsArray));
+
+            let htmlContentToAppend = comentarios(comentario, false)
+
+            document.getElementById('comments').innerHTML += htmlContentToAppend;
+            
+        }
     }
     else {
         showAlertErrorVoid()
