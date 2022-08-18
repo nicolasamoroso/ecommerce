@@ -43,6 +43,10 @@ document.addEventListener("DOMContentLoaded", async (e) => {
         showProductRelated(product.data.relatedProducts);
     }
 
+    if (localStorage.getItem(`product-${id}`)) {
+        showUserComments(JSON.parse(localStorage.getItem(`product-${id}`)))
+    }
+
     //--------------------------------------------------------//
 
     //guarda la ubicación actual por si llega a ir a un lugar no permitido.
@@ -170,7 +174,7 @@ function showProductInfoComments(productComment) {
         }
     }
     else htmlContentToAppend = `
-    <h1 class="text-center mt-5 mb-5">Se el primero en agregar un comentario</h1>
+    <h1 class="text-center mt-5 mb-5" id="se-el-primero-en-comentar">Se el primero en agregar un comentario</h1>
     <hr>
     `
 
@@ -196,7 +200,6 @@ function comentarios(product, se_puede) {
     `
     return htmlContentToAppend;
 }
-
 
 /* Muestra el score como estrellas en vez de números */
 function ScoreToStars(score) {
@@ -265,7 +268,7 @@ function checkScore() {
 function Comentar() {
     
     const comment = document.getElementById("productComment").value;
-    if (comment.length !== 0) {
+    if (comment.length !== 0 && !localStorage.getItem(`product-${id}`)) {
         const score = checkScore();
         const date = new Date();
         const profile = JSON.parse(localStorage.getItem("profile"));
@@ -280,21 +283,45 @@ function Comentar() {
             profile_pic : img
         }
 
-        localStorage.setItem("comment", JSON.stringify(comentario));
+        localStorage.setItem(`product-${id}`, JSON.stringify(comentario));
 
         let htmlContentToAppend = comentarios(comentario, false)
 
         document.getElementById('comments').innerHTML += htmlContentToAppend;
-
-        document.getElementById("productComment").value = "";
+        
+    }
+    else if (localStorage.getItem(`product-${id}`)) {
+        showAlertError();
     }
     else {
-        showAlertError()
+        showAlertErrorVoid()
     }
+
+    document.getElementById("productComment").value = "";
 }
 
-/* Alerta de contraseña menor a 8 carácteres agrega show del id "alert-danger"
+
+function showUserComments(array) {
+    let htmlContentToAppend = comentarios(array, false);
+    document.getElementById('comments').innerHTML += htmlContentToAppend;
+    if (document.getElementById('se-el-primero-en-comentar'))
+        document.getElementById('se-el-primero-en-comentar').innerHTML = "Comentarios";
+}
+
+
+/* Agrega show del id "alert-danger" si no escribío nada
 hace timeout a la alerta después de 4 segundos */
+function showAlertErrorVoid() {
+    document.getElementById("alert-danger-vacio").classList.add("show");
+    setTimeout(removeAlertError, 3000);
+}
+  
+/* remueve show del id "alert-danger" */
+function removeAlertError() {
+    document.getElementById("alert-danger-vacio").classList.remove("show")
+}
+
+/*  */
 function showAlertError() {
     document.getElementById("alert-danger").classList.add("show");
     setTimeout(removeAlertError, 3000);
@@ -307,8 +334,7 @@ function removeAlertError() {
 
 
 
-
-
+//  #-----------------------------Productos relacionados-----------------------------#
 
 //Muestra los productos relacionados con el artículo "id"
 function showProductRelated (related) {
