@@ -56,7 +56,7 @@ document.getElementById("form").addEventListener("submit", function (event) {
       const profile = {
         name: name,
         email: email,
-        picture: "../img/img_perfil.png"
+        picture: "img/img_perfil.png"
       }
       localStorage.setItem("profile", JSON.stringify(profile));
       window.location.href = "index.html";
