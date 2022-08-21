@@ -1,8 +1,12 @@
 
 //-------------------------------info de cada producto-------------------------------//
 
+// const queryString = window.location.search;
+// const urlParams = new URLSearchParams(queryString);
+// const id = urlParams.get('id')
+
+
 //agarra la id del url, esta url modificada fue creada en products.js > product_info(id)
-const id = localStorage.getItem("product-info");
 
 //te envía a product-info con un id en el URL para diferenciar
 //cada producto diferente
@@ -13,15 +17,9 @@ function product_info(id) {
 
 //-----------------------------------------------------------------------------------//
 
-
-//---------------------------------------URLs----------------------------------------//
-
-const PRODUCT_INFO = PRODUCT_INFO_URL + id + EXT_TYPE;
-
-const PRODUCT_INFO_COMMENTS = PRODUCT_INFO_COMMENTS_URL + id + EXT_TYPE;
-
-//-----------------------------------------------------------------------------------//
-
+let productInfoArray = [];
+let productInfoCommentsArray = [];
+let productInfoRelatedArray = [];
 
 //----------------------------------DOMContentLoaded---------------------------------//
 
@@ -31,21 +29,26 @@ document.addEventListener("DOMContentLoaded", async (e) => {
 
     const product = await getJSONData(PRODUCT_INFO);
     if (product.status === "ok") {
-      showProductInfo(product.data);
+        productInfoArray = product.data;
+        showProductInfo();
     }
 
     const comments = await getJSONData(PRODUCT_INFO_COMMENTS);
     if (comments.status === "ok") {
-        showProductInfoComments(comments.data);
+        productInfoCommentsArray = comments.data;
+        showProductInfoComments();
     }
 
     if (product.status === "ok") {
-        showProductRelated(product.data.relatedProducts);
+        productInfoRelatedArray = product.data.relatedProducts;
+        showProductRelated();
     }
 
     if (localStorage.getItem(`product-${id}`)) {
         showUserComments(JSON.parse(localStorage.getItem(`product-${id}`)))
     }
+
+    showTextArea();
 
     //--------------------------------------------------------//
 
@@ -62,29 +65,26 @@ document.addEventListener("DOMContentLoaded", async (e) => {
 /* Agrega con innerHTML los datos del JSON (nombre, descripción, costo,
 cuantos quedan, categoría, imagenes del producto y muestra productos
 relacionados) */
-function showProductInfo(product) {
+function showProductInfo() {
 
 //  #-----------------------------Info básica-----------------------------#
 
-    let htmlContentToAppend = `
-    <h1 class="text-center mb-3">${product.name}</h1>
-    <p><strong>Descripción:</strong> ${product.description}</p>
-    <p><strong>Precio:</strong> ${product.currency} ${product.cost}</p>
-    <p><strong>Vendidos:</strong> ${product.soldCount}</p>
-    <p><strong>Categoría:</strong> ${product.category}</p>
+    document.getElementById('product').innerHTML  = `
+    <h1 class="text-center mb-3">${productInfoArray.name}</h1>
+    <p><strong>Descripción:</strong> ${productInfoArray.description}</p>
+    <p><strong>Precio:</strong> ${productInfoArray.currency} ${productInfoArray.cost}</p>
+    <p><strong>Vendidos:</strong> ${productInfoArray.soldCount}</p>
+    <p><strong>Categoría:</strong> ${productInfoArray.category}</p>
 
     <div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">   
     </div>
     `
 
-    document.getElementById('product').innerHTML = htmlContentToAppend;
-
-
 //  #-----------------------------Carrusel de imágenes-----------------------------#
 
-    const images = product.images;
+    const images = productInfoArray.images;
 
-    htmlContentToAppend = `
+    document.getElementById('carouselExampleDark').innerHTML = `
     <div id="c-indicators" class="carousel-indicators">
     </div>
     <div id="c-inner" class="carousel-inner">
@@ -98,25 +98,21 @@ function showProductInfo(product) {
         <span class="visually-hidden">Next</span>
     </button>
     `
-    document.getElementById('carouselExampleDark').innerHTML = htmlContentToAppend;
 
 
     //Botones del carrusel
 
-    htmlContentToAppend = `
+    let htmlContentToAppend = `
     <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
     `
     document.getElementById('c-indicators').innerHTML = htmlContentToAppend;
     
     //Agrega los slide para cada número de imagen
     for (let i = 1; i < images.length; i++) {
-        htmlContentToAppend +=`
+        document.getElementById('c-indicators').innerHTML +=`
         <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="${i}" aria-label="Slide ${i+1}"></button>
         `
     }
-
-    document.getElementById('c-indicators').innerHTML = htmlContentToAppend;
-
 
     //Imagenes del carrusel
 
@@ -145,32 +141,32 @@ function showProductInfo(product) {
 
 /* Muestra los comentarios del producto "id".
 Si no hay comentarios, cambia el texto a "Se el primero en comentar" */
-function showProductInfoComments(productComment) {
+function showProductInfoComments() {
 
     let htmlContentToAppend = "";
 
     /* Si hay comentarios entra */
-    if(productComment.length !== 0) {
+    if(productInfoCommentsArray.length !== 0) {
 
         /* Si no tiene imagen, le agrega una */
-        if (!productComment.profile_pic) {
+        if (!productInfoCommentsArray.profile_pic) {
 
             htmlContentToAppend += `
             <h1 class="text-center mt-5 mb-5">Comentarios</h1>
             <hr>
             `
 
-            for (let i = 0; i < productComment.length; i++) {
-                let product = productComment[i];
+            for (let i = 0; i < productInfoCommentsArray.length; i++) {
+                let product = productInfoCommentsArray[i];
                 product.profile_pic = "../img/img_perfil.png";
             }
         }
 
         /* Agrega cada comentario, además de mostrar el score (estrellas) y 
         la fecha en la q se comentó. */
-        for (let i = 0; i < productComment.length; i++) {
-            let product = productComment[i];
-            htmlContentToAppend += comentarios(product, true)
+        for (let i = 0; i < productInfoCommentsArray.length; i++) {
+            let product = productInfoCommentsArray[i];
+            htmlContentToAppend += comentarios(product, true);
         }
     }
     else htmlContentToAppend = `
@@ -186,7 +182,7 @@ function comentarios(product, se_puede) {
     <div class="comments">
         <div class="d-flex justify-content-between">
             <h6>
-                <img id="profile_pic_comments" src="${product.profile_pic}" alt="">
+                <img id="profile_pic_comments" src="${product.profile_pic }">
                 ${product.user}
             </h6>
             <small>${se_puede ? changeDayFormat(convertDateForIos(product.dateTime)) : changeDayFormat(new Date(product.dateTime))}</small>
@@ -264,40 +260,38 @@ function checkScore() {
     return j;
 }
 
-
-function existe(array) {
-    return array.comentario.user === JSON.parse(localStorage.getItem("profile")).name;
-}
-
 let commentsArray = [];
 
-function Comentar() {
+function addComment() {
 
     const profile = JSON.parse(localStorage.getItem("profile"));
     const comment = document.getElementById("productComment").value;
 
     if (comment.length !== 0) {
 
+        const score = checkScore();
+        const date = new Date();
+        const name = profile.name;
+        const img = profile.picture;
+
+        const comentario = {
+            user : name,
+            description : comment,
+            score : score,
+            dateTime : date,
+            profile_pic : img
+        }
+
         if (localStorage.getItem(`product-${id}`)) {
             commentsArray = JSON.parse(localStorage.getItem(`product-${id}`));
 
-            const existe_nombre = commentsArray.find(existe);
+            const existe_nombre = commentsArray.find(function({user}) {
+                return user === JSON.parse(localStorage.getItem("profile")).name;
+            });
+            
             if (!existe_nombre) {
-
-                const score = checkScore();
-                const date = new Date();
-                const name = profile.name;
-                const img = profile.picture;
-
-                const comentario = {
-                    user : name,
-                    description : comment,
-                    score : score,
-                    dateTime : date,
-                    profile_pic : img
-                }
-
-                commentsArray.push({comentario});
+                
+                commentsArray.push(comentario);
                 
                 localStorage.setItem(`product-${id}`, JSON.stringify(commentsArray));
 
@@ -311,26 +305,17 @@ function Comentar() {
             }
         }
         else {
-            const score = checkScore();
-            const date = new Date();
-            const name = profile.name;
-            const img = profile.picture;
-
-            const comentario = {
-                user : name,
-                description : comment,
-                score : score,
-                dateTime : date,
-                profile_pic : img
-            }
-
-            commentsArray.push({comentario});
+            
+            commentsArray.push(comentario);
             
             localStorage.setItem(`product-${id}`, JSON.stringify(commentsArray));
 
             let htmlContentToAppend = comentarios(comentario, false)
 
             document.getElementById('comments').innerHTML += htmlContentToAppend;
+
+            if (document.getElementById('se-el-primero-en-comentar'))
+                document.getElementById('se-el-primero-en-comentar').innerHTML = "Comentarios";
             
         }
     }
@@ -348,7 +333,7 @@ function showUserComments(array) {
     let htmlContentToAppend = "";
 
     for (let i = 0; i < array.length; i++) {
-        const element = array[i].comentario;
+        const element = array[i];
         htmlContentToAppend += comentarios(element, false);
     }
 
@@ -387,7 +372,7 @@ function removeAlertError() {
 //  #-----------------------------Productos relacionados-----------------------------#
 
 //Muestra los productos relacionados con el artículo "id"
-function showProductRelated (related) {
+function showProductRelated () {
 
     let htmlContentToAppend = `
     <div class="container">
@@ -402,8 +387,8 @@ function showProductRelated (related) {
     htmlContentToAppend = "";
 
     //agrega cada articulo relacionado que se encuentre para esa id en el JSON
-    for (let i = 0; i < related.length; i++) {
-        let p_related = related[i];
+    for (let i = 0; i < productInfoRelatedArray.length; i++) {
+        let p_related = productInfoRelatedArray[i];
         htmlContentToAppend += `
         <div class="col-md-4" onclick="product_info(${p_related.id})">
             <div class="card mb-4 shadow-sm custom-card cursor-active card_hover">
@@ -418,4 +403,10 @@ function showProductRelated (related) {
 }
 
 
-
+function showTextArea() {
+    let htmlContentToAppend = `
+    <textarea name="productComment" class="form-control" id="productComment" cols="10" rows="7" placeholder="Agrega un comentario al producto"></textarea>
+    <input id="btn-comment" class="mt-2 w-100" type="submit" onclick="addComment()"></input>
+    `
+    document.getElementById("comentario").innerHTML = htmlContentToAppend;
+}

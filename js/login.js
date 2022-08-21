@@ -6,7 +6,7 @@
 function handleCredentialResponse(response) {
   const responsePayload = decodeJwtResponse(response.credential);
   localStorage.setItem("profile", JSON.stringify(responsePayload));
-  window.location.href = "index.html";
+  redirect();
 }
 
 //Puede validar y decodificar la credencial JWT
@@ -59,7 +59,7 @@ document.getElementById("form").addEventListener("submit", function (event) {
         picture: "img/img_perfil.png"
       }
       localStorage.setItem("profile", JSON.stringify(profile));
-      window.location.href = "index.html";
+      redirect();
     }
     else {
       showAlertError();
@@ -69,7 +69,7 @@ document.getElementById("form").addEventListener("submit", function (event) {
 
 //Alerta de contraseña menor a 8 carácteres
 //agrega show del id "alert-danger"
-//hace timeout a la alerta después de 4 segundos
+//hace timeout a la alerta después de 3 segundos
 function showAlertError() {
   document.getElementById("alert-danger").classList.add("show");
   setTimeout(removeAlertError, 3000);
@@ -82,10 +82,14 @@ function removeAlertError() {
 
 //si el perfil existe (se validó el login), te envía al inicio
 document.addEventListener("DOMContentLoaded", function() {
+  redirect();
+});
+
+function redirect() {
   const profile = JSON.parse(localStorage.getItem("profile"));
   
   if (profile) {
     const location = JSON.parse(localStorage.getItem("prev_location"));
     window.location = location;
   }
-});
+}
