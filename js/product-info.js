@@ -402,7 +402,6 @@ function showProductRelated () {
     document.getElementById('container-related').innerHTML = htmlContentToAppend;
 }
 
-
 function showTextArea() {
     let htmlContentToAppend = `
     <textarea name="productComment" class="form-control" id="productComment" cols="10" rows="7" placeholder="Agrega un comentario al producto"></textarea>
