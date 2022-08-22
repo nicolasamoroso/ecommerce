@@ -256,3 +256,51 @@ textarea {
   user-select: none;
   cursor: pointer;
 }
+
+
+.form-focus {
+  border: none;
+  border-radius: 0;
+  border-bottom: 2px solid #7e7e7e;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.form-focus:focus {
+  border-color: #1a98ff;
+  box-shadow: none;
+}
+
+
+.p_100 {
+  max-width: 600px;
+}
+
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* circle image */
+.img-circle {
+  border-radius: 50%;
+  max-width: 200px;
+  max-height: 200px;
+  width: 200px;
+  height: 200px;
+}
+
+@media (max-width: 768px) {
+  .img-circle {
+    max-width: 150px;
+    max-height: 150px;
+    width: 150px;
+    height: 150px;
+  }
+}

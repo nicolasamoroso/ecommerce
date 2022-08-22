@@ -5,7 +5,15 @@
 //obtiene el perfil de google, lo guarda en localStorage y te manda a inicio
 function handleCredentialResponse(response) {
   const responsePayload = decodeJwtResponse(response.credential);
-  localStorage.setItem("profile", JSON.stringify(responsePayload));
+  const profile = {
+    name: responsePayload.name,
+    email: responsePayload.email,
+    picture: responsePayload.picture,
+    phone: "Debe completar este campo",
+    address: "Debe completar este campo",
+    age: "Debe completar este campo"
+  }
+  localStorage.setItem("profile", JSON.stringify(profile));
   redirect();
 }
 
@@ -53,10 +61,13 @@ document.getElementById("form").addEventListener("submit", function (event) {
   if (email && password) {
     if (password.length >= 8) {
       const name = email.split("@")[0];
-      const profile = {
+      let profile = {
         name: name,
         email: email,
-        picture: "img/img_perfil.png"
+        picture: "img/img_perfil.png",
+        phone: "Debe completar este campo",
+        address: "Debe completar este campo",
+        age: "Debe completar este campo"
       }
       localStorage.setItem("profile", JSON.stringify(profile));
       redirect();
@@ -82,7 +93,12 @@ function removeAlertError() {
 
 //si el perfil existe (se validó el login), te envía al inicio
 document.addEventListener("DOMContentLoaded", function() {
-  redirect();
+  const profile = JSON.parse(localStorage.getItem("profile"));
+  
+  if (profile) {
+    const location = JSON.parse(localStorage.getItem("prev_location"));
+    window.location.href = location;
+  }
 });
 
 function redirect() {
@@ -90,6 +106,6 @@ function redirect() {
   
   if (profile) {
     const location = JSON.parse(localStorage.getItem("prev_location"));
-    window.location = location;
+    window.location.href = location;
   }
 }

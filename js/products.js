@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", async (e) => {
 //Función que agrega mediante innerHTML los productos 
 //relacionados (imagen, nombre, precio, descripcion y
 //cantidad de articulos)
-function showProductsList(productsArray){
+function showProductsList(productsArray) {
     let htmlContentToAppend = "";
     if (productsArray.length === 0) {
         document.getElementById("subtitulo").innerHTML = `<h4 class="mb-4 text-muted">No hay productos para la categoría <span class="text-dark">${cat_name}</span></h4>`;
@@ -199,7 +199,7 @@ function sortProducts(criteria, array){
 function sortAndShowProducts(sortCriteria, productArray){
     currentSortCriteria = sortCriteria;
 
-    if(productArray != undefined){
+    if(productArray != undefined) {
         productsArray = productArray;
     }
 
