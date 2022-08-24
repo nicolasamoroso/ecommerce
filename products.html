@@ -34,8 +34,8 @@
           <li class="nav-item">
             <a class="nav-link" href="sell.html">Vender</a>
           </li>
-          <div id="dropdown">
-          </div>
+          <li id="dropdown" class="nav-item dropdown">
+          </li>
         </ul>
       </div>
     </div>
@@ -48,37 +48,39 @@
     </div>
     <div class="row">
       <div class="col text-end">
-        <div class="btn-group btn-group-toggle mb-4" data-bs-toggle="buttons">
-          <input type="radio" class="btn-check" name="options" id="sortAsc">
-          <label class="btn shadow-none bg-light" for="sortAsc">A-Z</label>
-          <input type="radio" class="btn-check" name="options" id="sortDesc">
-          <label class="btn shadow-none bg-light" for="sortDesc">Z-A</label>
-          <input type="radio" class="btn-check" name="options" id="sortByCount" checked>
-          <label class="btn shadow-none bg-light" for="sortByCount"><i id="up-down" class="fas fa-sort-amount-down mr-1"></i></label>
+        <div class="btn-group btn-group-toggle mb-4" data-bs-toggle="buttons">          
+          <input type="radio" class="btn-check" name="options" id="sortByPriceDown">
+          <label class="btn shadow-none bg-sort" id="count-down" for="sortByPriceDown"><i id="price-down" class="fas fa-sort-amount-down mr-1"></i>$</label>
+          <input type="radio" class="btn-check" name="options" id="sortByPriceUp">
+          <label class="btn shadow-none bg-sort" id="count-up" for="sortByPriceUp"><i id="price-up" class="fas fa-sort-amount-up mr-1"></i>$</label>
+          <input type="radio" class="btn-check" name="options" id="sortRelDesc">
+          <label class="btn shadow-none bg-sort" id="desc" for="sortRelDesc"><i id="rel-down" class="fas fa-sort-amount-down mr-1"></i>Rel.</label>
         </div>
       </div>
     </div>
     <div class="row justify-content-end mb-3">
       <div class="col-md-6">
         <div class="my-2 my-lg-0">
-          <input type="text" name="searchBar" id="searchBar" class="form-control me-sm-2" placeholder="Buscar...">
+          <input type="search" name="searchBar" id="searchBar" class="form-control me-sm-2" placeholder="Buscar...">
         </div>
       </div>
       <div class="col-md-6 col-sm-12 mb-1 container">
         <div class="row p-0 m-0">
           <div class="col">
-            <p class="font-weight-normal text-end my-2">Cant.</p>
+            <p class="font-weight-normal text-end my-2">Precio</p>
           </div>
           <div class="col">
-            <input class="form-control" type="number" placeholder="min." id="rangeFilterCountMin" min="0">
+            <input class="form-control" type="number" placeholder="min." id="rangeFilterPriceMin" min="0">
           </div>
           <div class="col">
-            <input class="form-control" type="number" placeholder="máx." id="rangeFilterCountMax" min="0">
+            <input class="form-control" type="number" placeholder="máx." id="rangeFilterPriceMax" min="0">
           </div>
-          <div class="col-3 p-0">
+          <div class="col p-0">
             <div class="btn-group" role="group">
-              <button class="btn btn-light btn-block" id="rangeFilterCount">Filtrar</button>
-              <button class="btn btn-link btn-sm" id="clearRangeFilter">Limpiar</button>
+              <input type="radio" class="btn-check" name="options" id="filtrar">
+              <label class="btn shadow-none bg-sort" id="rangeFilterPrice" for="filtrar">Filtrar</label>
+              <input type="radio" class="btn-check" name="options" id="limpiar">
+              <label class="btn shadow-none bg-sort" id="clearRangeFilter" for="limpiar">Limpiar</label>
             </div>
           </div>
         </div>

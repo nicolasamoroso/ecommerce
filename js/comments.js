@@ -43,7 +43,7 @@ function comentarios(product, se_puede) {
     <div class="comments">
         <div class="d-flex justify-content-between">
             <h6>
-                <img id="profile_pic_comments" src="${product.profile_pic }">
+                <img id="profile_pic_comments" class="rounded-circle" src="${product.profile_pic }">
                 ${product.user}
             </h6>
             <small>${se_puede ? changeDayFormat(convertDateForIos(product.dateTime)) : changeDayFormat(new Date(product.dateTime))}</small>
@@ -125,7 +125,11 @@ let commentsArray = [];
 
 function addComment() {
 
-    const profile = JSON.parse(localStorage.getItem("profile"));
+    const profileArray = JSON.parse(localStorage.getItem("profile"));
+    const profile = profileArray.find(function({logged}) {
+        return logged === true;
+    })
+
     const comment = document.getElementById("productComment").value;
 
     if (comment.length !== 0) {
@@ -137,6 +141,7 @@ function addComment() {
 
         const comentario = {
             user : name,
+            email : profile.email,
             description : comment,
             score : score,
             dateTime : date,
@@ -146,8 +151,8 @@ function addComment() {
         if (localStorage.getItem(`product-${id}`)) {
             commentsArray = JSON.parse(localStorage.getItem(`product-${id}`));
 
-            const existe_nombre = commentsArray.find(function({user}) {
-                return user === JSON.parse(localStorage.getItem("profile")).name;
+            const existe_nombre = commentsArray.find(function({email}) {
+                return email === profile.email;
             });
             
             if (!existe_nombre) {
@@ -190,6 +195,19 @@ function addComment() {
 
 
 function showUserComments(array) {
+
+    /* if user change his name or pic, change it on comments localstorage */
+    const profileArray = JSON.parse(localStorage.getItem("profile"));
+    for (let i = 0; i < profileArray.length; i++) {
+        const element1 = profileArray[i];
+        let elem = array.find(function({email}) {
+            return email === element1.email;
+        })  
+        if (elem) {
+            elem.user = element1.name;
+            elem.profile_pic = element1.picture;
+        }
+    }
 
     let htmlContentToAppend = "";
 

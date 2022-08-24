@@ -2,19 +2,12 @@
 
 //-------------------------------google oauth-------------------------------//
 
+
 //obtiene el perfil de google, lo guarda en localStorage y te manda a inicio
 function handleCredentialResponse(response) {
   const responsePayload = decodeJwtResponse(response.credential);
-  const profile = {
-    name: responsePayload.name,
-    email: responsePayload.email,
-    picture: responsePayload.picture,
-    phone: "Debe completar este campo",
-    address: "Debe completar este campo",
-    age: "Debe completar este campo"
-  }
-  localStorage.setItem("profile", JSON.stringify(profile));
-  redirect();
+
+  signIn(responsePayload.email, responsePayload.name, responsePayload.picture);
 }
 
 //Puede validar y decodificar la credencial JWT
@@ -29,6 +22,54 @@ function decodeJwtResponse (token) {
 
 //----------------------------Fin Desafiate Entrega 1----------------------------//
 
+
+function signIn(n_email, name = undefined, picture = undefined) {
+  const profileArray = JSON.parse(localStorage.getItem("profile"));
+  if (profileArray) {
+    const catchProfile = profileArray.find(function({email}) {
+      return email === n_email
+    })
+    if (catchProfile) {
+      const profile = {
+        name: catchProfile.name,
+        email: catchProfile.email,
+        picture: catchProfile.picture,
+        phone: catchProfile.phone,
+        address: catchProfile.address,
+        age: catchProfile.age,
+        name_lastname: catchProfile.name_lastnme,
+        logged : true
+      }
+      profileArray.splice(profileArray.findIndex(function({email}) {
+        return email === n_email
+      }), 1, profile);
+      localStorage.setItem("profile", JSON.stringify(profileArray));
+      redirect();
+      return;
+    }
+  }
+  name = name ? name : n_email.split("@")[0];
+  const profile = {
+    name,
+    email: n_email,
+    picture: picture ? picture : "img/img_perfil.png",
+    phone: "Debe completar este campo",
+    address: "Debe completar este campo",
+    age: "Debe completar este campo",
+    name_lastname: "Debe completar este campo",
+    logged : true
+  }
+  if (profileArray) {
+    profileArray.push(profile);
+    localStorage.setItem("profile", JSON.stringify(profileArray));
+    redirect();
+    return;
+  }
+  const profileArray2 = [profile];
+  localStorage.setItem("profile", JSON.stringify(profileArray2));
+  redirect();
+  return;
+}
 
 
 
@@ -56,25 +97,14 @@ function decodeJwtResponse (token) {
 //También muestra un cartel (alerta de boostrap) si la contraseña tiene menos de 8 carácteres
 document.getElementById("form").addEventListener("submit", function (event) {
   event.preventDefault();
-  const email = document.getElementById("email").value
+  const n_email = document.getElementById("email").value
   const password = document.getElementById("password").value
-  if (email && password) {
+  if (n_email && password) {
     if (password.length >= 8) {
-      const name = email.split("@")[0];
-      let profile = {
-        name: name,
-        email: email,
-        picture: "img/img_perfil.png",
-        phone: "Debe completar este campo",
-        address: "Debe completar este campo",
-        age: "Debe completar este campo"
-      }
-      localStorage.setItem("profile", JSON.stringify(profile));
-      redirect();
+      signIn(n_email);
+      return
     }
-    else {
-      showAlertError();
-    }
+    showAlertError();
   }
 });
 
@@ -93,19 +123,22 @@ function removeAlertError() {
 
 //si el perfil existe (se validó el login), te envía al inicio
 document.addEventListener("DOMContentLoaded", function() {
-  const profile = JSON.parse(localStorage.getItem("profile"));
-  
-  if (profile) {
-    const location = JSON.parse(localStorage.getItem("prev_location"));
-    window.location.href = location;
-  }
+  redirect();
 });
 
 function redirect() {
   const profile = JSON.parse(localStorage.getItem("profile"));
-  
   if (profile) {
-    const location = JSON.parse(localStorage.getItem("prev_location"));
-    window.location.href = location;
+    const catchProfile = JSON.parse(localStorage.getItem("profile")).find(function({logged}) {
+      return logged === true
+    })
+    if (catchProfile) {
+      const location = JSON.parse(localStorage.getItem("prev_location"));
+      if (location) {
+        window.location.href = location;
+      }
+      else
+        window.location.href = "index.html";
+    }
   }
 }

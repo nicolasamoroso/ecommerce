@@ -16,6 +16,8 @@ const PRODUCT_INFO = PRODUCT_INFO_URL + id + EXT_TYPE;
 
 const PRODUCT_INFO_COMMENTS = PRODUCT_INFO_COMMENTS_URL + id + EXT_TYPE;
 
+const CART_INFO = CART_INFO_URL + 25801 + EXT_TYPE;
+
 //-------------------------------media-------------------------------//
 var media = window.matchMedia("(max-width: 700px)")
 
@@ -65,20 +67,29 @@ document.addEventListener("DOMContentLoaded", function(){
     window.location.href = "login.html"
     return
   }
+  const catchProfile = profile.find(function({logged}) {
+    return logged === true
+  })
+  if (!catchProfile) {
+    window.location.href = "login.html"
+    return
+  }
 
+  const perfil = catchProfile;
 
   //-------------------------dropdown-------------------------//
 
-  let dropdown = `
-  <button class="btn nav-link dropdown-toggle dropdown-btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    <img id="profile_pic" class="rounded-circle" width="27" height="27" src="${profile.picture}">
-    ${profile.name}
-  </button>
-  <div class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton">
-      <a class="dropdown-item" href="my-profile.html">Mi Perfil</a>
-      <a class="dropdown-item" href="cart.html">Ver Carrito</a>
-      <hr class="dropdown-divider">
-      <a class="dropdown-item text-danger cursor-active" onclick="signOut()" >Cerrar Sesión</a>
+
+  let dropdown = ` 
+  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <img src="${perfil.picture}" alt="user" class="img-fluid rounded-circle imagen-nav" width="30">
+    <span class="ml-2">${perfil.name}</span>
+  </a>
+  <div class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
+    <a class="dropdown-item" href="my-profile.html">Mi Perfil</a>
+    <a class="dropdown-item" href="cart.html">Ver Carrito</a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item text-danger cursor-active" onclick="signOut()">Cerrar Sesión</a>
   </div>
   `
 
@@ -88,6 +99,27 @@ document.addEventListener("DOMContentLoaded", function(){
 
 //-------------------------------Cerrar Sesión-------------------------------//
 function signOut() {
-  localStorage.setItem('profile', null);
-  window.location.href = "login.html"
-}
+  if (localStorage.getItem("profile")) {
+    const profileArray = JSON.parse(localStorage.getItem("profile"))
+    const catchProfile = profileArray.find(function({logged}) {
+      return logged === true
+    })
+    if (catchProfile) {
+      const newProfile = {
+        name: catchProfile.name,
+        email: catchProfile.email,
+        picture: catchProfile.picture,
+        phone: catchProfile.phone,
+        address: catchProfile.address,
+        age: catchProfile.age,
+        logged : false
+      }
+      profileArray.splice(profileArray.findIndex(function({logged}) {
+        return logged === true
+      }), 1, newProfile);
+
+      localStorage.setItem("profile", JSON.stringify(profileArray));
+    }
+  }
+  window.location.href = "index.html"
+} 

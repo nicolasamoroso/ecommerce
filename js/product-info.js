@@ -80,7 +80,7 @@ function showProductInfo() {
     <p><strong>Vendidos:</strong> ${productInfoArray.soldCount}</p>
     <p><strong>Categoría:</strong> ${productInfoArray.category}</p>
 
-    <div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">   
+    <div id="carouselDark" class="carousel carousel-dark slide" data-bs-ride="carousel">   
     </div>
     `
 
@@ -88,16 +88,16 @@ function showProductInfo() {
 
     const images = productInfoArray.images;
 
-    document.getElementById('carouselExampleDark').innerHTML = `
+    document.getElementById('carouselDark').innerHTML = `
     <div id="c-indicators" class="carousel-indicators">
     </div>
     <div id="c-inner" class="carousel-inner">
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselDark" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
     </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselDark" data-bs-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
     </button>
@@ -107,14 +107,14 @@ function showProductInfo() {
     //Botones del carrusel
 
     let htmlContentToAppend = `
-    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carouselDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
     `
     document.getElementById('c-indicators').innerHTML = htmlContentToAppend;
     
     //Agrega los slide para cada número de imagen
     for (let i = 1; i < images.length; i++) {
         document.getElementById('c-indicators').innerHTML +=`
-        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="${i}" aria-label="Slide ${i+1}"></button>
+        <button type="button" data-bs-target="#carouselDark" data-bs-slide-to="${i}" aria-label="Slide ${i+1}"></button>
         `
     }
 

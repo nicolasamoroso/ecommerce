@@ -8,6 +8,20 @@ let minCount = undefined;
 let maxCount = undefined;
 let ya_lo_hice = false;
 
+function changeColor(a, b, c) {
+    document.getElementById(a).classList.remove("bg-sort");
+    document.getElementById(a).classList.add("bg-sort-active");
+    if (document.getElementById(b).classList.contains("bg-sort-active")) {
+        document.getElementById(b).classList.remove("bg-sort-active");
+        document.getElementById(b).classList.add("bg-sort");
+    }
+    if (document.getElementById(c).classList.contains("bg-sort-active")) {
+        document.getElementById(c).classList.remove("bg-sort-active");
+        document.getElementById(c).classList.add("bg-sort");
+    }
+}
+
+
 function sortCategories(criteria, array){
     let result = [];
     if (criteria === ORDER_ASC_BY_NAME)
@@ -120,10 +134,14 @@ document.addEventListener("DOMContentLoaded", function(e){
 
     document.getElementById("sortAsc").addEventListener("click", function(){
         sortAndShowCategories(ORDER_ASC_BY_NAME);
+
+        changeColor("asc", "desc", "count");
     });
 
     document.getElementById("sortDesc").addEventListener("click", function(){
         sortAndShowCategories(ORDER_DESC_BY_NAME);
+
+        changeColor("desc", "asc", "count");
     });
 
     document.getElementById("sortByCount").addEventListener("click", () => {
@@ -137,6 +155,8 @@ document.addEventListener("DOMContentLoaded", function(e){
             document.getElementById("up-down").classList.add("fa-sort-amount-down")
             sortAndShowCategories(ORDER_BY_PROD_COUNT_MIN);
         }
+
+        changeColor("count", "asc", "desc");
     });
 
     document.getElementById("clearRangeFilter").addEventListener("click", function(){
@@ -181,10 +201,16 @@ const searchBar = document.getElementById("searchBar")
 
 searchBar.addEventListener("keyup", (e) => {
     const searchString = e.target.value;
-    const filteredProductsArray = currentCategoriesArray.filter(category => {
+    const filteredCategoriesArray = currentCategoriesArray.filter(category => {
         return category.name.toLowerCase().includes(searchString.toLowerCase()) || 
         category.description.toLowerCase().includes(searchString.toLowerCase()) ||
         category.productCount.toString().includes(searchString);
     })
-    showCategoriesList(filteredProductsArray);
+    showCategoriesList(filteredCategoriesArray);
+    if (filteredCategoriesArray.length === 0) {
+        document.getElementById("subtitulo").innerHTML = `
+        <p class="lead">No hay categorías que coincidan con tu búsqueda.</p>
+        `
+        document.getElementById("cat-list-container").innerHTML = "";
+    }
 })
