@@ -1,45 +1,165 @@
-const perfil = JSON.parse(localStorage.getItem("profile"));
+const profileArray = JSON.parse(localStorage.getItem("profile"));
+const profile = JSON.parse(localStorage.getItem("profile")).find(function({logged}) {
+    return logged === true;
+})
 
 document.addEventListener("DOMContentLoaded", function (e) {
 
+    // console.log(profile)
     pic();
     info();
     
     //guarda la ubicación actual por si llega a ir a un lugar no permitido.
     const location = window.location.href;
     localStorage.setItem("prev_location", JSON.stringify(location));
+
+    //boton para cancelar la foto de perfil
+    document.getElementById("cancel-pic").addEventListener("click", function (e) {
+        document.getElementById("profile_img").src = profile.picture;
+    })
+
+
+    // Input File
+    const inputImage = document.querySelector('#image');
+    // Nodo donde estará el editor
+    const editor = document.querySelector('#editor');
+    // El canvas donde se mostrará la previa
+    const miCanvas = document.querySelector('#preview');
+    // Contexto del canvas
+    const contexto = miCanvas.getContext('2d');
+    // Ruta de la imagen seleccionada
+    let urlImage = undefined;
+    // Evento disparado cuando se adjunte una imagen
+    inputImage.addEventListener('change', abrirEditor, false);
+    
+    /**
+      Método que abre el editor con la imagen seleccionada
+     */
+    function abrirEditor(e) {
+        
+        if(!e.target.files[0]) {
+            document.getElementById("Modal").classList.add("d-none");
+            document.querySelector(".modal-backdrop").remove();
+            alert('No se seleccionó ninguna imagen');
+            return;
+        }
+
+        // Obtiene la imagen si existe "e.target.files[0]"
+        urlImage = URL.createObjectURL(e.target.files[0]);
+    
+        // Borra editor en caso que existiera una imagen previa
+        editor.innerHTML = '';
+        let cropprImg = document.createElement('img');
+        cropprImg.setAttribute('id', 'croppr');
+        editor.appendChild(cropprImg);
+    
+        // Limpia la previa en caso que existiera algún elemento previo
+        contexto.clearRect(0, 0, miCanvas.width, miCanvas.height);
+    
+        // Envia la imagen al editor para su recorte
+        document.querySelector('#croppr').setAttribute('src', urlImage);
+    
+        // Crea el editor
+        new Croppr('#croppr', {
+            aspectRatio: 1,
+            startSize: [70, 70],
+            onCropEnd: recortarImagen
+        })
+    }
+    
+    /**
+     * Método que recorta la imagen con las coordenadas proporcionadas con croppr.js
+     */
+    function recortarImagen(data) {
+        // Variables
+        const inicioX = data.x;
+        const inicioY = data.y;
+        const nuevoAncho = data.width;
+        const nuevaAltura = data.height;
+        const zoom = 1;
+        let imagenEn64 = '';
+        // La imprimo
+        miCanvas.width = nuevoAncho;
+        miCanvas.height = nuevaAltura;
+        // La declaro
+        let miNuevaImagenTemp = new Image();
+        // Cuando la imagen se cargue se procederá al recorte
+        miNuevaImagenTemp.onload = function() {
+            // Se recorta
+            contexto.drawImage(miNuevaImagenTemp, inicioX, inicioY, nuevoAncho * zoom, nuevaAltura * zoom, 0, 0, nuevoAncho, nuevaAltura);
+            // Se transforma a base64
+            imagenEn64 = miCanvas.toDataURL("image/png");
+            // Mostramos el código generado
+            
+            if(imagenEn64.includes("data:image/")) {
+                document.getElementById("profile_img").src = imagenEn64;
+            }
+        }
+        // Proporciona la imagen cruda, sin editarla por ahora
+        miNuevaImagenTemp.src = urlImage;
+        document.querySelector("#preview").remove();
+    }
+
 });
 
 function pic() {
     let htmlContentToAppend = `
+
     <div class="row mb-2">
         <div class="text-center">
-            <img id="image" src="${perfil.picture}" alt="${perfil.name}" class="img-circle mb-2"">
+            <img id="profile_img" src="${profile.picture}" alt="${profile.name}" class="mb-2 shadow">
+            <canvas id="preview" class="d-none" width="0"></canvas>
             <!-- boton para editar foto de perfil -->
             <div class="d-flex justify-content-center mb-2">
-                <label id="edit-pic" class="d-none btn btn-primary mt-1">
-                    Editar
-                    <input class="d-none" type="file" onclick="editImg()"id="imagen" name="image">
-                </label>
+            <label class="d-none btn btn-primary mt-1" id="image" data-toggle="modal" data-target="#Modal">
+                Editar
+                <input class="d-none" type="file" name="image">
+            </label>
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="ModalLabel">Editar imagen de perfil</h5>
+        </div>
+        <div class="modal-body">
+        <p class="text-muted">Para cambiar la imagen de perfil, ajuste el tamaño.</p>
+            <div id="editor"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancel-pic" onclick="cancel_pic">Close</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" id="save-pic">Save changes</button>
+        </div>
+      </div>    
+    </div>
+  </div>
     `
 
     document.getElementById("img").innerHTML = htmlContentToAppend;
 }
 
+function cancel_pic() {
+    document.getElementById("profile_img").src = profile.picture;
+}
+
+
 function info() {
-    const profile = JSON.parse(localStorage.getItem("profile"));
 
     let htmlContentToAppend = `
-    <form class="row mb-4 card-body row ">
+    <form class="row mb-4 card-body row">
         <p class="mb-0 col-sm-5"><strong>Nombre de usuario</strong></p>
         <p class="col-sm-7" id="username" >${profile.name}</p>
         <hr>
 
         <p class="mb-0 col-sm-5"><strong>Email</strong></p>
         <p class="col-sm-7" id="email">${profile.email}</p>
+        <hr>
+
+        <p class="mb-0 col-sm-5"><strong>Nombre y Apellido</strong></p>
+        <p class="col-sm-7" id="nombre-apellido">${profile.name_lastname}</p>
         <hr>
 
         <p class="mb-0 col-sm-5"><strong>Celular</strong></p>
@@ -65,7 +185,7 @@ function info() {
 
 function modifyInfo() {
 
-    document.getElementById("edit-pic").classList.remove("d-none")
+    document.getElementById("image").classList.remove("d-none")
 
 
     let htmlContentToAppend = `
@@ -73,25 +193,29 @@ function modifyInfo() {
     <form class="row mb-4 card-body row ">
         <p class="mb-0 col-sm-5"><strong>Nombre de usuario</strong></p>
         <div class="form-group col-sm-7">
-            <input type="text" class="form-control form-focus" id="nombre" placeholder="username">
+            <input type="text" class="form-control form-focus" id="nombre" placeholder="Username">
         </div>
         <hr>
 
         <p class="mb-0 col-sm-5"><strong>Email</strong></p>
+        <p class="col-sm-7" id="email">${profile.email}</p>
+        <hr>
+
+        <p class="mb-0 col-sm-5"><strong>Nombre y Apellido</strong></p>
         <div class="form-group col-sm-7">
-            <input type="email" class="form-control form-focus"  id="email" placeholder="name@example.com" required>
+            <input type="text" class="form-control form-focus" id="nombre-apellido" placeholder="Nombre y Apellido">
         </div>
         <hr>
 
         <p class="mb-0 col-sm-5"><strong>Celular</strong></p>
         <div class="form-group col-sm-7">
-            <input type="number" class="form-control form-focus" id="celular" min="0" placeholder="+598 99 999 999">
+            <input type="number" class="form-control form-focus" id="celular" min="0" placeholder="099999999">
         </div>
         <hr>
 
         <p class="mb-0 col-sm-5"><strong>Dirección</strong></p>
         <div class="form-group col-sm-7">
-            <input type="text" class="form-control form-focus " id="direccion" placeholder="City, Country">
+            <input type="text" class="form-control form-focus " id="direccion" placeholder="Ciudad, País">
         </div>
         <hr>
 
@@ -105,44 +229,76 @@ function modifyInfo() {
         <button type="button" onclick="cancel()" id="actualizarD" class="btn btn-danger mt-2">Cancelar</button>
         
     </form>
-    
     `
 
     document.getElementById("info-perfil").innerHTML = htmlContentToAppend;
 
-
-    const perfil = JSON.parse(localStorage.getItem("profile"));
-
-    document.getElementById("nombre").value = perfil.name;
-    document.getElementById("email").value = perfil.email;
-    document.getElementById("celular").value = parseInt(perfil.phone);
-    document.getElementById("direccion").value = perfil.address === "Debe completar este campo" ? "" : perfil.address;
-    document.getElementById("edad").value = parseInt(perfil.age);
+    document.getElementById("nombre").value = profile.name;
+    document.getElementById("nombre-apellido").value = profile.name_lastname === "Debe completar este campo" ? "" : profile.name_lastname;
+    document.getElementById("celular").value = parseInt(profile.phone);
+    document.getElementById("direccion").value = profile.address === "Debe completar este campo" ? "" : profile.address;
+    document.getElementById("edad").value = parseInt(profile.age);
 
 }
 
 function saveInfo() {
     let name = document.getElementById("nombre").value;
-    let email = document.getElementById("email").value;
-    let picture = document.getElementById("image").src;
+    let picture = document.getElementById("profile_img").src;
+    let name_lastname = document.getElementById("nombre-apellido").value
     let phone = document.getElementById("celular").value;
     let address = document.getElementById("direccion").value;
     let age = document.getElementById("edad").value;
 
-    if (name && email && email.includes("@") && email.includes(".com") && phone && address && age) {
-        let profile = {
-            name: name,
-            email: email,
-            picture: picture,
-            phone: phone,
-            address: address,
-            age: age
+    if (name && name_lastname && phone && address && age) {
+
+        if(name.length > 20) {
+            alert("El nombre es muy largo");
+            return;
         }
-    
-        localStorage.setItem("profile", JSON.stringify(profile));
-        info();
-        document.getElementById("edit-pic").classList.add("d-none")
-        document.getElementById("profile_pic").src = profile.picture;
+        if(phone.length > 10) {
+            alert("El celular es muy largo");
+            return;
+        }
+        if(address.length > 30) {
+            alert("La dirección es muy larga");
+            return;
+        }
+        if(age.length > 3 && age > 120) {
+            alert("La edad es muy larga");
+            return;
+        }
+        if(age < 0) {
+            alert("La edad no puede ser negativa");
+            return;
+        }
+        if (name_lastname.length > 33) {
+            alert("El nombre y apellido es muy largo");
+            return;
+        }
+
+
+        const catchProfile = JSON.parse(localStorage.getItem("profile")).find(function({email}) {
+            return email === profile.email;
+        })
+
+        if (catchProfile) {
+            const newProfile = {
+                name,
+                email: catchProfile.email,
+                name_lastname,
+                picture,
+                phone,
+                address,
+                age,
+                logged : catchProfile.logged
+            }
+            profileArray.splice(profileArray.findIndex(function({logged}) {
+                return logged === true
+            }), 1, newProfile);
+
+            localStorage.setItem("profile", JSON.stringify(profileArray));
+            window.location.href = "my-profile.html";
+        }
     }
     else {
         alert("Por favor complete todos los campos");
@@ -151,8 +307,9 @@ function saveInfo() {
 }
 
 function cancel() {
-    document.getElementById("edit-pic").classList.add("d-none")
-    info();
+    document.getElementById("image").classList.add("d-none")
+    document.getElementById("profile_img").src = profile.picture;
+    info()
 }
 
 document.addEventListener("keypress", (event) => {
@@ -162,21 +319,20 @@ document.addEventListener("keypress", (event) => {
 });
 
 
-function editImg() {
-  let inputFile = document.getElementById("imagen");
-  inputFile.addEventListener("change", (e) => {
-    let file = e.target.files[0];
-    let reader = new FileReader();
-    reader.onload = (e) => {
-        let img = document.getElementById("image");
-        if (e.target.result.includes("data:image/")) {
-            img.src = e.target.result;
-        }
-        else {
-            img.src = perfil.picture;
-            console.log("Error");
-        }
-    }
-    reader.readAsDataURL(file);
-  }, false);
-}
+// function editImg() {
+//   let inputFile = document.getElementById("imagen");
+//   inputFile.addEventListener("change", (e) => {
+//     let file = e.target.files[0];
+//     let reader = new FileReader();
+//     reader.onload = (e) => {
+//         let img = document.getElementById("image");
+//         if (e.target.result.includes("data:image/")) {
+//             img.src = e.target.result;
+//         }
+//         else {
+//             alert("El archivo no es una imagen");
+//         }
+//     }
+//     reader.readAsDataURL(file);
+//   }, false);
+// }
