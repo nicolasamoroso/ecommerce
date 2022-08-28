@@ -3,9 +3,9 @@ let cat_name = "";
 const ORDER_BY_PROD_PRICE_MIN = "$ min";    
 const ORDER_BY_PROD_PRICE_MAX = "$ max";
 const ORDER_DESC_BY_REL = "Rel.";
-let currentSortCriteria = undefined;
-let minCount = undefined;
-let maxCount = undefined;
+let currentSort = undefined;
+let minPrice = undefined;
+let maxPrice = undefined;
     
 document.addEventListener("DOMContentLoaded", async (e) => {
     
@@ -14,10 +14,17 @@ document.addEventListener("DOMContentLoaded", async (e) => {
     //con la array con todas las categorías y el nombre de cada una
     const product = await getJSONData(LIST_URL);
 
-    if (product.status === "ok") {
-      productsArray = product.data.products;
-      cat_name = product.data.catName;
-      showProductsList(productsArray);
+    if (product.status === "ok") {        
+        cat_name = product.data.catName;
+        productsArray = product.data.products;
+
+        const newProduct = JSON.parse(localStorage.getItem("productAdded"));
+        if (newProduct) {
+            newProductListAdded()
+        }
+        else {
+            showProductsList(productsArray);
+        }
     }
 
     //Sort
@@ -45,8 +52,8 @@ document.addEventListener("DOMContentLoaded", async (e) => {
         document.getElementById("rangeFilterPriceMin").value = "";
         document.getElementById("rangeFilterPriceMax").value = "";
 
-        minCount = undefined;
-        maxCount = undefined;
+        minPrice = undefined;
+        maxPrice = undefined;
 
         showProductsList(productsArray);
     });
@@ -54,18 +61,18 @@ document.addEventListener("DOMContentLoaded", async (e) => {
     document.getElementById("rangeFilterPrice").addEventListener("click", () => {
         //Obtengo el mínimo y máximo de los intervalos para filtrar por el precio
         //de productos.
-        minCount = document.getElementById("rangeFilterPriceMin").value;
-        maxCount = document.getElementById("rangeFilterPriceMax").value;
+        minPrice = document.getElementById("rangeFilterPriceMin").value;
+        maxPrice = document.getElementById("rangeFilterPriceMax").value;
 
-        if ((minCount != undefined) && (minCount != "") && (parseInt(minCount)) >= 0)
+        if ((minPrice != undefined) && (minPrice != "") && (parseInt(minPrice)) >= 0)
             minCount = parseInt(minCount); 
         else
             minCount = undefined;
 
-        if ((maxCount != undefined) && (maxCount != "") && (parseInt(maxCount)) >= 0)
-            maxCount = parseInt(maxCount);
+        if ((maxPrice != undefined) && (maxPrice != "") && (parseInt(maxPrice)) >= 0)
+            maxPrice = parseInt(maxPrice);
         else
-            maxCount = undefined;
+            maxPrice = undefined;
 
         showProductsList(productsArray);
     });
@@ -75,6 +82,56 @@ document.addEventListener("DOMContentLoaded", async (e) => {
     const location = window.location.href;
     localStorage.setItem("prev_location", JSON.stringify(location));
 });
+
+
+function newProductListAdded() {
+    const newProduct = JSON.parse(localStorage.getItem("productAdded"));
+    let atStart = [];
+    let atEnd = [];
+    const PREMIUM = 0.07;
+    let idStart = productsArray.length !== 0 ? productsArray[0].id : Math.floor(Math.random() * (100000 - 70000)) + 70000;
+    let idEnd = productsArray.length !== 0  ? productsArray[productsArray.length - 1].id : Math.floor(Math.random() * (100000 - 70000)) + 70000;
+    
+    for (let i = 0; i < newProduct.length; i++) {
+        if (newProduct[i].category === cat_name) {
+            if (newProduct[i].percentage >= PREMIUM) {
+                idStart--;
+                const new_product = {
+                    id : idStart,
+                    name : newProduct[i].name,
+                    description : newProduct[i].description,
+                    currency : newProduct[i].currency,
+                    cost : newProduct[i].cost,
+                    image : newProduct[i].photos[0].dataURL,
+                    images : newProduct[i].photos,
+                    soldCount : newProduct[i].soldCount,
+                    category : cat_name
+                }
+                atStart.unshift(new_product);
+            }
+            else {
+                idEnd++;
+                const new_product = {
+                    id : idEnd,
+                    name : newProduct[i].name,
+                    description : newProduct[i].description,
+                    currency : newProduct[i].currency,
+                    cost : newProduct[i].cost,
+                    image : newProduct[i].photos[0].dataURL,
+                    images : newProduct[i].photos,
+                    soldCount : newProduct[i].soldCount,
+                    category : cat_name
+                }
+                atEnd.push(new_product);
+            }
+        }
+    }
+    const starConcatProducts = atStart.concat(productsArray)
+    productsArray = starConcatProducts.concat(atEnd);
+    localStorage.setItem("productList", JSON.stringify(productsArray));
+    showProductsList(productsArray)
+    asd = productsArray;
+}
 
 //cambia el background color de los botones que ordenan los productos
 function changeColor(a, b, c) {
@@ -104,14 +161,14 @@ function showProductsList(productsArray) {
         if (!media.matches) {
             for(let i = 0; i < productsArray.length; i++){ 
                 let product = productsArray[i];
-                if (((minCount == undefined) || (minCount != undefined && parseInt(product.cost) >= minCount)) &&
-                    ((maxCount == undefined) || (maxCount != undefined && parseInt(product.cost) <= maxCount))){
+                if (((minPrice == undefined) || (minPrice != undefined && parseInt(product.cost) >= minPrice)) &&
+                    ((maxPrice == undefined) || (maxPrice != undefined && parseInt(product.cost) <= maxPrice))){
                     
                     htmlContentToAppend += ` 
                     <div class="list-group-item list-group-item-action cursor-active" onclick="product_info(${product.id})">
                         <div class="row">
                             <div class="col-3">
-                                <img src="${product.image}" alt="${product.description}" class="p-0 img-thumbnail">
+                                <img src="${product.image[0].dataURL === undefined ? product.image : product.image[0].dataURL}" alt="${product.description}" class="p-0 img-thumbnail">
                             </div>
                             <div class="col">
                                 <div class="d-flex w-100 justify-content-between">
@@ -131,8 +188,8 @@ function showProductsList(productsArray) {
         else {
             for(let i = 0; i < productsArray.length; i++){ 
                 let product = productsArray[i];
-                if (((minCount == undefined) || (minCount != undefined && parseInt(product.soldCount) >= minCount)) &&
-                    ((maxCount == undefined) || (maxCount != undefined && parseInt(product.soldCount) <= maxCount))){
+                if (((minPrice == undefined) || (minPrice != undefined && parseInt(product.soldCount) >= minPrice)) &&
+                    ((maxPrice == undefined) || (maxPrice != undefined && parseInt(product.soldCount) <= maxPrice))){
                     
                     htmlContentToAppend += ` 
                     <div class="row d-flex justify-content-center">
@@ -160,7 +217,7 @@ function showProductsList(productsArray) {
 //cada producto diferente
 function product_info(id) {
     localStorage.setItem("product-info", id);
-    window.location.href = "product-info.html"
+    window.location.href = "product-info.html"    
 }
 
 // function product_info(id) {
@@ -203,12 +260,12 @@ function sortProducts(criteria, array){
     return result;
 }
 
-function sortAndShowProducts(sortCriteria, productArray){
+function sortAndShowProducts(sort, productArray){
 
-    currentSortCriteria = sortCriteria;
+    currentSort = sort;
     if(productArray != undefined)
         productsArray = productArray;
-    productsArray = sortProducts(currentSortCriteria, productsArray);
+    productsArray = sortProducts(currentSort, productsArray);
 
     showProductsList(productsArray);
 }
@@ -232,3 +289,11 @@ searchBar.addEventListener("keyup", (e) => {
     }
 })
 
+const GOLD = 0.13;
+const PREMIUM = 0.07;
+const ESTANDAR  = 0.03;
+let saveProductInfo = [];
+
+// function addProduct(nProduct, percentage, array, cat_name) {
+    
+// }

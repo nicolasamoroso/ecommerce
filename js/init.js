@@ -19,7 +19,8 @@ const PRODUCT_INFO_COMMENTS = PRODUCT_INFO_COMMENTS_URL + id + EXT_TYPE;
 const CART_INFO = CART_INFO_URL + 25801 + EXT_TYPE;
 
 //-------------------------------media-------------------------------//
-var media = window.matchMedia("(max-width: 700px)")
+var media = window.matchMedia("(max-width: 760px)")
+var media2 = window.matchMedia("(max-width: 990px)")
 
 //-------------------------------"fecth"-------------------------------//
 
@@ -81,11 +82,11 @@ document.addEventListener("DOMContentLoaded", function(){
 
 
   let dropdown = ` 
-  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+  <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     <img src="${perfil.picture}" alt="user" class="img-fluid rounded-circle imagen-nav" width="30">
     <span class="ml-2">${perfil.name}</span>
   </a>
-  <div class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
+  <div class="dropdown-menu dropdown-menu-dark aaaaaaa" aria-labelledby="navbarDropdown">
     <a class="dropdown-item" href="my-profile.html">Mi Perfil</a>
     <a class="dropdown-item" href="cart.html">Ver Carrito</a>
     <div class="dropdown-divider"></div>

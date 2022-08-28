@@ -65,12 +65,18 @@
                   Arrastra tus fotos aquí<br>
                 </div>
               </div>
+              <div class="invalid-feedback">
+                Ingresa una imagen o más
+              </div>
             </div>
           </div>
           <div class="row">
             <div class="col-md-12 mb-3">
               <label for="productDescription">Descripción</label>
               <textarea name="productDescription" class="form-control" id="productDescription" cols="30" rows="5"></textarea>
+              <div class="invalid-feedback">
+                Ingresa una descripcion
+              </div>
             </div>
           </div>
           <div class="row">
@@ -84,7 +90,7 @@
             </div>
             <div class="col-md-4 mb-3">
               <label for="productCurrency">Moneda</label>
-              <select name="productCurrency" class="form-select custom-select d-block w-100" id="productCurrency" required>
+              <select name="productCurrency" class="form-select custom-select d-block w-100" id="productCurrency">
                 <option value="" hidden selected>Seleccionar moneda</option>
                 <option>Pesos Uruguayos (UYU)</option>
                 <option>Dólares (USD)</option>
@@ -105,6 +111,9 @@
                 <option>Herramientas</option>
                 <option>Computadoras</option>
                 <option>Vestimenta</option>
+                <option>Electrodomésticos</option>
+                <option>Deporte</option>
+                <option>Celulares</option>
               </select>
               <div class="invalid-feedback">
                 Por favor ingresa una categoría válida.
@@ -114,7 +123,7 @@
           <div class="row">
             <div class="col-md-3 mb-3">
               <label for="productCountInput">Cantidad en stock</label>
-              <input type="number" name="productCountInput" class="form-control" id="productCountInput"  required value="1"
+              <input type="number" name="productCountInput" class="form-control" id="productCountInput" value="1"
                 min="0">
               <div class="invalid-feedback">
                 La cantidad es requerida.
@@ -166,7 +175,7 @@
             </li>
           </ul>
           <hr class="mb-4">
-          <button class="btn btn-primary btn-lg" type="submit">Vender</button>
+          <button id="BtnSell" class="btn btn-primary btn-lg" type="submit">Vender</button>
         </form>
       </div>
     </div>

@@ -123,10 +123,28 @@ function sortAndShowCategories(sortCriteria, categoriesArray){
 //Función que se ejecuta una vez que se haya lanzado el evento de
 //que el documento se encuentra cargado, es decir, se encuentran todos los
 //elementos HTML presentes.
+const GOLD = 0.13;
 document.addEventListener("DOMContentLoaded", function(e){
     getJSONData(CATEGORIES_URL).then(function(resultObj){
         if (resultObj.status === "ok"){
             currentCategoriesArray = resultObj.data
+            const refreshCategories = JSON.parse(localStorage.getItem("productAdded"));
+            if (refreshCategories) {
+                const existe = refreshCategories.filter(element => element.percentage === GOLD);
+                 /* change object element in currentCategoriesArray */ 
+                for (let i = 0; i < currentCategoriesArray.length; i++) {
+                    for (let j = 0; j < existe.length; j++) {
+                        if (currentCategoriesArray[i].name === existe[j].category) {
+                            currentCategoriesArray[i].imgSrc = existe[j].photos[0].dataURL
+                        }
+                    }
+                    const xd = refreshCategories.filter(element => element.category === currentCategoriesArray[i].name);
+                    if (xd.length > 0) {
+                        currentCategoriesArray[i].productCount = xd.length + parseInt(currentCategoriesArray[i].productCount);
+                    }
+                }
+
+            }
             showCategoriesList(currentCategoriesArray)
             //sortAndShowCategories(ORDER_ASC_BY_NAME, resultObj.data);
         }

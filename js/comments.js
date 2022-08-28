@@ -27,7 +27,7 @@ function showProductInfoComments() {
         la fecha en la q se comentó. */
         for (let i = 0; i < productInfoCommentsArray.length; i++) {
             let product = productInfoCommentsArray[i];
-            htmlContentToAppend += comentarios(product, true);
+            htmlContentToAppend += comentarios(product);
         }
     }
     else htmlContentToAppend = `
@@ -38,23 +38,44 @@ function showProductInfoComments() {
     document.getElementById('comments').innerHTML += htmlContentToAppend;
 }
 
-function comentarios(product, se_puede) {
-    let htmlContentToAppend = `
-    <div class="comments">
-        <div class="d-flex justify-content-between">
-            <h6>
-                <img id="profile_pic_comments" class="rounded-circle" src="${product.profile_pic }">
-                ${product.user}
-            </h6>
-            <small>${se_puede ? changeDayFormat(convertDateForIos(product.dateTime)) : changeDayFormat(new Date(product.dateTime))}</small>
+function comentarios(product) {
+    let htmlContentToAppend = "";
+    if (!media2.matches) {
+        htmlContentToAppend = `
+        <div class="comments">
+            <div class="d-flex justify-content-between">
+                <h6>
+                    <img id="profile_pic_comments" class="rounded-circle" src="${product.profile_pic }">
+                    ${product.user}
+                </h6>
+                <small>${changeDayFormat(new Date(product.dateTime))}</small>
+            </div>
+            <div class="d-flex justify-content-between pt-2">
+                <p >${product.description}</p>
+                <div> ${ScoreToStars(product.score)} </div>
+            </div>
         </div>
-        <div class="d-flex justify-content-between pt-2">
-            <p >${product.description}</p>
-            <div> ${ScoreToStars(product.score)} </div>
+        <hr>
+        `
+    }
+    else {
+        htmlContentToAppend = `
+        <div class="comments">
+            <div class="py-2"> ${ScoreToStars(product.score)} </div>
+            <div class="d-flex justify-content-between">
+                <h6>
+                    <img id="profile_pic_comments" class="rounded-circle" src="${product.profile_pic }">
+                    ${product.user}
+                </h6>
+                <small>${changeDayFormat(new Date(product.dateTime))}</small>
+            </div>
+            <div class="d-flex justify-content-between pt-2">
+                <p >${product.description}</p>
+            </div>
         </div>
-    </div>
-    <hr>
-    `
+        <hr>
+        `
+    }
     return htmlContentToAppend;
 }
 
@@ -161,7 +182,7 @@ function addComment() {
                 
                 localStorage.setItem(`product-${id}`, JSON.stringify(commentsArray));
 
-                let htmlContentToAppend = comentarios(comentario, false)
+                let htmlContentToAppend = comentarios(comentario)
 
                 document.getElementById('comments').innerHTML += htmlContentToAppend;
 
@@ -176,7 +197,7 @@ function addComment() {
             
             localStorage.setItem(`product-${id}`, JSON.stringify(commentsArray));
 
-            let htmlContentToAppend = comentarios(comentario, false)
+            let htmlContentToAppend = comentarios(comentario)
 
             document.getElementById('comments').innerHTML += htmlContentToAppend;
 
@@ -193,10 +214,7 @@ function addComment() {
     document.getElementById("productComment").value = "";
 }
 
-
-function showUserComments(array) {
-
-    /* if user change his name or pic, change it on comments localstorage */
+function actualizar(array) {
     const profileArray = JSON.parse(localStorage.getItem("profile"));
     for (let i = 0; i < profileArray.length; i++) {
         const element1 = profileArray[i];
@@ -208,18 +226,6 @@ function showUserComments(array) {
             elem.profile_pic = element1.picture;
         }
     }
-
-    let htmlContentToAppend = "";
-
-    for (let i = 0; i < array.length; i++) {
-        const element = array[i];
-        htmlContentToAppend += comentarios(element, false);
-    }
-
-    document.getElementById('comments').innerHTML += htmlContentToAppend;
-
-    if (document.getElementById('se-el-primero-en-comentar'))
-        document.getElementById('se-el-primero-en-comentar').innerHTML = "Comentarios";
 }
 
 

@@ -176,7 +176,7 @@ footer p {
 }
 
 main {
-  min-height: calc(100vh - 210px);
+  min-height: calc(100vh - 220px);
 }
 
 a.custom-card,
@@ -360,31 +360,16 @@ main.adaptable {
 }
 
 .carousel-dark .carousel-indicators [data-bs-target] {
-  margin: auto;
-  background-color: transparent;
+  background-color: rgb(143, 143, 143);
 }
 
-.carousel-dark .carousel-indicators button.active {
-  background-color: rgb(113, 113, 113);
-}
-
-
-.carousel .carousel-indicators button {
-  border-radius: 50%;
-  width: 6px;
-  height: 6px;
-  padding: 4px;
-  position: relative;
-  background-color: transparent;
+.aaaaaaa {
+  margin-left: 25%
 }
 
 
-.carousel-indicators button:after {
-  border-radius: 50%;
-  padding: 10px;
-  border: 4px solid rgb(141, 141, 141);
-  position: absolute;
-  content: "";
-  top: -7px;
-  right: -7px;
+@media (max-width: 700px) {
+  .aaasdf {
+    padding-right: 100px;
+  }
 }
