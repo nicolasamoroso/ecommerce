@@ -18,13 +18,48 @@ document.addEventListener("DOMContentLoaded", async (e) => {
         cat_name = product.data.catName;
         productsArray = product.data.products;
 
-        const newProduct = JSON.parse(localStorage.getItem("productAdded"));
-        if (newProduct) {
-            newProductListAdded()
+        let start = JSON.parse(localStorage.getItem("productStart"));
+        let end = JSON.parse(localStorage.getItem("productEnd"));
+
+        start = start.filter(function (product) {
+            return product.category === cat_name;
+        });
+
+        if (start) {
+            for (let i = 0; i < productsArray.length; i++) {
+                for (let j = 0; j < start.length; j++) {
+                    if (productsArray[i].name === start[j].name) {
+                        productsArray.splice(i, 1);
+                    }
+                }
+            }
         }
-        else {
-            showProductsList(productsArray);
+        end = end.filter(function (product) {
+            return product.category === cat_name;
+        });
+
+        if (end) {
+            for (let i = 0; i < productsArray.length; i++) {
+                for (let j = 0; j < end.length; j++) {
+                    if (productsArray[i].name === end[j].name) {
+                        productsArray.splice(i, 1);
+                    }
+                }
+            }
         }
+
+
+        if (start && end) {
+            productsArray = start.concat(productsArray.concat(end));
+        }
+        else if (start) {
+            productsArray = start.concat(productsArray);
+        }
+        else if (end) {
+            productsArray = productsArray.concat(end);
+        }
+
+        showProductsList(productsArray);
     }
 
     //Sort
@@ -65,9 +100,9 @@ document.addEventListener("DOMContentLoaded", async (e) => {
         maxPrice = document.getElementById("rangeFilterPriceMax").value;
 
         if ((minPrice != undefined) && (minPrice != "") && (parseInt(minPrice)) >= 0)
-            minCount = parseInt(minCount); 
+            minPrice = parseInt(minPrice); 
         else
-            minCount = undefined;
+            minPrice = undefined;
 
         if ((maxPrice != undefined) && (maxPrice != "") && (parseInt(maxPrice)) >= 0)
             maxPrice = parseInt(maxPrice);
@@ -82,56 +117,6 @@ document.addEventListener("DOMContentLoaded", async (e) => {
     const location = window.location.href;
     localStorage.setItem("prev_location", JSON.stringify(location));
 });
-
-
-function newProductListAdded() {
-    const newProduct = JSON.parse(localStorage.getItem("productAdded"));
-    let atStart = [];
-    let atEnd = [];
-    const PREMIUM = 0.07;
-    let idStart = productsArray.length !== 0 ? productsArray[0].id : Math.floor(Math.random() * (100000 - 70000)) + 70000;
-    let idEnd = productsArray.length !== 0  ? productsArray[productsArray.length - 1].id : Math.floor(Math.random() * (100000 - 70000)) + 70000;
-    
-    for (let i = 0; i < newProduct.length; i++) {
-        if (newProduct[i].category === cat_name) {
-            if (newProduct[i].percentage >= PREMIUM) {
-                idStart--;
-                const new_product = {
-                    id : idStart,
-                    name : newProduct[i].name,
-                    description : newProduct[i].description,
-                    currency : newProduct[i].currency,
-                    cost : newProduct[i].cost,
-                    image : newProduct[i].photos[0].dataURL,
-                    images : newProduct[i].photos,
-                    soldCount : newProduct[i].soldCount,
-                    category : cat_name
-                }
-                atStart.unshift(new_product);
-            }
-            else {
-                idEnd++;
-                const new_product = {
-                    id : idEnd,
-                    name : newProduct[i].name,
-                    description : newProduct[i].description,
-                    currency : newProduct[i].currency,
-                    cost : newProduct[i].cost,
-                    image : newProduct[i].photos[0].dataURL,
-                    images : newProduct[i].photos,
-                    soldCount : newProduct[i].soldCount,
-                    category : cat_name
-                }
-                atEnd.push(new_product);
-            }
-        }
-    }
-    const starConcatProducts = atStart.concat(productsArray)
-    productsArray = starConcatProducts.concat(atEnd);
-    localStorage.setItem("productList", JSON.stringify(productsArray));
-    showProductsList(productsArray)
-    asd = productsArray;
-}
 
 //cambia el background color de los botones que ordenan los productos
 function changeColor(a, b, c) {
@@ -176,7 +161,7 @@ function showProductsList(productsArray) {
                                         <h4> ${product.name} - ${product.currency} ${product.cost} </h4> 
                                         <p mb-1> ${product.description} </p> 
                                     </div>
-                                    <small class="text-muted"> ${product.soldCount} vendidos</small> 
+                                    <small class="text-muted"> ${product.soldCount === undefined ? 0 : product.soldCount} vendidos</small> 
                                 </div>
                             </div>
                         </div>

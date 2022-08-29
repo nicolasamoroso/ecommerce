@@ -25,30 +25,55 @@ let productInfoRelatedArray = [];
 
 document.addEventListener("DOMContentLoaded", async (e) => {
 
-    //------------------getJSONData en orden------------------//
-    const newProductList = JSON.parse(localStorage.getItem("productList"))
-    if (newProductList) {
-        productInfoArray = newProductList.find(product => product.id === parseInt(localStorage.getItem("product-info")))
-        if (productInfoArray.images) {
+    const start = JSON.parse(localStorage.getItem("productStart"));
+    const end = JSON.parse(localStorage.getItem("productEnd"));
+    
+    if (start || end) {
+        if (start && start.length !== 0) {
+            productInfoArray = start.find(product => product.id === parseInt(id));
+            if (productInfoArray) {
+                if (localStorage.getItem(`product-${id}`)) {
+                    actualizar(JSON.parse(localStorage.getItem(`product-${id}`)))
+                    productInfoCommentsArray = JSON.parse(localStorage.getItem(`product-${id}`))
+                }
+                
+                showProductInfo();
 
-            if (localStorage.getItem(`product-${id}`)) {
-                actualizar(JSON.parse(localStorage.getItem(`product-${id}`)))
-                productInfoCommentsArray = JSON.parse(localStorage.getItem(`product-${id}`))
+                showProductInfoComments();
+
+                document.getElementById("addComment").classList.add("show")
+                showTextArea();
+
+                for (let i = 0; i < ratingStars.length; ++i) {
+                    ratingStars[i].className = "ratingStar fa fa-star checked";
+                }
+
+                return
             }
-            
-            showProductInfo();
-
-            showProductInfoComments();
-
-            document.getElementById("addComment").classList.add("show")
-            showTextArea();
-
-            for (let i = 0; i < ratingStars.length; ++i) {
-                ratingStars[i].className = "ratingStar fa fa-star checked";
-            }
-
-            return
         }
+        if (end && end.length !== 0) {
+            productInfoArray = end.find(product => product.id === parseInt(id));
+            if (productInfoArray) {
+                if (localStorage.getItem(`product-${id}`)) {
+                    actualizar(JSON.parse(localStorage.getItem(`product-${id}`)))
+                    productInfoCommentsArray = JSON.parse(localStorage.getItem(`product-${id}`))
+                }
+                
+                showProductInfo();
+
+                showProductInfoComments();
+
+                document.getElementById("addComment").classList.add("show")
+                showTextArea();
+
+                for (let i = 0; i < ratingStars.length; ++i) {
+                    ratingStars[i].className = "ratingStar fa fa-star checked";
+                }
+
+                return
+            }
+        }
+        
     }
     const product = await getJSONData(PRODUCT_INFO);
     if (product.status === "ok") {
@@ -125,7 +150,7 @@ function showProductInfo() {
     </div>
     `
 
-    const images = productInfoArray.images;
+    const images = productInfoArray.images === undefined ? productInfoArray.image : productInfoArray.images;
 
     if (images.length > 1) {
         document.getElementById('carouselDark').innerHTML += `
@@ -162,7 +187,7 @@ function showProductInfo() {
 
     //Agrega cada imagen que se encuentre para esa id en el JSON
     for (let i = 1; i < images.length; i++) {
-        let img = images[i].dataURL === undefined ? images[i] : images[i].dataURL;
+        let img = images[i] !== undefined ? images[i] : images[i].dataURL;
         htmlContentToAppend += `
         <div class="carousel-item">
             <img src="${img}" class="d-block w-100">

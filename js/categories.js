@@ -128,22 +128,26 @@ document.addEventListener("DOMContentLoaded", function(e){
     getJSONData(CATEGORIES_URL).then(function(resultObj){
         if (resultObj.status === "ok"){
             currentCategoriesArray = resultObj.data
-            const refreshCategories = JSON.parse(localStorage.getItem("productAdded"));
-            if (refreshCategories) {
-                const existe = refreshCategories.filter(element => element.percentage === GOLD);
-                 /* change object element in currentCategoriesArray */ 
-                for (let i = 0; i < currentCategoriesArray.length; i++) {
-                    for (let j = 0; j < existe.length; j++) {
-                        if (currentCategoriesArray[i].name === existe[j].category) {
-                            currentCategoriesArray[i].imgSrc = existe[j].photos[0].dataURL
+
+            const start = JSON.parse(localStorage.getItem("productStart"));
+            const end = JSON.parse(localStorage.getItem("productEnd"));
+
+            if (start || end) {
+                const concatCat = start.concat(end);
+                if (concatCat) {
+                    const existe = concatCat.filter(element => element.percentage === GOLD);
+                    for (let i = 0; i < currentCategoriesArray.length; i++) {
+                        for (let j = 0; j < existe.length; j++) {
+                            if (currentCategoriesArray[i].name === existe[j].category) {
+                                currentCategoriesArray[i].imgSrc = existe[j].image[0].dataURL
+                            }
+                        }
+                        const pCount = concatCat.filter(element => element.category === currentCategoriesArray[i].name);
+                        if (pCount.length > 0) {
+                            currentCategoriesArray[i].productCount = pCount.length + parseInt(currentCategoriesArray[i].productCount);
                         }
                     }
-                    const xd = refreshCategories.filter(element => element.category === currentCategoriesArray[i].name);
-                    if (xd.length > 0) {
-                        currentCategoriesArray[i].productCount = xd.length + parseInt(currentCategoriesArray[i].productCount);
-                    }
                 }
-
             }
             showCategoriesList(currentCategoriesArray)
             //sortAndShowCategories(ORDER_ASC_BY_NAME, resultObj.data);

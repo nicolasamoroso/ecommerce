@@ -78,7 +78,6 @@ document.addEventListener("DOMContentLoaded", function(e){
 
     myDropzone.on('thumbnail', function(dataURL) {
         imgArray.push(dataURL);
-        console.log(imgArray);
     });
     
     myDropzone.on("maxfilesexceeded", function(file)
@@ -119,7 +118,7 @@ document.addEventListener("DOMContentLoaded", function(e){
         //Se realizan los controles necesarios,
         //En este caso se controla que se haya ingresado el nombre y categoría.
         //Consulto por el nombre del producto
-        if (productNameInput.value === "") {
+        if (productNameInput.value === "" || productNameInput.value === "⠀" || productNameInput.value.trim().length === 0) {
             productNameInput.classList.add('is-invalid');
             infoMissing = true;
         } 
@@ -155,7 +154,7 @@ document.addEventListener("DOMContentLoaded", function(e){
         }
 
         //Consulto por la descripción
-        if (productDesc.value === "") {
+        if (productDesc.value === "" || productDesc.value === "⠀" || productDesc.value.trim().length === 0) {
             productDesc.classList.add('is-invalid');
             infoMissing = true;
         } 
@@ -197,7 +196,9 @@ document.addEventListener("DOMContentLoaded", function(e){
                     msgToShow = resultObj.data.msg.toUpperCase();
                     document.getElementById("alertResult").classList.add('alert-primary');
                     agregarPublicacion()
-                    window.location.href = "categories.html";
+                    setTimeout(() => {
+                        window.location.href = "categories.html";
+                    }, 2000); 
                 }
                 else if (resultObj.status === 'error')
      {
@@ -221,9 +222,9 @@ function agregarPublicacion() {
     guardarlo en un json */
 
     const productCost = document.getElementById("productCostInput").value
-    const productName = document.getElementById("productName");
-    const productCategory = document.getElementById("productCategory");
-    const productDescription = document.getElementById("productDescription");
+    const productName = document.getElementById("productName").value;
+    const productCategory = document.getElementById("productCategory").value;
+    const productDescription = document.getElementById("productDescription").value;
     let productCurrency = document.getElementById("productCurrency").value;
     const productStock = document.getElementById("productCountInput").value;
     const photosArray = imgArray;
@@ -234,35 +235,99 @@ function agregarPublicacion() {
     else
         productCurrency = "USD";
 
+    const start = JSON.parse(localStorage.getItem("productStart"));
+    const end = JSON.parse(localStorage.getItem("productEnd"));
+    let idRandom = Math.floor(Math.random() * (200000 - 100000)) + 100000;
+    
+    // if (start || end) {
+    //     const concatSE = start.concat(end);
+    //     console.log(start)
+    //     console.log(end)
+    //     if (concatSE) {
+    //         const existProduct = concatSE.find(function({name, category, description, currency, cost}) {
+    //             return name === productName && 
+    //                     category === productCategory && 
+    //                     currency === productCurrency && 
+    //                     cost === productCost &&
+    //                     description === productDescription
+    //         })
+    //         if (existProduct) {
+    //             alert("Ya existe un producto con esos datos");
+    //             setTimeout(() => {
+    //                 window.location.href = "sell.html";
+    //             }, 2000); 
+    //             return;
+    //         }
+    //     }
+
+    // }
+
     const productAdded = {
-        name : productName.value,
-        description : productDescription.value,
-        cost : productCost,
+        id : idRandom,
+        name : productName,
+        description : productDescription,
+        cost : parseInt(productCost),
         currency : productCurrency,
-        soldCount : 0,
-        category : productCategory.value,
-        photos : photosArray,
-        stock : productStock.value,
-        percentage : comissionPercentage
+        category : productCategory,
+        image : photosArray,
+        stock : productStock,
+        percentage : comissionPercentage,
+        soldCount : 0
     }
 
-    if (localStorage.getItem("productAdded")) {
-        let productAddedArray = JSON.parse(localStorage.getItem("productAdded"));
-        if (productAddedArray) {
-            const a = productAddedArray.find(function({name, description, cost, currency, soldCount, category, stock}) {
-                return name === productAdded.name && description === productAdded.description && cost === productAdded.cost && 
-                currency === productAdded.currency && category === productAdded.category && stock === productAdded.stock;
-            })
-            if (!a) {
-                productAddedArray.push(productAdded)
-                localStorage.setItem("productAdded", JSON.stringify(productAddedArray));
-            }
+    /* if productAdded exists in start or end, splice it in both */
+    if (start) {
+        const existProduct = start.find(function({name, category, description, currency, cost}) {
+            return name === productName &&
+                    category === productCategory &&
+                    currency === productCurrency &&
+                    cost === parseInt(productCost) &&
+                    description === productDescription
+        })
+        if (existProduct) {
+            start.splice(start.indexOf(existProduct), 1);
+        } 
+    }
+    if (end) {
+        const existProduct = end.find(function({name, category, description, currency, cost}) {
+            return name === productName &&
+                    category === productCategory &&
+                    currency === productCurrency &&
+                    cost === parseInt(productCost) &&
+                    description === productDescription
+        })
+        if (existProduct) {
+            end.splice(end.indexOf(existProduct), 1);
+        }
+    }
+    
+    if (productAdded.percentage >= PREMIUM) {
+
+        if (start) {
+            start.unshift(productAdded);
+            localStorage.setItem("productStart", JSON.stringify(start));
+        }
+        else {
+            const startArray = [productAdded];
+            localStorage.setItem("productStart", JSON.stringify(startArray));
+        }
+
+        if (end) {
+            localStorage.setItem("productEnd", JSON.stringify(end));
         }
     }
     else {
-        const productAddedArray2 = [productAdded]
-        localStorage.setItem("productAdded", JSON.stringify(productAddedArray2));
+        if (end) {
+            end.push(productAdded);
+            localStorage.setItem("productEnd", JSON.stringify(end));
+        }
+        else {
+            const endArray = [productAdded];
+            localStorage.setItem("productEnd", JSON.stringify(endArray));
+        }
+
+        if (start) {
+            localStorage.setItem("productStart", JSON.stringify(start));
+        }
     }
-
 }
-
