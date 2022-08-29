@@ -183,11 +183,11 @@ function showProductsList(productsArray) {
                     <div class="row d-flex justify-content-center">
                         <div class="col-md-4" onclick="product_info(${product.id})">
                             <div class="card mb-4 shadow-sm custom-card cursor-active card_hover" id="autos">
-                                <img class="bd-placeholder-img card-img-top" src="${product.image}" alt="${product.description}">
+                                <img class="bd-placeholder-img card-img-top" src="${product.image[0].dataURL === undefined ? product.image : product.image[0].dataURL}" alt="${product.description}">
                                 <h4 class="m-3">${product.name} - ${product.currency} ${product.cost}</h4>
                                 <div class="card-body">
                                     <p class="card-text">${product.description}</p>
-                                    <small class="text-muted"> ${product.soldCount} vendidos</small> 
+                                    <small class="text-muted"> ${product.soldCount === undefined ? 0 : product.soldCount} vendidos</small> 
                                 </div>
                             </div>
                         </div>

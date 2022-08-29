@@ -54,14 +54,12 @@ document.addEventListener("DOMContentLoaded", async (e) => {
         if (end && end.length !== 0) {
             productInfoArray = end.find(product => product.id === parseInt(id));
             if (productInfoArray) {
+
                 if (localStorage.getItem(`product-${id}`)) {
-                    actualizar(JSON.parse(localStorage.getItem(`product-${id}`)))
-                    productInfoCommentsArray = JSON.parse(localStorage.getItem(`product-${id}`))
+                    showUserComments(JSON.parse(localStorage.getItem(`product-${id}`)))
                 }
                 
                 showProductInfo();
-
-                showProductInfoComments();
 
                 document.getElementById("addComment").classList.add("show")
                 showTextArea();
