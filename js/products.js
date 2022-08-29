@@ -19,13 +19,14 @@ document.addEventListener("DOMContentLoaded", async (e) => {
         productsArray = product.data.products;
 
         let start = JSON.parse(localStorage.getItem("productStart"));
-        let end = JSON.parse(localStorage.getItem("productEnd"));
-
-        start = start.filter(function (product) {
-            return product.category === cat_name;
-        });
+        let end = JSON.parse(localStorage.getItem("productEnd"));   
 
         if (start) {
+
+            start = start.filter(function (product) {
+                return product.category === cat_name;
+            });
+
             for (let i = 0; i < productsArray.length; i++) {
                 for (let j = 0; j < start.length; j++) {
                     if (productsArray[i].name === start[j].name) {
@@ -34,11 +35,13 @@ document.addEventListener("DOMContentLoaded", async (e) => {
                 }
             }
         }
-        end = end.filter(function (product) {
-            return product.category === cat_name;
-        });
 
         if (end) {
+
+            end = end.filter(function (product) {
+                return product.category === cat_name;
+            });
+            
             for (let i = 0; i < productsArray.length; i++) {
                 for (let j = 0; j < end.length; j++) {
                     if (productsArray[i].name === end[j].name) {
