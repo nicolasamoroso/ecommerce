@@ -133,15 +133,27 @@ document.addEventListener("DOMContentLoaded", function(e){
             const end = JSON.parse(localStorage.getItem("productEnd"));
 
             if (start || end) {
-                const concatCat = start.concat(end);
+                const concat = undefined
+                if (start && end) {
+                    concatCat = start.concat(end);
+                }
+                else if (start) {
+                    concatCat = start;
+                }
+                else if(start) {
+                    concatCat = end;
+                }
                 if (concatCat) {
                     const existe = concatCat.filter(element => element.percentage === GOLD);
                     for (let i = 0; i < currentCategoriesArray.length; i++) {
-                        for (let j = 0; j < existe.length; j++) {
-                            if (currentCategoriesArray[i].name === existe[j].category) {
-                                currentCategoriesArray[i].imgSrc = existe[j].image[0].dataURL
+                        if (existe) {
+                            for (let j = 0; j < existe.length; j++) {
+                                if (currentCategoriesArray[i].name === existe[j].category) {
+                                    currentCategoriesArray[i].imgSrc = existe[j].image[0].dataURL
+                                }
                             }
                         }
+                        
                         const pCount = concatCat.filter(element => element.category === currentCategoriesArray[i].name);
                         if (pCount.length > 0) {
                             currentCategoriesArray[i].productCount = pCount.length + parseInt(currentCategoriesArray[i].productCount);
