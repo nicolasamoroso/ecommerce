@@ -45,7 +45,7 @@ function comentarios(product) {
         <div class="comments">
             <div class="d-flex justify-content-between">
                 <h6>
-                    <img id="profile_pic_comments" class="rounded-circle" src="${product.profile_pic }">
+                    <img id="profile_pic_comments" class="rounded-circle" src="${product.profile_pic}">
                     ${product.user}
                 </h6>
                 <small>${changeDayFormat(new Date(product.dateTime))}</small>
@@ -258,4 +258,33 @@ function showTextArea() {
     <input id="btn-comment" class="mt-2 w-100" type="submit" onclick="addComment()"></input>
     `
     document.getElementById("comentario").innerHTML = htmlContentToAppend;
+}
+
+
+function showUserComments(array) {
+
+    /* if user change his name or pic, change it on comments localstorage */
+    const profileArray = JSON.parse(localStorage.getItem("profile"));
+    for (let i = 0; i < profileArray.length; i++) {
+        const element1 = profileArray[i];
+        let elem = array.find(function({email}) {
+            return email === element1.email;
+        })  
+        if (elem) {
+            elem.user = element1.name;
+            elem.profile_pic = element1.picture;
+        }
+    }
+
+    let htmlContentToAppend = "";
+
+    for (let i = 0; i < array.length; i++) {
+        const element = array[i];
+        htmlContentToAppend += comentarios(element, false);
+    }
+
+    document.getElementById('comments').innerHTML += htmlContentToAppend;
+
+    if (document.getElementById('se-el-primero-en-comentar'))
+        document.getElementById('se-el-primero-en-comentar').innerHTML = "Comentarios";
 }

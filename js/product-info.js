@@ -75,38 +75,33 @@ document.addEventListener("DOMContentLoaded", async (e) => {
         }
         
     }
+
     const product = await getJSONData(PRODUCT_INFO);
     if (product.status === "ok") {
         productInfoArray = product.data;
+        showProductInfo();
     }
-    
+
     const comments = await getJSONData(PRODUCT_INFO_COMMENTS);
     if (comments.status === "ok") {
-        
-        if (localStorage.getItem(`product-${id}`)) {
-            actualizar(JSON.parse(localStorage.getItem(`product-${id}`)))
-            productInfoCommentsArray = comments.data.concat(JSON.parse(localStorage.getItem(`product-${id}`)));
-        }
-        else productInfoCommentsArray = comments.data;   
+        productInfoCommentsArray = comments.data;
+        showProductInfoComments();
     }
 
     if (product.status === "ok") {
         productInfoRelatedArray = product.data.relatedProducts;
+        showProductRelated();
     }
 
-
-    showProductInfo();
-
-    showProductInfoComments();
-
-    document.getElementById("addComment").classList.add("show")
+    if (localStorage.getItem(`product-${id}`)) {
+        showUserComments(JSON.parse(localStorage.getItem(`product-${id}`)))
+    }
+    
     showTextArea();
 
     for (let i = 0; i < ratingStars.length; ++i) {
         ratingStars[i].className = "ratingStar fa fa-star checked";
     }
-
-    showProductRelated();
         
 
     
