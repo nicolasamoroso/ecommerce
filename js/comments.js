@@ -9,13 +9,11 @@ function showProductInfoComments() {
     /* Si hay comentarios entra */
     if(productInfoCommentsArray.length !== 0) {
 
+        if (document.getElementById('se-el-primero-en-comentar'))
+                document.getElementById('se-el-primero-en-comentar').innerHTML = "Comentarios";
+                
         /* Si no tiene imagen, le agrega una */
         if (!productInfoCommentsArray.profile_pic) {
-
-            htmlContentToAppend += `
-            <h1 class="text-center mt-5 mb-5">Comentarios</h1>
-            <hr>
-            `
 
             for (let i = 0; i < productInfoCommentsArray.length; i++) {
                 let product = productInfoCommentsArray[i];
@@ -30,10 +28,6 @@ function showProductInfoComments() {
             htmlContentToAppend += comentarios(product);
         }
     }
-    else htmlContentToAppend = `
-    <h1 class="text-center mt-5 mb-5" id="se-el-primero-en-comentar">Se el primero en agregar un comentario</h1>
-    <hr>
-    `
 
     document.getElementById('comments').innerHTML += htmlContentToAppend;
 }
@@ -169,6 +163,10 @@ function addComment() {
             profile_pic : img
         }
 
+
+        if (document.getElementById('se-el-primero-en-comentar'))
+                document.getElementById('se-el-primero-en-comentar').innerHTML = "Comentarios";
+
         if (localStorage.getItem(`product-${id}`)) {
             commentsArray = JSON.parse(localStorage.getItem(`product-${id}`));
 
@@ -200,9 +198,6 @@ function addComment() {
             let htmlContentToAppend = comentarios(comentario)
 
             document.getElementById('comments').innerHTML += htmlContentToAppend;
-
-            if (document.getElementById('se-el-primero-en-comentar'))
-                document.getElementById('se-el-primero-en-comentar').innerHTML = "Comentarios";
             
         }
     }
@@ -263,7 +258,6 @@ function showTextArea() {
 
 function showUserComments(array) {
 
-    /* if user change his name or pic, change it on comments localstorage */
     const profileArray = JSON.parse(localStorage.getItem("profile"));
     for (let i = 0; i < profileArray.length; i++) {
         const element1 = profileArray[i];

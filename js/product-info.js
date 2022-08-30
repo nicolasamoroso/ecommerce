@@ -32,6 +32,7 @@ document.addEventListener("DOMContentLoaded", async (e) => {
         if (start && start.length !== 0) {
             productInfoArray = start.find(product => product.id === parseInt(id));
             if (productInfoArray) {
+                
                 if (localStorage.getItem(`product-${id}`)) {
                     showUserComments(JSON.parse(localStorage.getItem(`product-${id}`)))
                 }
@@ -170,7 +171,7 @@ function showProductInfo() {
 
     htmlContentToAppend = `
     <div class="carousel-item active">
-        <img src="${images[0].dataURL === undefined ? images[0] : images[0].dataURL}" class="d-block w-100">
+        <img src="${images[0].dataURL === undefined ? images[0] : images[0].dataURL}" class="d-block w-100 mb-5">
     </div>
     `
     document.getElementById('c-inner').innerHTML = htmlContentToAppend;

@@ -276,12 +276,3 @@ searchBar.addEventListener("keyup", (e) => {
         document.getElementById("product-list-container").innerHTML = "";
     }
 })
-
-const GOLD = 0.13;
-const PREMIUM = 0.07;
-const ESTANDAR  = 0.03;
-let saveProductInfo = [];
-
-// function addProduct(nProduct, percentage, array, cat_name) {
-    
-// }
