@@ -78,6 +78,7 @@ function signIn(n_email, name = undefined, picture = undefined) {
 
   const profileArray2 = [profile];
   localStorage.setItem("profile", JSON.stringify(profileArray2));
+  localStorage.setItem("hayJSONid", false)
   redirect();
   return;
 }
