@@ -122,5 +122,62 @@ function signOut() {
       localStorage.setItem("profile", JSON.stringify(profileArray));
     }
   }
+  localStorage.setItem("hayJSONid", false)
+  localStorage.removeItem("productBuyArray")
   window.location.href = "index.html"
 } 
+
+
+
+function addProduct(info) {
+  let cartArray = JSON.parse(localStorage.getItem("productBuyArray"));
+
+  const img = info.images ? info.images[0] : info.image[0].dataURL ? info.image[0].dataURL : info.image;
+  
+  if (cartArray) {
+
+    let newElement = undefined;
+    let index = 0;
+    for (let i = 0; i < cartArray.length; i++) {
+      const element = cartArray[i];
+      if (element.id === info.id) {
+        newElement = element;
+        index = i;
+        break
+      }
+    }
+
+    const newProduct = {
+      id: info.id,
+      name: info.name,
+      unitCost: info.cost,
+      currency: info.currency,
+      image: img,
+      count: newElement === undefined ? 1 : newElement.count + 1,
+      stock: info.stock === undefined ? null : info.stock
+    }
+
+    if (newElement) {
+      cartArray.splice(index, 1);
+    }
+
+    cartArray.push(newProduct);
+    localStorage.setItem("productBuyArray", JSON.stringify(cartArray));
+  }
+  else {
+
+    const newProduct = {
+      id: info.id,
+      name: info.name,
+      unitCost: info.cost,
+      currency: info.currency,
+      image: img,
+      count: 1,
+      stock: info.stock === undefined ? null : info.stock
+    }
+
+    cartArray = [newProduct];
+    localStorage.setItem("productBuyArray", JSON.stringify(cartArray));
+  }
+  window.location.href = "cart.html";
+}

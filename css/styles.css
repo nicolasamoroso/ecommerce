@@ -396,3 +396,8 @@ main.adaptable {
     bottom: 35px;
   }
 }
+
+
+.input-width {
+  width: 70px;
+}

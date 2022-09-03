@@ -31,7 +31,7 @@ function updateTotalCosts(){
 //Función que se ejecuta una vez que se haya lanzado el evento de
 //que el documento se encuentra cargado, es decir, se encuentran todos los
 //elementos HTML presentes.
-document.addEventListener("DOMContentLoaded", function(e){
+document.addEventListener("DOMContentLoaded", (e) => {
     document.getElementById("productCountInput").addEventListener("change", function(){
         productCount = this.value;
         updateTotalCosts();
@@ -197,7 +197,8 @@ document.addEventListener("DOMContentLoaded", function(e){
                     document.getElementById("alertResult").classList.add('alert-primary');
                     agregarPublicacion()
                     setTimeout(() => {
-                        window.location.href = "categories.html";
+                        localStorage.setItem("product-info", productAdded.id);
+                        window.location.href = "product-info.html"
                     }, 2000); 
                 }
                 else if (resultObj.status === 'error')
@@ -216,6 +217,7 @@ document.addEventListener("DOMContentLoaded", function(e){
     localStorage.setItem("prev_location", JSON.stringify(location));
 });
 
+let productAdded = {};
 
 function agregarPublicacion() {
     /* Agarra todos los datos del producto a vender y los guarda en un json para
@@ -238,31 +240,8 @@ function agregarPublicacion() {
     const start = JSON.parse(localStorage.getItem("productStart"));
     const end = JSON.parse(localStorage.getItem("productEnd"));
     let idRandom = Math.floor(Math.random() * (200000 - 100000)) + 100000;
-    
-    // if (start || end) {
-    //     const concatSE = start.concat(end);
-    //     console.log(start)
-    //     console.log(end)
-    //     if (concatSE) {
-    //         const existProduct = concatSE.find(function({name, category, description, currency, cost}) {
-    //             return name === productName && 
-    //                     category === productCategory && 
-    //                     currency === productCurrency && 
-    //                     cost === productCost &&
-    //                     description === productDescription
-    //         })
-    //         if (existProduct) {
-    //             alert("Ya existe un producto con esos datos");
-    //             setTimeout(() => {
-    //                 window.location.href = "sell.html";
-    //             }, 2000); 
-    //             return;
-    //         }
-    //     }
 
-    // }
-
-    const productAdded = {
+    productAdded = {
         id : idRandom,
         name : productName,
         description : productDescription,
@@ -284,9 +263,8 @@ function agregarPublicacion() {
                     cost === parseInt(productCost) &&
                     description === productDescription
         })
-        if (existProduct) {
+        if (existProduct)
             start.splice(start.indexOf(existProduct), 1);
-        } 
     }
     if (end) {
         const existProduct = end.find(function({name, category, description, currency, cost}) {
@@ -296,9 +274,8 @@ function agregarPublicacion() {
                     cost === parseInt(productCost) &&
                     description === productDescription
         })
-        if (existProduct) {
+        if (existProduct)
             end.splice(end.indexOf(existProduct), 1);
-        }
     }
     
     if (productAdded.percentage >= PREMIUM) {
@@ -312,9 +289,8 @@ function agregarPublicacion() {
             localStorage.setItem("productStart", JSON.stringify(startArray));
         }
 
-        if (end) {
+        if (end)
             localStorage.setItem("productEnd", JSON.stringify(end));
-        }
     }
     else {
         if (end) {
@@ -326,8 +302,7 @@ function agregarPublicacion() {
             localStorage.setItem("productEnd", JSON.stringify(endArray));
         }
 
-        if (start) {
+        if (start)
             localStorage.setItem("productStart", JSON.stringify(start));
-        }
     }
 }
