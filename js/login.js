@@ -49,6 +49,7 @@ function signIn(n_email, name = undefined, picture = undefined) {
         return email === n_email
       }), 1, profile);
       localStorage.setItem("profile", JSON.stringify(profileArray));
+      localStorage.setItem("hayJSONid", false)
       redirect();
       return;
     }
@@ -70,6 +71,7 @@ function signIn(n_email, name = undefined, picture = undefined) {
 
     profileArray.push(profile);
     localStorage.setItem("profile", JSON.stringify(profileArray));
+    localStorage.setItem("hayJSONid", false)
     redirect();
     return;
   }

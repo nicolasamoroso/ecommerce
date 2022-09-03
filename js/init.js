@@ -122,7 +122,6 @@ function signOut() {
       localStorage.setItem("profile", JSON.stringify(profileArray));
     }
   }
-  localStorage.setItem("hayJSONid", false)
   localStorage.removeItem("productBuyArray")
   window.location.href = "index.html"
 } 
