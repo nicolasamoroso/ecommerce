@@ -9,9 +9,11 @@ let maxPrice = undefined;
     
 document.addEventListener("DOMContentLoaded", async (e) => {
     
-    //Llama a la función "getJSONData" que está en init.js.
-    //Si el status es "ok" llama a la función "showProductsList"
-    //con la array con todas las categorías y el nombre de cada una
+    /* 
+    Llama a la función "getJSONData" que está en init.js.
+    Si el status es "ok" llama a la función "showProductsList"
+    con la array con todas las categorías y el nombre de cada una 
+    */
     const product = await getJSONData(LIST_URL);
 
     if (product.status === "ok") {        
@@ -21,19 +23,22 @@ document.addEventListener("DOMContentLoaded", async (e) => {
         let start = JSON.parse(localStorage.getItem("productStart"));
         let end = JSON.parse(localStorage.getItem("productEnd"));   
 
+        /*
+        Si existe start o end, los concatena.
+        "start" y "end" son almacenamientos locales que guardar los productos que se "vendieron" en "Vender (sell.js)"
+        */
         if (start) {
 
             start = start.filter(function (product) {
                 return product.category === cat_name;
             });
 
-            for (let i = 0; i < productsArray.length; i++) {
-                for (let j = 0; j < start.length; j++) {
-                    if (productsArray[i].name === start[j].name) {
-                        productsArray.splice(i, 1);
-                    }
-                }
-            }
+            start.forEach(element => {
+                let index = productsArray.findIndex(product => product.name == element.name);
+                if (index !== -1) 
+                    productsArray.splice(index, 1);
+                
+            });
         }
 
         if (end) {
@@ -42,24 +47,17 @@ document.addEventListener("DOMContentLoaded", async (e) => {
                 return product.category === cat_name;
             });
             
-            for (let i = 0; i < productsArray.length; i++) {
-                for (let j = 0; j < end.length; j++) {
-                    if (productsArray[i].name === end[j].name) {
-                        productsArray.splice(i, 1);
-                    }
-                }
-            }
+            end.forEach(element => {
+                let index = productsArray.findIndex(product => product.name == element.name);
+                if (index !== -1) 
+                    productsArray.splice(index, 1);
+                
+            });
         }
-
-
-        if (start && end) {
-            productsArray = start.concat(productsArray.concat(end));
-        }
-        else if (start) {
-            productsArray = start.concat(productsArray);
-        }
-        else if (end) {
-            productsArray = productsArray.concat(end);
+        if (start || end) {
+            let array = start.concat(productsArray.concat(end))
+            array = array.filter((item) => item !== null);
+            productsArray = array;
         }
 
         showProductsList(productsArray);
@@ -74,8 +72,6 @@ document.addEventListener("DOMContentLoaded", async (e) => {
 
     document.getElementById("sortByPriceDown").addEventListener("click", () => {
         sortAndShowProducts(ORDER_BY_PROD_PRICE_MAX);
-
-
 
         changeColor("count-down", "desc", "count-up");
     });
@@ -97,8 +93,11 @@ document.addEventListener("DOMContentLoaded", async (e) => {
     });
 
     document.getElementById("rangeFilterPrice").addEventListener("click", () => {
-        //Obtengo el mínimo y máximo de los intervalos para filtrar por el precio
-        //de productos.
+
+        /* 
+        Obtengo el mínimo y máximo de los intervalos para filtrar por el precio
+        de productos. 
+        */
         minPrice = document.getElementById("rangeFilterPriceMin").value;
         maxPrice = document.getElementById("rangeFilterPriceMax").value;
 
@@ -153,22 +152,25 @@ function showProductsList(productsArray) {
                     ((maxPrice == undefined) || (maxPrice != undefined && parseInt(product.cost) <= maxPrice))){
                     
                     htmlContentToAppend += ` 
-                    <div class="list-group-item list-group-item-action cursor-active" onclick="product_info(${product.id})">
-                        <div class="row">
-                            <div class="col-3">
-                                <img src="${product.image[0].dataURL === undefined ? product.image : product.image[0].dataURL}" alt="${product.description}" class="p-0 img-thumbnail">
-                            </div>
-                            <div class="col">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <div class="mb-1">
-                                        <h4> ${product.name} - ${product.currency} ${product.cost} </h4> 
-                                        <p mb-1> ${product.description} </p> 
+                    <div class="position-relative">
+                        <button class="btn btn-primary position-absolute btnAddCart" onclick="addProduct(productsArray[${i}])">Agregar al carrito</button>
+                        <div class="list-group-item list-group-item-action cursor-active position-relative" onclick="product_info(${product.id})">
+                            <div class="row">
+                                <div class="col-3">
+                                    <img src="${product.image[0].dataURL === undefined ? product.image : product.image[0].dataURL}" alt="${product.description}" class="p-0 img-thumbnail">
+                                </div>
+                                <div class="col">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <div class="mb-1">
+                                            <h4> ${product.name} - ${product.currency} ${product.cost} </h4> 
+                                            <p class="mb-1"> ${product.description} </p> 
+                                        </div>
+                                        <small class="text-muted"> ${product.soldCount === undefined ? 0 : product.soldCount} vendidos</small> 
                                     </div>
-                                    <small class="text-muted"> ${product.soldCount === undefined ? 0 : product.soldCount} vendidos</small> 
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        </div>          
+                    </div>    
                     `
                 }
             }
@@ -180,17 +182,20 @@ function showProductsList(productsArray) {
                     ((maxPrice == undefined) || (maxPrice != undefined && parseInt(product.soldCount) <= maxPrice))){
                     
                     htmlContentToAppend += ` 
-                    <div class="row d-flex justify-content-center">
-                        <div class="col-md-4" onclick="product_info(${product.id})">
-                            <div class="card mb-4 shadow-sm custom-card cursor-active card_hover" id="autos">
-                                <img class="bd-placeholder-img card-img-top" src="${product.image[0].dataURL === undefined ? product.image : product.image[0].dataURL}" alt="${product.description}">
-                                <h4 class="m-3">${product.name} - ${product.currency} ${product.cost}</h4>
-                                <div class="card-body">
-                                    <p class="card-text">${product.description}</p>
-                                    <small class="text-muted"> ${product.soldCount === undefined ? 0 : product.soldCount} vendidos</small> 
+                    <div class="position-relative">
+                        <div class="row d-flex justify-content-center">
+                            <div class="col-md-4" onclick="product_info(${product.id})">
+                                <div class="card mb-4 shadow-sm custom-card cursor-active card_hover" id="autos">
+                                    <img class="bd-placeholder-img card-img-top" src="${product.image[0].dataURL === undefined ? product.image : product.image[0].dataURL}" alt="${product.description}">
+                                    <h4 class="m-3">${product.name} - ${product.currency} ${product.cost}</h4>
+                                    <div class="card-body">
+                                        <p class="card-text">${product.description}</p>
+                                        <small class="text-muted"> ${product.soldCount === undefined ? 0 : product.soldCount} vendidos</small> 
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        <button class="btn btn-primary position-absolute btnAddCart" onclick="addProduct(productsArray[${i}])">Agregar al carrito</button>
                     </div>
                     `
                 }
@@ -207,10 +212,6 @@ function product_info(id) {
     localStorage.setItem("product-info", id);
     window.location.href = "product-info.html"    
 }
-
-// function product_info(id) {
-//     window.location.href = "product-info.html?id=" + id;
-// }
 
 function sortProducts(criteria, array){
     let result = [];
@@ -251,6 +252,7 @@ function sortProducts(criteria, array){
 function sortAndShowProducts(sort, productArray){
 
     currentSort = sort;
+    
     if(productArray != undefined)
         productsArray = productArray;
     productsArray = sortProducts(currentSort, productsArray);
@@ -258,9 +260,11 @@ function sortAndShowProducts(sort, productArray){
     showProductsList(productsArray);
 }
 
-const searchBar = document.getElementById("searchBar")
 
-searchBar.addEventListener("keyup", (e) => {
+//-------------------------------Desafiate Entrega 2-------------------------------//
+
+document.getElementById("searchBar").addEventListener("keyup", (e) => {
+
     const searchString = e.target.value;
     const filteredProductsArray = productsArray.filter(product => {
         return product.name.toLowerCase().includes(searchString.toLowerCase()) || 
@@ -268,11 +272,29 @@ searchBar.addEventListener("keyup", (e) => {
                product.currency.toLowerCase().includes(searchString.toLowerCase()) ||
                product.cost.toString().includes(searchString) ;
     })
-    showProductsList(filteredProductsArray);
+
     if (filteredProductsArray.length === 0) {
+
         document.getElementById("subtitulo").innerHTML = `
-        <h4 class="mb-4 text-muted">No hay productos que coincidan con tu búsqueda para la categoría <span class="text-dark">${cat_name}</span></h4>
+        <h4 class="mb-4 text-muted">
+            No hay productos que coincidan con tu búsqueda para la categoría 
+            <span class="text-dark">${cat_name}</span>
+        </h4>
         `
         document.getElementById("product-list-container").innerHTML = "";
     }
+
+    showProductsList(filteredProductsArray);
+    
 })
+
+
+//----------------------------Fin Desafiate Entrega 2----------------------------//
+
+
+function X() {
+    var searchString = document.getElementById("searchBar").value;
+    if (searchString.length === 0) {
+        showProductsList(productsArray);
+    }
+}

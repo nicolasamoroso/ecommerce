@@ -131,36 +131,22 @@ document.addEventListener("DOMContentLoaded", function(e){
 
             const start = JSON.parse(localStorage.getItem("productStart"));
             const end = JSON.parse(localStorage.getItem("productEnd"));
-
             if (start || end) {
-                const concat = undefined
-                if (start && end) {
-                    concatCat = start.concat(end);
-                }
-                else if (start) {
-                    concatCat = start;
-                }
-                else if(start) {
-                    concatCat = end;
-                }
+                const concatCat = start.concat(end).filter((item) => item !== null);
                 if (concatCat) {
-                    const existe = concatCat.filter(element => element.percentage === GOLD);
-                    for (let i = 0; i < currentCategoriesArray.length; i++) {
-                        if (existe) {
-                            for (let j = 0; j < existe.length; j++) {
-                                if (currentCategoriesArray[i].name === existe[j].category) {
-                                    currentCategoriesArray[i].imgSrc = existe[j].image[0].dataURL
-                                }
-                            }
-                        }
-                        
-                        const pCount = concatCat.filter(element => element.category === currentCategoriesArray[i].name);
-                        if (pCount.length > 0) {
-                            currentCategoriesArray[i].productCount = pCount.length + parseInt(currentCategoriesArray[i].productCount);
-                        }
-                    }
+                    currentCategoriesArray.forEach((cat) => {
+                        const existe = concatCat.filter(({category, percentage}) =>
+                            category === cat.name &&
+                            percentage === GOLD);
+                        if (existe && existe.length > 0) 
+                            cat.imgSrc = existe[0].image[0].dataURL
+                        const pCount = concatCat.filter(element => element.category === cat.name);
+                        if (pCount.length > 0) 
+                            cat.productCount = pCount.length + parseInt(cat.productCount);
+                    });
                 }
             }
+            
             showCategoriesList(currentCategoriesArray)
             //sortAndShowCategories(ORDER_ASC_BY_NAME, resultObj.data);
         }
@@ -242,9 +228,17 @@ searchBar.addEventListener("keyup", (e) => {
     })
     showCategoriesList(filteredCategoriesArray);
     if (filteredCategoriesArray.length === 0) {
-        document.getElementById("subtitulo").innerHTML = `
+        document.getElementById("subtitulo-category").innerHTML = `
         <p class="lead">No hay categorías que coincidan con tu búsqueda.</p>
         `
         document.getElementById("cat-list-container").innerHTML = "";
     }
 })
+
+
+function X() {
+    var searchString = document.getElementById("searchBar").value;
+    if (searchString.length === 0) {
+        showCategoriesList(currentCategoriesArray);
+    }
+}
