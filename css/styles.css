@@ -363,7 +363,7 @@ main.adaptable {
   background-color: rgb(143, 143, 143);
 }
 
-.aaaaaaa {
+/* .aaaaaaa {
   margin-left: 25%
 }
 
@@ -372,7 +372,7 @@ main.adaptable {
   .aaasdf {
     padding-right: 100px;
   }
-}
+} */
 
 
 .fa.fa-trash:hover {
@@ -396,7 +396,6 @@ main.adaptable {
     bottom: 35px;
   }
 }
-
 
 .input-width {
   width: 70px;

@@ -28,6 +28,12 @@ document.addEventListener("DOMContentLoaded", async (e) => {
     const start = JSON.parse(localStorage.getItem("productStart"));
     const end = JSON.parse(localStorage.getItem("productEnd"));
 
+
+    document.getElementById("comments").innerHTML = `
+    <h1 class="text-center mt-5 mb-5" id="se-el-primero-en-comentar">Se el primero en agregar un comentario</h1>
+    <hr>
+    `
+
     if (start || end) {
         if (start && start.length !== 0) {
             productInfoArray = start.find(product => product.id === parseInt(id));
@@ -77,11 +83,6 @@ document.addEventListener("DOMContentLoaded", async (e) => {
         productInfoArray = product.data;
         showProductInfo();
     }
-
-    document.getElementById("comments").innerHTML = `
-    <h1 class="text-center mt-5 mb-5" id="se-el-primero-en-comentar">Se el primero en agregar un comentario</h1>
-    <hr>
-    `
 
     const comments = await getJSONData(PRODUCT_INFO_COMMENTS);
     if (comments.status === "ok") {
