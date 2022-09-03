@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", async (e) => {
 
     const start = JSON.parse(localStorage.getItem("productStart"));
     const end = JSON.parse(localStorage.getItem("productEnd"));
-    
+
     if (start || end) {
         if (start && start.length !== 0) {
             productInfoArray = start.find(product => product.id === parseInt(id));
@@ -77,6 +77,11 @@ document.addEventListener("DOMContentLoaded", async (e) => {
         productInfoArray = product.data;
         showProductInfo();
     }
+
+    document.getElementById("comments").innerHTML = `
+    <h1 class="text-center mt-5 mb-5" id="se-el-primero-en-comentar">Se el primero en agregar un comentario</h1>
+    <hr>
+    `
 
     const comments = await getJSONData(PRODUCT_INFO_COMMENTS);
     if (comments.status === "ok") {
@@ -130,6 +135,12 @@ function showProductInfo() {
 
     <div id="carouselDark" class="carousel carousel-dark slide" data-bs-ride="carousel">   
     </div>
+    
+    <div class="d-flex w-100 justify-content-center">
+        <div class="mb-1 mt-4">
+            <button class="btn btn-primary" onclick="addProduct(productInfoArray)">Agregar al carrito</button>
+        </div>
+    </div>
     `
 
 //  #-----------------------------Carrusel de imágenes-----------------------------#
@@ -171,14 +182,14 @@ function showProductInfo() {
 
     htmlContentToAppend = `
     <div class="carousel-item active">
-        <img src="${images[0].dataURL === undefined ? images[0] : images[0].dataURL}" class="d-block w-100 mb-5">
+        <img src="${images[0].dataURL === undefined ? images[0] : images[0].dataURL}" class="d-block w-100">
     </div>
     `
     document.getElementById('c-inner').innerHTML = htmlContentToAppend;
 
     //Agrega cada imagen que se encuentre para esa id en el JSON
     for (let i = 1; i < images.length; i++) {
-        let img = images[i] !== undefined ? images[i] : images[i].dataURL;
+        let img = images[i].dataURL === undefined ? images[i] : images[i].dataURL;
         htmlContentToAppend += `
         <div class="carousel-item">
             <img src="${img}" class="d-block w-100">

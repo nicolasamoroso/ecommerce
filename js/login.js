@@ -24,12 +24,16 @@ function decodeJwtResponse (token) {
 
 
 function signIn(n_email, name = undefined, picture = undefined) {
+
   const profileArray = JSON.parse(localStorage.getItem("profile"));
+
   if (profileArray) {
     const catchProfile = profileArray.find(function({email}) {
       return email === n_email
     })
+
     if (catchProfile) {
+
       const profile = {
         name: catchProfile.name,
         email: catchProfile.email,
@@ -40,6 +44,7 @@ function signIn(n_email, name = undefined, picture = undefined) {
         name_lastname: catchProfile.name_lastnme,
         logged : true
       }
+
       profileArray.splice(profileArray.findIndex(function({email}) {
         return email === n_email
       }), 1, profile);
@@ -48,23 +53,27 @@ function signIn(n_email, name = undefined, picture = undefined) {
       return;
     }
   }
+
   name = name ? name : n_email.split("@")[0];
   const profile = {
     name,
     email: n_email,
     picture: picture ? picture : "img/img_perfil.png",
-    phone: "Debe completar este campo",
-    address: "Debe completar este campo",
-    age: "Debe completar este campo",
-    name_lastname: "Debe completar este campo",
+    phone: null,
+    address: null,
+    age: null,
+    name_lastname: null,
     logged : true
   }
+
   if (profileArray) {
+
     profileArray.push(profile);
     localStorage.setItem("profile", JSON.stringify(profileArray));
     redirect();
     return;
   }
+
   const profileArray2 = [profile];
   localStorage.setItem("profile", JSON.stringify(profileArray2));
   redirect();
@@ -108,9 +117,11 @@ document.getElementById("form").addEventListener("submit", function (event) {
   }
 });
 
-//Alerta de contraseña menor a 8 carácteres
-//agrega show del id "alert-danger"
-//hace timeout a la alerta después de 3 segundos
+/* 
+Alerta de contraseña menor a 8 carácteres
+agrega show del id "alert-danger"
+hace timeout a la alerta después de 3 segundos 
+*/
 function showAlertError() {
   document.getElementById("alert-danger").classList.add("show");
   setTimeout(removeAlertError, 3000);
