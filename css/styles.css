@@ -278,7 +278,7 @@ textarea {
 }
 
 
-input::-webkit-outer-spin-button,
+/* input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
@@ -286,7 +286,7 @@ input::-webkit-inner-spin-button {
 
 input[type=number] {
   -moz-appearance: textfield;
-}
+} */
 
 /* circle image */
 .img-circle {
@@ -371,5 +371,28 @@ main.adaptable {
 @media (max-width: 700px) {
   .aaasdf {
     padding-right: 100px;
+  }
+}
+
+
+.fa.fa-trash:hover {
+  color: #ff0000;
+  cursor: pointer;
+}
+
+.container.mw1000 {
+  max-width: 1000px;
+}
+
+.btnAddCart {
+  z-index: 100;
+  right: 20px;
+  bottom: 20px;
+}
+
+@media (max-width: 760px) {
+  .btnAddCart {
+    right: 10px;
+    bottom: 35px;
   }
 }
