@@ -3,7 +3,7 @@ const profile = JSON.parse(localStorage.getItem("profile")).find(function({logge
     return logged === true;
 })
 
-document.addEventListener("DOMContentLoaded", function (e) {
+document.addEventListener("DOMContentLoaded", async (e) => {
 
     // console.log(profile)
     pic();
@@ -20,11 +20,11 @@ document.addEventListener("DOMContentLoaded", function (e) {
 
 
     // Input File
-    const inputImage = document.querySelector('#image');
+    const inputImage = document.getElementById('image');
     // Nodo donde estará el editor
-    const editor = document.querySelector('#editor');
+    const editor = document.getElementById('editor');
     // El canvas donde se mostrará la previa
-    const miCanvas = document.querySelector('#preview');
+    const miCanvas = document.getElementById('preview');
     // Contexto del canvas
     const contexto = miCanvas.getContext('2d');
     // Ruta de la imagen seleccionada
@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
         contexto.clearRect(0, 0, miCanvas.width, miCanvas.height);
     
         // Envia la imagen al editor para su recorte
-        document.querySelector('#croppr').setAttribute('src', urlImage);
+        document.getElementById('croppr').setAttribute('src', urlImage);
     
         // Crea el editor
         new Croppr('#croppr', {
@@ -159,19 +159,19 @@ function info() {
         <hr>
 
         <p class="mb-0 col-sm-5"><strong>Nombre y Apellido</strong></p>
-        <p class="col-sm-7" id="nombre-apellido">${profile.name_lastname}</p>
+        <p class="col-sm-7" id="nombre-apellido">${profile.name_lastname ? profile.name_lastname : "Debe completar este campo"}</p>
         <hr>
 
         <p class="mb-0 col-sm-5"><strong>Celular</strong></p>
-        <p class="col-sm-7" id="celular">${profile.phone}</p>
+        <p class="col-sm-7" id="celular">${profile.phone ? profile.phone : "Debe completar este campo"}</p>
         <hr>
 
         <p class="mb-0 col-sm-5"><strong>Dirección</strong></p>
-        <p class="col-sm-7" id="direccion">${profile.address}</p>
+        <p class="col-sm-7" id="direccion">${profile.address ? profile.address : "Debe completar este campo"}</p>
         <hr>
 
         <p class="mb-0 col-sm-5"><strong>Edad</strong></p>
-        <p class="col-sm-7" id="edad">${profile.age}</p>
+        <p class="col-sm-7" id="edad">${profile.age ? profile.age : "Debe completar este campo"}</p>
         <hr>
 
         <button type="button" onclick="modifyInfo()" id="modificarD" class="btn btn-dark">Modificar mis datos</button>
@@ -203,7 +203,7 @@ function modifyInfo() {
 
         <p class="mb-0 col-sm-5"><strong>Nombre y Apellido</strong></p>
         <div class="form-group col-sm-7">
-            <input type="text" class="form-control form-focus" id="nombre-apellido" placeholder="Nombre y Apellido">
+            <input type="text" class="form-control form-focus" id="nombre-apellido" placeholder="Jane Doe">
         </div>
         <hr>
 
@@ -215,7 +215,7 @@ function modifyInfo() {
 
         <p class="mb-0 col-sm-5"><strong>Dirección</strong></p>
         <div class="form-group col-sm-7">
-            <input type="text" class="form-control form-focus " id="direccion" placeholder="Ciudad, País">
+            <input type="text" class="form-control form-focus " id="direccion" placeholder="City, Country">
         </div>
         <hr>
 
@@ -234,9 +234,9 @@ function modifyInfo() {
     document.getElementById("info-perfil").innerHTML = htmlContentToAppend;
 
     document.getElementById("nombre").value = profile.name;
-    document.getElementById("nombre-apellido").value = profile.name_lastname === "Debe completar este campo" ? "" : profile.name_lastname;
+    document.getElementById("nombre-apellido").value = profile.name_lastname ? profile.name_lastname : "";
     document.getElementById("celular").value = parseInt(profile.phone);
-    document.getElementById("direccion").value = profile.address === "Debe completar este campo" ? "" : profile.address;
+    document.getElementById("direccion").value = profile.address ? profile.address : "";
     document.getElementById("edad").value = parseInt(profile.age);
 
 }
@@ -317,22 +317,3 @@ document.addEventListener("keypress", (event) => {
     saveInfo();
   }
 });
-
-
-// function editImg() {
-//   let inputFile = document.getElementById("imagen");
-//   inputFile.addEventListener("change", (e) => {
-//     let file = e.target.files[0];
-//     let reader = new FileReader();
-//     reader.onload = (e) => {
-//         let img = document.getElementById("image");
-//         if (e.target.result.includes("data:image/")) {
-//             img.src = e.target.result;
-//         }
-//         else {
-//             alert("El archivo no es una imagen");
-//         }
-//     }
-//     reader.readAsDataURL(file);
-//   }, false);
-// }
