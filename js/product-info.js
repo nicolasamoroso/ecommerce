@@ -12,7 +12,7 @@
 //cada producto diferente
 function product_info(id) {
     localStorage.setItem("product-info", id);
-    window.location.href = "product-info.html?related?id=" + id;
+    window.location.href = "product-info.html";
 }
 
 //-----------------------------------------------------------------------------------//
@@ -87,6 +87,12 @@ document.addEventListener("DOMContentLoaded", async (e) => {
     const comments = await getJSONData(PRODUCT_INFO_COMMENTS);
     if (comments.status === "ok") {
         productInfoCommentsArray = comments.data;
+        productInfoCommentsArray.sort((a, b) => {
+            let dateA = new Date(a.dateTime);
+            let dateB = new Date(b.dateTime);
+            return dateA - dateB
+        })
+
         showProductInfoComments();
     }
 
@@ -139,7 +145,7 @@ function showProductInfo() {
     
     <div class="d-flex w-100 justify-content-center">
         <div class="mb-1 mt-4">
-            <button class="btn btn-primary" onclick="addProduct(productInfoArray)">Agregar al carrito</button>
+            <button class="btn btn-primary" onclick="addProduct(productInfoArray)">Comprar</button>
         </div>
     </div>
     `
@@ -223,7 +229,7 @@ function showProductRelated () {
     for (let i = 0; i < productInfoRelatedArray.length; i++) {
         let p_related = productInfoRelatedArray[i];
         htmlContentToAppend += `
-        <div class="col-md-4" onclick="product_info(${p_related.id})">
+        <div class="col-md-4 scale" onclick="product_info(${p_related.id})">
             <div class="card mb-4 shadow-sm custom-card cursor-active card_hover">
                 <img class="bd-placeholder-img card-img-top" src="${p_related.image}">
                 <h3 class="m-3 text-center">${p_related.name}</h3>
