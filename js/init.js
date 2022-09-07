@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function(){
     <img src="${perfil.picture}" alt="user" class="img-fluid rounded-circle imagen-nav" width="30">
     <span class="ml-2">${perfil.name}</span>
   </a>
-  <div class="dropdown-menu dropdown-menu-dark aaaaaaa" aria-labelledby="navbarDropdown">
+  <div class="dropdown-menu dropdown-menu-dark m-left-dropdown" aria-labelledby="navbarDropdown">
     <a class="dropdown-item" href="my-profile.html">Mi Perfil</a>
     <a class="dropdown-item" href="cart.html">Ver Carrito</a>
     <div class="dropdown-divider"></div>
