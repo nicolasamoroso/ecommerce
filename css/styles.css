@@ -363,11 +363,13 @@ main.adaptable {
   background-color: rgb(143, 143, 143);
 }
 
-/* .aaaaaaa {
-  margin-left: 25%
+@media (min-width: 991px) {
+  .m-left-dropdown {
+    margin-left: 25%
+  }
 }
 
-
+/* 
 @media (max-width: 700px) {
   .aaasdf {
     padding-right: 100px;
@@ -386,8 +388,9 @@ main.adaptable {
 
 .btnAddCart {
   z-index: 100;
-  right: 20px;
-  bottom: 20px;
+  right: 10px;
+  bottom: 10px;
+  padding: 5px;
 }
 
 @media (max-width: 760px) {
@@ -399,4 +402,13 @@ main.adaptable {
 
 .input-width {
   width: 70px;
+}
+
+.p-soldcount{ 
+  margin-left: 30px
+}
+
+.scale:hover {
+  transform: scale(1.1);
+  transition: all 0.5s ease-in-out;
 }

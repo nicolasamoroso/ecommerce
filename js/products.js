@@ -166,7 +166,7 @@ function showProductsList(productsArray) {
                                             <h4> ${product.name} - ${product.currency} ${product.cost} </h4> 
                                             <p class="mb-1"> ${product.description} </p> 
                                         </div>
-                                        <small class="text-muted aaaaa"> ${product.soldCount === undefined ? 0 : product.soldCount} vendidos</small> 
+                                        <small class="text-muted p-soldcount"> ${product.soldCount === undefined ? 0 : product.soldCount} vendidos</small> 
                                     </div>
                                 </div>
                             </div>
