@@ -7,6 +7,7 @@ let currentSortCriteria = undefined;
 let minCount = undefined;
 let maxCount = undefined;
 let ya_lo_hice = false;
+let toggle = true;
 
 function changeColor(a, b, c) {
     document.getElementById(a).classList.remove("bg-sort");
@@ -78,32 +79,57 @@ function showCategoriesList(currentCategoriesArray){
         document.getElementById("subtitulo-category").innerHTML = `<p class="lead">Verás aquí todas las categorías del sitio.</p>`;
         
         let htmlContentToAppend = "";
-        for(let i = 0; i < currentCategoriesArray.length; i++){
-            let category = currentCategoriesArray[i];
-
-            if (((minCount == undefined) || (minCount != undefined && parseInt(category.productCount) >= minCount)) &&
-                ((maxCount == undefined) || (maxCount != undefined && parseInt(category.productCount) <= maxCount))){
-
-                htmlContentToAppend += `
-                <div onclick="setCatID(${category.id})" class="list-group-item list-group-item-action cursor-active">
-                    <div class="row">
-                        <div class="col-3">
-                            <img src="${category.imgSrc}" alt="${category.description}" class="p-0 img-thumbnail">
-                        </div>
-                        <div class="col">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h4 class="mb-1">${category.name}</h4>
-                                <small class="text-muted">${category.productCount} artículos</small>
+        if (toggle === true && !media.matches) {
+            for(let i = 0; i < currentCategoriesArray.length; i++){
+                let category = currentCategoriesArray[i];
+    
+                if (((minCount == undefined) || (minCount != undefined && parseInt(category.productCount) >= minCount)) &&
+                    ((maxCount == undefined) || (maxCount != undefined && parseInt(category.productCount) <= maxCount))){
+    
+                    htmlContentToAppend += `
+                    <div onclick="setCatID(${category.id})" class="list-group-item list-group-item-action cursor-active">
+                        <div class="row">
+                            <div class="col-3">
+                                <img src="${category.imgSrc}" alt="${category.description}" class="p-0 img-thumbnail">
                             </div>
-                            <p class="mb-1">${category.description}</p>
+                            <div class="col">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h4 class="mb-1">${category.name}</h4>
+                                    <small class="text-muted">${category.productCount} artículos</small>
+                                </div>
+                                <p class="mb-1">${category.description}</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                `
+                    `
+                }
+    
             }
-
-            document.getElementById("cat-list-container").innerHTML = htmlContentToAppend;
         }
+        else {
+            for(let i = 0; i < currentCategoriesArray.length; i++){
+                let category = currentCategoriesArray[i];
+    
+                if (((minCount == undefined) || (minCount != undefined && parseInt(category.productCount) >= minCount)) &&
+                    ((maxCount == undefined) || (maxCount != undefined && parseInt(category.productCount) <= maxCount))){
+    
+                    htmlContentToAppend += `
+                    <div class="col-md-3" onclick="setCatID(${category.id})">
+                        <div class="card mb-4 shadow-sm custom-card cursor-active card_hover" id="autos">
+                            <img class="bd-placeholder-img card-img-top" src="${category.imgSrc}" alt="${category.description}">
+                            <h4 class="m-3">${category.name}</h4>
+                            <div class="card-body">
+                                <p class="card-text">${category.description}</p>
+                                <small class="text-muted">${category.productCount}vendidos</small> 
+                            </div>
+                        </div>
+                    </div> 
+                    `
+                }
+    
+            }
+        }
+        document.getElementById("cat-list-container").innerHTML = htmlContentToAppend;
     }
 }
 
@@ -242,3 +268,14 @@ function X() {
         showCategoriesList(currentCategoriesArray);
     }
 }
+
+window.addEventListener("resize" , function() {
+    if (this.window.innerWidth <= 775 && toggle === false) {
+        showCategoriesList(currentCategoriesArray);
+        toggle = true;
+    }
+    else if (this.window.innerWidth > 775 && toggle === true) {
+        showCategoriesList(currentCategoriesArray)
+        toggle = false;
+    }
+})

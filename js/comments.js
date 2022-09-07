@@ -1,3 +1,5 @@
+let toggle = true;
+
 //  #-----------------------------Comentarios-----------------------------#
 
 /* Muestra los comentarios del producto "id".
@@ -34,7 +36,7 @@ function showProductInfoComments() {
 
 function comentarios(product) {
     let htmlContentToAppend = "";
-    if (!media2.matches) {
+    if (toggle === true && !media2.matches) {
         htmlContentToAppend = `
         <div class="comments">
             <div class="d-flex justify-content-between">
@@ -282,3 +284,28 @@ function showUserComments(array) {
     if (document.getElementById('se-el-primero-en-comentar'))
         document.getElementById('se-el-primero-en-comentar').innerHTML = "Comentarios";
 }
+
+window.addEventListener("resize" , function(e) {
+    if (this.window.innerWidth <= 990 && toggle === false) {
+        document.getElementById("comments").innerHTML = `
+        <h1 class="text-center mt-5 mb-5" id="se-el-primero-en-comentar">Se el primero en agregar un comentario</h1>
+        <hr>
+        `
+        showProductInfoComments()
+        if (localStorage.getItem(`product-${id}`)) {
+            showUserComments(JSON.parse(localStorage.getItem(`product-${id}`)))
+        }
+        toggle = true;
+    }
+    else if (this.window.innerWidth > 990 && toggle === true) {
+        document.getElementById("comments").innerHTML = `
+        <h1 class="text-center mt-5 mb-5" id="se-el-primero-en-comentar">Se el primero en agregar un comentario</h1>
+        <hr>
+        `
+        showProductInfoComments()
+        if (localStorage.getItem(`product-${id}`)) {
+            showUserComments(JSON.parse(localStorage.getItem(`product-${id}`)))
+        }
+        toggle = false;
+    }
+})

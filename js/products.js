@@ -6,6 +6,7 @@ const ORDER_DESC_BY_REL = "Rel.";
 let currentSort = undefined;
 let minPrice = undefined;
 let maxPrice = undefined;
+let toggle = true;
     
 document.addEventListener("DOMContentLoaded", async (e) => {
     
@@ -145,15 +146,15 @@ function showProductsList(productsArray) {
     }
     else {
         document.getElementById("subtitulo").innerHTML = `<h4 class="mb-4 text-muted">Verás aquí todos los productos de la categoría <span class="text-dark">${cat_name}</span></h4>`;
-        if (!media.matches) {
+        if (toggle === true && !media.matches) {
             for(let i = 0; i < productsArray.length; i++){ 
                 let product = productsArray[i];
                 if (((minPrice == undefined) || (minPrice != undefined && parseInt(product.cost) >= minPrice)) &&
                     ((maxPrice == undefined) || (maxPrice != undefined && parseInt(product.cost) <= maxPrice))){
-                    
+                        
                     htmlContentToAppend += ` 
                     <div class="position-relative">
-                        <button class="btn btn-primary position-absolute btnAddCart" onclick="addProduct(productsArray[${i}])">Agregar al carrito</button>
+                        <button class="btn btn-primary position-absolute btnAddCart" onclick="addProduct(productsArray[${i}])">Comprar</button>
                         <div class="list-group-item list-group-item-action cursor-active position-relative" onclick="product_info(${product.id})">
                             <div class="row">
                                 <div class="col-3">
@@ -165,7 +166,7 @@ function showProductsList(productsArray) {
                                             <h4> ${product.name} - ${product.currency} ${product.cost} </h4> 
                                             <p class="mb-1"> ${product.description} </p> 
                                         </div>
-                                        <small class="text-muted"> ${product.soldCount === undefined ? 0 : product.soldCount} vendidos</small> 
+                                        <small class="text-muted aaaaa"> ${product.soldCount === undefined ? 0 : product.soldCount} vendidos</small> 
                                     </div>
                                 </div>
                             </div>
@@ -185,7 +186,7 @@ function showProductsList(productsArray) {
                     <div class="position-relative">
                         <div class="row d-flex justify-content-center">
                             <div class="col-md-4" onclick="product_info(${product.id})">
-                                <div class="card mb-4 shadow-sm custom-card cursor-active card_hover" id="autos">
+                                <div class="card mb-4 shadow-sm custom-card cursor-active card_hover">
                                     <img class="bd-placeholder-img card-img-top" src="${product.image[0].dataURL === undefined ? product.image : product.image[0].dataURL}" alt="${product.description}">
                                     <h4 class="m-3">${product.name} - ${product.currency} ${product.cost}</h4>
                                     <div class="card-body">
@@ -195,7 +196,7 @@ function showProductsList(productsArray) {
                                 </div>
                             </div>
                         </div>
-                        <button class="btn btn-primary position-absolute btnAddCart" onclick="addProduct(productsArray[${i}])">Agregar al carrito</button>
+                        <button class="btn btn-primary position-absolute btnAddCart" onclick="addProduct(productsArray[${i}])">Comprar</button>
                     </div>
                     `
                 }
@@ -227,21 +228,21 @@ function sortProducts(criteria, array){
     }
     else if (criteria === ORDER_BY_PROD_PRICE_MAX) {
         result = array.sort(function(a, b) {
-            let aCount = parseInt(a.cost);
-            let bCount = parseInt(b.cost);
+            let aCost = parseInt(a.cost);
+            let bCost = parseInt(b.cost);
 
-            if ( aCount > bCount ){ return -1; }
-            if ( aCount < bCount ){ return 1; }
+            if ( aCost > bCost ){ return -1; }
+            if ( aCost < bCost ){ return 1; }
             return 0;
         });
     }
     else if(criteria === ORDER_BY_PROD_PRICE_MIN) {
         result = array.sort(function(a, b) {
-            let aCount = parseInt(a.cost);
-            let bCount = parseInt(b.cost);
+            let aCost = parseInt(a.cost);
+            let bCost = parseInt(b.cost);
 
-            if ( aCount < bCount ){ return -1; }
-            if ( aCount > bCount ){ return 1; }
+            if ( aCost < bCost ){ return -1; }
+            if ( aCost > bCost ){ return 1; }
             return 0;
         });
     }
@@ -288,13 +289,23 @@ document.getElementById("searchBar").addEventListener("keyup", (e) => {
     
 })
 
-
-//----------------------------Fin Desafiate Entrega 2----------------------------//
-
-
 function X() {
     var searchString = document.getElementById("searchBar").value;
     if (searchString.length === 0) {
         showProductsList(productsArray);
     }
 }
+
+//----------------------------Fin Desafiate Entrega 2----------------------------//
+
+
+window.addEventListener("resize" , function() {
+    if (this.window.innerWidth <= 760 && toggle === false) {
+        showProductsList(productsArray);
+        toggle = true;
+    }
+    else if (this.window.innerWidth > 760 && toggle === true) {
+        showProductsList(productsArray);
+        toggle = false;
+    }
+})
