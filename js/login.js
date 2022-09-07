@@ -22,6 +22,39 @@ function decodeJwtResponse (token) {
 
 //----------------------------Fin Desafiate Entrega 1----------------------------//
 
+//-------------------------------login-------------------------------//
+
+//animación de login para cuando los datos no son correctos
+(function () {
+  'use strict'
+  let forms = document.querySelectorAll('.needs-validation')
+  Array.prototype.slice.call(forms)
+    .forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+        form.classList.add('was-validated')
+      }, false)
+    })
+})()
+
+//validación del login y en el caso de que el login sea valido
+//crea un perfil para guardar en localStorage (nombre, email e imágen).
+//También muestra un cartel (alerta de boostrap) si la contraseña tiene menos de 8 carácteres
+document.getElementById("form").addEventListener("submit", function (event) {
+  event.preventDefault();
+  const n_email = document.getElementById("email").value
+  const password = document.getElementById("password").value
+  if (n_email && password) {
+    if (password.length >= 8) {
+      signIn(n_email);
+      return
+    }
+    showAlertError();
+  }
+});
 
 function signIn(n_email, name = undefined, picture = undefined) {
 
@@ -83,42 +116,22 @@ function signIn(n_email, name = undefined, picture = undefined) {
   return;
 }
 
-
-
-//-------------------------------login-------------------------------//
-
-//animación de login para cuando los datos no son correctos
-(function () {
-  'use strict'
-  let forms = document.querySelectorAll('.needs-validation')
-  Array.prototype.slice.call(forms)
-    .forEach(function (form) {
-      form.addEventListener('submit', function (event) {
-        if (!form.checkValidity()) {
-          event.preventDefault()
-          event.stopPropagation()
-        }
-        form.classList.add('was-validated')
-      }, false)
+function redirect() {
+  const profile = JSON.parse(localStorage.getItem("profile"));
+  if (profile) {
+    const catchProfile = JSON.parse(localStorage.getItem("profile")).find(function({logged}) {
+      return logged === true
     })
-})()
-
-
-//validación del login y en el caso de que el login sea valido
-//crea un perfil para guardar en localStorage (nombre, email e imágen).
-//También muestra un cartel (alerta de boostrap) si la contraseña tiene menos de 8 carácteres
-document.getElementById("form").addEventListener("submit", function (event) {
-  event.preventDefault();
-  const n_email = document.getElementById("email").value
-  const password = document.getElementById("password").value
-  if (n_email && password) {
-    if (password.length >= 8) {
-      signIn(n_email);
-      return
+    if (catchProfile) {
+      const location = JSON.parse(localStorage.getItem("prev_location"));
+      if (location) {
+        window.location.href = location;
+      }
+      else
+        window.location.href = "index.html";
     }
-    showAlertError();
   }
-});
+}
 
 /* 
 Alerta de contraseña menor a 8 carácteres
@@ -139,20 +152,3 @@ function removeAlertError() {
 document.addEventListener("DOMContentLoaded", function() {
   redirect();
 });
-
-function redirect() {
-  const profile = JSON.parse(localStorage.getItem("profile"));
-  if (profile) {
-    const catchProfile = JSON.parse(localStorage.getItem("profile")).find(function({logged}) {
-      return logged === true
-    })
-    if (catchProfile) {
-      const location = JSON.parse(localStorage.getItem("prev_location"));
-      if (location) {
-        window.location.href = location;
-      }
-      else
-        window.location.href = "index.html";
-    }
-  }
-}
