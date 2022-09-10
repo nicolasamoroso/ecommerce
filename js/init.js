@@ -146,22 +146,24 @@ const addProduct = async (info) => {
       }
     }
 
+    if (newElement && parseInt(newElement.count) >= 9) {
+      alert("No se pueden agregar más de 9 productos")
+      return
+    }
+
     const newProduct = {
       id: info.id,
       name: info.name,
       unitCost: info.cost,
       currency: info.currency,
       image: img,
-      count: newElement === undefined ? 1 : newElement.count + 1,
+      count: newElement === undefined ? 1 : parseInt(newElement.count) + 1,
       stock: info.stock === undefined ? null : info.stock
     }
-
-    if (newElement) {
-      cartArray.splice(index, 1);
-    }
-
+    cartArray.splice(index, 1);
     cartArray.push(newProduct);
     localStorage.setItem("productBuyArray", JSON.stringify(cartArray));
+
   }
   else {
 
