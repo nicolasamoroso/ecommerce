@@ -28,7 +28,6 @@ document.addEventListener("DOMContentLoaded", async (e) => {
     const start = JSON.parse(localStorage.getItem("productStart"));
     const end = JSON.parse(localStorage.getItem("productEnd"));
 
-
     document.getElementById("comments").innerHTML = `
     <h1 class="text-center mt-5 mb-5" id="se-el-primero-en-comentar">Se el primero en agregar un comentario</h1>
     <hr>
@@ -82,37 +81,34 @@ document.addEventListener("DOMContentLoaded", async (e) => {
     if (product.status === "ok") {
         productInfoArray = product.data;
         showProductInfo();
-    }
 
-    const comments = await getJSONData(PRODUCT_INFO_COMMENTS);
-    if (comments.status === "ok") {
-        productInfoCommentsArray = comments.data;
-        productInfoCommentsArray.sort((a, b) => {
-            let dateA = new Date(a.dateTime);
-            let dateB = new Date(b.dateTime);
-            return dateA - dateB
-        })
+        const comments = await getJSONData(PRODUCT_INFO_COMMENTS);
+        if (comments.status === "ok") {
+            productInfoCommentsArray = comments.data;
+            productInfoCommentsArray.sort((a, b) => {
+                let dateA = new Date(a.dateTime);
+                let dateB = new Date(b.dateTime);
+                return dateA - dateB
+            })
 
-        showProductInfoComments();
-    }
+            showProductInfoComments();
+        }
 
-    if (product.status === "ok") {
-        productInfoRelatedArray = product.data.relatedProducts;
-        showProductRelated();
-    }
+        if (product.status === "ok") {
+            productInfoRelatedArray = product.data.relatedProducts;
+            showProductRelated();
+        }
 
-    if (localStorage.getItem(`product-${id}`)) {
-        showUserComments(JSON.parse(localStorage.getItem(`product-${id}`)))
-    }
-    
-    showTextArea();
-
-    for (let i = 0; i < ratingStars.length; ++i) {
-        ratingStars[i].className = "ratingStar fa fa-star checked";
-    }
+        if (localStorage.getItem(`product-${id}`)) {
+            showUserComments(JSON.parse(localStorage.getItem(`product-${id}`)))
+        }
         
+        showTextArea();
 
-    
+        for (let i = 0; i < ratingStars.length; ++i) {
+            ratingStars[i].className = "ratingStar fa fa-star checked";
+        }
+    }
 
     //--------------------------------------------------------//
 
