@@ -128,7 +128,7 @@ function signOut() {
 
 
 
-function addProduct(info) {
+const addProduct = async (info) => {
   let cartArray = JSON.parse(localStorage.getItem("productBuyArray"));
 
   const img = info.images ? info.images[0] : info.image[0].dataURL ? info.image[0].dataURL : info.image;
@@ -175,8 +175,18 @@ function addProduct(info) {
       stock: info.stock === undefined ? null : info.stock
     }
 
-    cartArray = [newProduct];
+    
+    const productJSON = await getJSONData(CART_INFO);
+    if (productJSON.status === "ok") {
+      productArray = productJSON.data.articles;
+      cartArray = [];
+      productArray.forEach(function(product) {
+        cartArray.push(product);
+      });
+      cartArray.push(newProduct);
+    }
     localStorage.setItem("productBuyArray", JSON.stringify(cartArray));
   }
+
   window.location.href = "cart.html";
 }

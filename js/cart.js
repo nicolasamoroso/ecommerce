@@ -4,49 +4,27 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const productBuyArray = JSON.parse(localStorage.getItem("productBuyArray"));
 
-    const productJSON = await getJSONData(CART_INFO);
-    if (productJSON.status === "ok") {
-        productArray = productJSON.data.articles;
-    }
-
-    /* si existe productBuyArray, entonces se concatena con productsArray, si hay repetidos, se suma "count"*/
     if (productBuyArray) {
-       /* Si hayID === false, el productJSON se concatena con productBuyArray. Si hayID === true, no se concatena */
-        if (localStorage.getItem("hayJSONid") === "true") {
+        if (productBuyArray.length !== 0) {
             productArray = productBuyArray;
+            showBuyList()
         }
-        /* Si hayID === true, se suma "count" */
-        if (localStorage.getItem("hayJSONid") === "false") {
-            productArray = productArray.map(product => {
-                productBuyArray.forEach(productBuy => {
-                    if (productBuy.id === product.id) {
-                        product.count += productBuy.count;
-                    }
-                });
-                return product;
-            });
-
-            productArray = productArray.concat(productBuyArray);
-
-            /* si hay dos con la misma id, borra uno */
-            productArray = productArray.filter((product, index, self) =>
-                index === self.findIndex((t) => (
-                    t.id === product.id
-                ))
-            )
-
+        else {
+            document.getElementById("products-containers").innerHTML = `<p>No hay productos en el carrito</p>`;
         }
-
-        showBuyList();
-        
-    }
-    else if ((localStorage.getItem("hayJSONid") === "false")) {
-        showBuyList();
     }
     else {
-        document.getElementById("products-containers").innerHTML = `<p>No hay productos en el carrito</p>`;
+        if (localStorage.getItem("hayJSONid") === "false") {
+            const productJSON = await getJSONData(CART_INFO);
+            if (productJSON.status === "ok") {
+                productArray = productJSON.data.articles;
+                showBuyList();
+            }
+        }
+        else {
+            document.getElementById("products-containers").innerHTML = `<p>No hay productos en el carrito</p>`;
+        }
     }
-
 })
 
 function showBuyList() {
@@ -118,6 +96,7 @@ function remove(id) {
         }
         /* actualiza la pagina */
         showBuyList();
+        updateTotalCosts(productArray);
         return true;
     }
     else {
@@ -134,18 +113,20 @@ function changeTotal(e, info) {
         }
     }
     else {
-        /* agarra el total y lo suma a la multiplicacion del costo con e.target.value */
-        let subtotalCost = document.getElementById("subtotal-value");
-
-        const subtotal = parseInt(subtotalCost.innerHTML.split("U$S")[1]) + (info.unitCost * e.target.value);
-
-        subtotalCost.innerHTML = `U$S ${subtotal}`;
-
-        document.getElementById("total-value").innerHTML = `U$S ${subtotal}`;
+        info.count = parseInt(e.target.value);
+        updateTotalCosts(productArray);
     }
+    
+    productArray = productArray.map(product => {
+        if (product.id === info.id) {
+            product.count = e.target.value;
+        }
+        return product;
+    });
+    localStorage.setItem("productBuyArray", JSON.stringify(productArray));
 }
 
-// (info.unitCost * info.count)
+let perccentage = 0;
 
 /* actualiza el precio cuando se agrega un item */
 function updateTotalCosts(productA){
@@ -159,5 +140,118 @@ function updateTotalCosts(productA){
 
     document.getElementById("subtotal-value").innerHTML = `U$S ${subtotal}`
 
-    document.getElementById("total-value").innerHTML = `U$S ${subtotal}`;
+    let shipping = 0;
+
+    if (perccentage !== 0) {
+        shipping = subtotal * perccentage
+    }
+    
+
+    document.getElementById("total-value").innerHTML = `U$S ${subtotal + shipping}`;
+}
+
+document.getElementById("gold").addEventListener("click", function () {
+    document.getElementById("shipping-value").textContent = "3%";
+    perccentage = 0.03;
+    updateTotalCosts(productArray);
+})
+
+document.getElementById("premium").addEventListener("click", function () {
+    document.getElementById("shipping-value").textContent = "7%";
+    perccentage = 0.07;
+    updateTotalCosts(productArray);
+})
+
+document.getElementById("estandar").addEventListener("click", function () {
+    document.getElementById("shipping-value").textContent = "13%";
+    perccentage = 0.13;
+    updateTotalCosts(productArray);
+})
+
+document.getElementById("free-shipping").addEventListener("click", function () {
+    document.getElementById("shipping-value").textContent = "Gratis";
+    perccentage = 0;
+    updateTotalCosts(productArray);
+})
+
+/* add modal checkout when click in "Comprar" */
+document.getElementById("buy").addEventListener("click", function () {
+    if (localStorage.getItem("productBuyArray") && JSON.parse(localStorage.getItem("productBuyArray")).length !== 0) {
+        document.getElementById("checkoutModal").innerHTML = `
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Checkout</h4>
+                <button type="button" class="close" data-dismiss="modal" onclick="refresh()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="name">Nombre</label>
+                    <input type="text" class="form-control" id="name" placeholder="Ingrese su nombre">
+                </div>
+                <div class="form-group">
+                    <label for="surname">Apellido</label>
+                    <input type="text" class="form-control" id="surname" placeholder="Ingrese su apellido">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Teléfono</label>
+                    <input type="number" class="form-control" id="phone" placeholder="Ingrese su número de teléfono">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" placeholder="Ingrese su email">
+                </div>
+                <div class="form-group">
+                    <label for="address">Dirección</label>
+                    <input type="text" class="form-control" id="address" placeholder="Ingrese su dirección">
+                </div>
+                <div class="form-group">
+                    <label for="credit-card">Tarjeta de crédito</label>
+                    <input type="number" class="form-control" id="credit-card" placeholder="Ingrese su número de tarjeta de crédito">
+                </div>
+                <div class="form-group">
+                    <label for="credit-card">CVV</label>
+                    <input type="number" class="form-control" id="cvv" placeholder="Ingrese su número de CVV">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="refresh()">Cancelar</button>
+                <button type="button" class="btn btn-success" onclick="confirmBuy()">Comprar</button>
+            </div>
+            </div>
+        </div>
+        `
+    }
+    else {
+        alert("No hay productos para comprar");
+    }
+})
+
+function confirmBuy() {
+    localStorage.setItem("productBuyArray", JSON.stringify([]));
+    localStorage.setItem("hayJSONid", true);
+    document.getElementById("checkoutModal").innerHTML = `
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Resumen de compra</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="refresh()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Gracias por su compra!</p>
+                <p>Se le enviará un correo con los detalles de su compra.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="refresh()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+    `
+    document.getElementById("products-containers").innerHTML = `<p>No hay productos en el carrito</p>`;
+}
+
+function refresh() {
+    location.reload();
 }

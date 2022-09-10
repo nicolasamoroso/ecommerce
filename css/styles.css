@@ -412,3 +412,17 @@ main.adaptable {
   transform: scale(1.1);
   transition: all 0.5s ease-in-out;
 }
+
+@media (max-width: 767px) {
+
+  .p-listAndRes {
+    padding: 0 15px;
+  }
+  .p-list {
+    margin-bottom: 20px;
+  }
+}
+
+main.cartmain {
+  min-height: calc(100vh - 250px);
+}
