@@ -4,26 +4,21 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const productBuyArray = JSON.parse(localStorage.getItem("productBuyArray"));
 
-    if (productBuyArray) {
-        if (productBuyArray.length !== 0) {
-            productArray = productBuyArray;
-            showBuyList()
-        }
-        else {
-            document.getElementById("products-containers").innerHTML = `<p>No hay productos en el carrito</p>`;
+    if (productBuyArray && productBuyArray.length !== 0) {
+        productArray = productBuyArray;
+        showBuyList()  
+    }
+    else if (localStorage.getItem("hayJSONid") === "false") {
+        const productJSON = await getJSONData(CART_INFO);
+        if (productJSON.status === "ok") {
+            productArray = productJSON.data.articles;
+            showBuyList();
         }
     }
     else {
-        if (localStorage.getItem("hayJSONid") === "false") {
-            const productJSON = await getJSONData(CART_INFO);
-            if (productJSON.status === "ok") {
-                productArray = productJSON.data.articles;
-                showBuyList();
-            }
-        }
-        else {
-            document.getElementById("products-containers").innerHTML = `<p>No hay productos en el carrito</p>`;
-        }
+        document.getElementById("products-containers").innerHTML = `
+        <p>No hay productos en el carrito</p>
+        `
     }
 })
 
@@ -41,30 +36,30 @@ function showBuyList() {
             htmlContentToAppend += `
             <div class="list-group-item">
                 <div class="row">
-                <div class="col-3">
-                    <img src="${product.image}" class="p-0 img-thumbnail cursor-active" onclick="tp(${product.id})">
-                </div>
-                <div class="col-4 d-flex">
-                    <div class="d-flex w-100 justify-content-start align-items-center">
-                    <div class="mb-1">
-                        <h4>${product.name}</h4> 
-                        <p class="mb-1">${product.currency} ${product.unitCost}</p> 
+                    <div class="col-3">
+                        <img src="${product.image}" class="p-0 img-thumbnail cursor-active" onclick="tp(${product.id})">
                     </div>
+                    <div class="col-4 d-flex">
+                        <div class="d-flex w-100 justify-content-start align-items-center">
+                            <div class="mb-1">
+                                <h4>${product.name}</h4> 
+                                <p class="mb-1">${product.currency} ${product.unitCost}</p> 
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="col-2 d-flex">
-                    <div class="d-flex align-items-center justify-content-center">
-                    <div class="input-group input-width">
-                        <input onchange="changeTotal(event, productArray[${i}])" type="number" class="form-control" id="onchangeInput"
-                        placeholder="1" min="0" max="${product.stock === null ? 9 : product.stock}" value="${product.count ? product.count : 1}">
+                    <div class="col-2 d-flex">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <div class="input-group input-width">
+                                <input onchange="changeTotal(event, productArray[${i}])" type="number" class="form-control" id="onchangeInput"
+                                placeholder="1" min="0" max="${product.stock === null ? 9 : product.stock}" value="${product.count ? product.count : 1}">
+                            </div>
+                        </div>
                     </div>
+                    <div class="col-3 d-flex justify-content-end">
+                        <div class="d-flex align-items-center ">
+                            <i class="fa fa-trash h1" onclick="remove(${product.id})"></i>
+                        </div>
                     </div>
-                </div>
-                <div class="col-3 d-flex justify-content-end">
-                    <div class="d-flex align-items-center ">
-                    <i class="fa fa-trash h1" onclick="remove(${product.id})"></i>
-                    </div>
-                </div>
                 </div>
             </div>
             `
@@ -146,8 +141,7 @@ function updateTotalCosts(productA){
         shipping = subtotal * perccentage
     }
     
-
-    document.getElementById("total-value").innerHTML = `U$S ${subtotal + shipping}`;
+    document.getElementById("total-value").innerHTML = `U$S ${Math.round(subtotal + shipping, -1)}`;
 }
 
 document.getElementById("gold").addEventListener("click", function () {
