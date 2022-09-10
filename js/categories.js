@@ -79,7 +79,7 @@ function showCategoriesList(currentCategoriesArray){
         document.getElementById("subtitulo-category").innerHTML = `<p class="lead">Verás aquí todas las categorías del sitio.</p>`;
         
         let htmlContentToAppend = "";
-        if (toggle === true && !media.matches) {
+        if (toggle === true) {
             for(let i = 0; i < currentCategoriesArray.length; i++){
                 let category = currentCategoriesArray[i];
     
@@ -150,8 +150,11 @@ function sortAndShowCategories(sortCriteria, categoriesArray){
 //que el documento se encuentra cargado, es decir, se encuentran todos los
 //elementos HTML presentes.
 const GOLD = 0.13;
-document.addEventListener("DOMContentLoaded", function(e){
-    getJSONData(CATEGORIES_URL).then(function(resultObj){
+document.addEventListener("DOMContentLoaded", async (e) =>{
+
+    toggle = media.matches ? false : true;
+
+    await getJSONData(CATEGORIES_URL).then(function(resultObj){
         if (resultObj.status === "ok"){
             currentCategoriesArray = resultObj.data
 
@@ -270,11 +273,11 @@ function X() {
 }
 
 window.addEventListener("resize" , function() {
-    if (this.window.innerWidth <= 775 && toggle === false) {
+    if (this.window.innerWidth <= 760 && toggle === false) {
         showCategoriesList(currentCategoriesArray);
         toggle = true;
     }
-    else if (this.window.innerWidth > 775 && toggle === true) {
+    else if (this.window.innerWidth > 760 && toggle === true) {
         showCategoriesList(currentCategoriesArray)
         toggle = false;
     }

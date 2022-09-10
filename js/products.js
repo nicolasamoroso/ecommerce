@@ -10,6 +10,9 @@ let toggle = true;
     
 document.addEventListener("DOMContentLoaded", async (e) => {
     
+
+    toggle = media.matches ? false : true;
+
     /* 
     Llama a la función "getJSONData" que está en init.js.
     Si el status es "ok" llama a la función "showProductsList"
@@ -146,7 +149,7 @@ function showProductsList(productsArray) {
     }
     else {
         document.getElementById("subtitulo").innerHTML = `<h4 class="mb-4 text-muted">Verás aquí todos los productos de la categoría <span class="text-dark">${cat_name}</span></h4>`;
-        if (toggle === true && !media.matches) {
+        if (toggle === true) {
             for(let i = 0; i < productsArray.length; i++){ 
                 let product = productsArray[i];
                 if (((minPrice == undefined) || (minPrice != undefined && parseInt(product.cost) >= minPrice)) &&
@@ -299,7 +302,7 @@ function X() {
 //----------------------------Fin Desafiate Entrega 2----------------------------//
 
 
-window.addEventListener("resize" , function() {
+window.addEventListener("resize" , function(e) {
     if (this.window.innerWidth <= 760 && toggle === false) {
         showProductsList(productsArray);
         toggle = true;
