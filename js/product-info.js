@@ -1,15 +1,6 @@
 
 //-------------------------------info de cada producto-------------------------------//
 
-// const queryString = window.location.search;
-// const urlParams = new URLSearchParams(queryString);
-// const id = urlParams.get('id')
-
-
-//agarra la id del url, esta url modificada fue creada en products.js > product_info(id)
-
-//te envía a product-info con un id en el URL para diferenciar
-//cada producto diferente
 function product_info(id) {
     localStorage.setItem("product-info", id);
     window.location.href = "product-info.html";
