@@ -176,9 +176,9 @@ function info() {
 
         <button type="button" onclick="modifyInfo()" id="modificarD" class="btn btn-dark">Modificar mis datos</button>
     </form>
-  `
-
-  document.getElementById("info-perfil").innerHTML = htmlContentToAppend;
+    `
+    
+    document.getElementById("info-perfil").innerHTML = htmlContentToAppend;
 }
 
 
