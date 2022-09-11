@@ -151,27 +151,27 @@ function info() {
     let htmlContentToAppend = `
     <form class="row mb-4 card-body row">
         <p class="mb-0 col-sm-5"><strong>Nombre de usuario</strong></p>
-        <p class="col-sm-7" id="username" >${profile.name}</p>
+        <small class="col-sm-7" id="username" >${profile.name}</small>
         <hr>
 
         <p class="mb-0 col-sm-5"><strong>Email</strong></p>
-        <p class="col-sm-7" id="email">${profile.email}</p>
+        <small class="col-sm-7" id="email">${profile.email}</small>
         <hr>
 
         <p class="mb-0 col-sm-5"><strong>Nombre y Apellido</strong></p>
-        <p class="col-sm-7" id="nombre-apellido">${profile.name_lastname ? profile.name_lastname : "Debe completar este campo"}</p>
+        <small class="col-sm-7" id="nombre-apellido">${profile.name_lastname ? profile.name_lastname : "Debe completar este campo"}</small>
         <hr>
 
         <p class="mb-0 col-sm-5"><strong>Celular</strong></p>
-        <p class="col-sm-7" id="celular">${profile.phone ? profile.phone : "Debe completar este campo"}</p>
+        <small class="col-sm-7" id="celular">${profile.phone ? profile.phone : "Debe completar este campo"}</small>
         <hr>
 
         <p class="mb-0 col-sm-5"><strong>Dirección</strong></p>
-        <p class="col-sm-7" id="direccion">${profile.address ? profile.address : "Debe completar este campo"}</p>
+        <small class="col-sm-7" id="direccion">${profile.address ? profile.address : "Debe completar este campo"}</small>
         <hr>
 
         <p class="mb-0 col-sm-5"><strong>Edad</strong></p>
-        <p class="col-sm-7" id="edad">${profile.age ? profile.age : "Debe completar este campo"}</p>
+        <small class="col-sm-7" id="edad">${profile.age ? profile.age : "Debe completar este campo"}</small>
         <hr>
 
         <button type="button" onclick="modifyInfo()" id="modificarD" class="btn btn-dark">Modificar mis datos</button>
@@ -198,7 +198,7 @@ function modifyInfo() {
         <hr>
 
         <p class="mb-0 col-sm-5"><strong>Email</strong></p>
-        <p class="col-sm-7" id="email">${profile.email}</p>
+        <small class="col-sm-7" id="email">${profile.email}</small>
         <hr>
 
         <p class="mb-0 col-sm-5"><strong>Nombre y Apellido</strong></p>
