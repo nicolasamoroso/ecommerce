@@ -136,7 +136,7 @@ const addProduct = async (info) => {
   if (cartArray) {
 
     let newElement = undefined;
-    let index = 0;
+    let index = -1;
     for (let i = 0; i < cartArray.length; i++) {
       const element = cartArray[i];
       if (element.id === info.id) {
@@ -160,10 +160,9 @@ const addProduct = async (info) => {
       count: newElement === undefined ? 1 : parseInt(newElement.count) + 1,
       stock: info.stock === undefined ? null : info.stock
     }
-    cartArray.splice(index, 1);
+    if (index !== -1) cartArray.splice(index, 1);
     cartArray.push(newProduct);
     localStorage.setItem("productBuyArray", JSON.stringify(cartArray));
-
   }
   else {
 
