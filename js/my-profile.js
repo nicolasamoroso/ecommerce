@@ -5,7 +5,6 @@ const profile = JSON.parse(localStorage.getItem("profile")).find(function({logge
 
 document.addEventListener("DOMContentLoaded", async (e) => {
 
-    // console.log(profile)
     pic();
     info();
     
@@ -18,23 +17,14 @@ document.addEventListener("DOMContentLoaded", async (e) => {
         document.getElementById("profile_img").src = profile.picture;
     })
 
-
-    // Input File
     const inputImage = document.getElementById('image');
-    // Nodo donde estará el editor
     const editor = document.getElementById('editor');
-    // El canvas donde se mostrará la previa
     const miCanvas = document.getElementById('preview');
-    // Contexto del canvas
     const contexto = miCanvas.getContext('2d');
-    // Ruta de la imagen seleccionada
     let urlImage = undefined;
-    // Evento disparado cuando se adjunte una imagen
     inputImage.addEventListener('change', abrirEditor, false);
     
-    /**
-      Método que abre el editor con la imagen seleccionada
-     */
+    //Función que abre el editor con la imagen seleccionada
     function abrirEditor(e) {
         
         if(!e.target.files[0]) {
@@ -44,22 +34,22 @@ document.addEventListener("DOMContentLoaded", async (e) => {
             return;
         }
 
-        // Obtiene la imagen si existe "e.target.files[0]"
+        //Obtiene la imagen si existe "e.target.files[0]"
         urlImage = URL.createObjectURL(e.target.files[0]);
     
-        // Borra editor en caso que existiera una imagen previa
+        //Borra editor en caso que existiera una imagen previa
         editor.innerHTML = '';
         let cropprImg = document.createElement('img');
         cropprImg.setAttribute('id', 'croppr');
         editor.appendChild(cropprImg);
     
-        // Limpia la previa en caso que existiera algún elemento previo
+        //Limpia la previa en caso que existiera algún elemento previo
         contexto.clearRect(0, 0, miCanvas.width, miCanvas.height);
     
-        // Envia la imagen al editor para su recorte
+        //Envia la imagen al editor para su recorte
         document.getElementById('croppr').setAttribute('src', urlImage);
     
-        // Crea el editor
+        //Crea el editor
         new Croppr('#croppr', {
             aspectRatio: 1,
             startSize: [70, 70],
@@ -67,35 +57,37 @@ document.addEventListener("DOMContentLoaded", async (e) => {
         })
     }
     
-    /**
-     * Método que recorta la imagen con las coordenadas proporcionadas con croppr.js
-     */
+    //Función que recorta la imagen con las coordenadas proporcionadas con croppr.js
     function recortarImagen(data) {
-        // Variables
+
         const inicioX = data.x;
         const inicioY = data.y;
         const nuevoAncho = data.width;
         const nuevaAltura = data.height;
         const zoom = 1;
         let imagenEn64 = '';
-        // La imprimo
+
         miCanvas.width = nuevoAncho;
         miCanvas.height = nuevaAltura;
-        // La declaro
+
         let miNuevaImagenTemp = new Image();
+
+        
         // Cuando la imagen se cargue se procederá al recorte
         miNuevaImagenTemp.onload = function() {
-            // Se recorta
+
+            //Recorta
             contexto.drawImage(miNuevaImagenTemp, inicioX, inicioY, nuevoAncho * zoom, nuevaAltura * zoom, 0, 0, nuevoAncho, nuevaAltura);
-            // Se transforma a base64
+
+            //Se transforma a base64
             imagenEn64 = miCanvas.toDataURL("image/png");
-            // Mostramos el código generado
             
             if(imagenEn64.includes("data:image/")) {
                 document.getElementById("profile_img").src = imagenEn64;
             }
         }
-        // Proporciona la imagen cruda, sin editarla por ahora
+
+        //Agrega y elimina sino se bugea
         miNuevaImagenTemp.src = urlImage;
         document.querySelector("#preview").remove();
     }
