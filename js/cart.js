@@ -12,6 +12,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         const productJSON = await getJSONData(CART_INFO);
         if (productJSON.status === "ok") {
             productArray = productJSON.data.articles;
+            for (let i = 0; i < productArray.length; i++) {
+                const element = productArray[i];
+                element.stock = 9;
+            }
             showBuyList();
         }
     }

@@ -184,6 +184,10 @@ const addProduct = async (info) => {
       productArray.forEach(function(product) {
         cartArray.push(product);
       });
+      for (let i = 0; i < productArray.length; i++) {
+        const element = productArray[i];
+        element.stock = 9;
+      }
       cartArray.push(newProduct);
     }
     localStorage.setItem("productBuyArray", JSON.stringify(cartArray));
