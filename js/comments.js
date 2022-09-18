@@ -23,7 +23,7 @@ function showProductInfoComments() {
 
             for (let i = 0; i < productInfoCommentsArray.length; i++) {
                 let product = productInfoCommentsArray[i];
-                product.profile_pic = "../img/img_perfil.png";
+                product.profile_pic = "img/img_perfil.png";
             }
         }
 
