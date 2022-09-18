@@ -118,7 +118,10 @@ function pic() {
           <h5 class="modal-title" id="ModalLabel">Editar imagen de perfil</h5>
         </div>
         <div class="modal-body">
-        <p class="text-muted">Para cambiar la imagen de perfil, ajuste el tamaño.</p>
+            <p class="text-muted">
+                Para cambiar la imagen de perfil, ajuste el tamaño.
+                <small class="text-muted">(Sino no se cambiará)</small>
+            </p>
             <div id="editor"></div>
         </div>
         <div class="modal-footer">
