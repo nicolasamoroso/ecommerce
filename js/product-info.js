@@ -28,44 +28,17 @@ document.addEventListener("DOMContentLoaded", async (e) => {
         if (start && start.length !== 0) {
             productInfoArray = start.find(product => product.id === parseInt(id));
             if (productInfoArray) {
-                
-                if (localStorage.getItem(`product-${id}`)) {
-                    showUserComments(JSON.parse(localStorage.getItem(`product-${id}`)))
-                }
-                
-                showProductInfo();
-
-                document.getElementById("addComment").classList.add("show")
-                showTextArea();
-
-                for (let i = 0; i < ratingStars.length; ++i) {
-                    ratingStars[i].className = "ratingStar fa fa-star checked";
-                }
-
+                showPage()
                 return
             }
         }
         if (end && end.length !== 0) {
             productInfoArray = end.find(product => product.id === parseInt(id));
             if (productInfoArray) {
-
-                if (localStorage.getItem(`product-${id}`)) {
-                    showUserComments(JSON.parse(localStorage.getItem(`product-${id}`)))
-                }
-                
-                showProductInfo();
-
-                document.getElementById("addComment").classList.add("show")
-                showTextArea();
-
-                for (let i = 0; i < ratingStars.length; ++i) {
-                    ratingStars[i].className = "ratingStar fa fa-star checked";
-                }
-
+                showPage()
                 return
             }
         }
-        
     }
 
     const product = await getJSONData(PRODUCT_INFO);
@@ -112,6 +85,22 @@ document.addEventListener("DOMContentLoaded", async (e) => {
 
 
 //--------------------------------Muestra el producto--------------------------------//
+
+function showPage() {
+    if (localStorage.getItem(`product-${id}`)) {
+        showUserComments(JSON.parse(localStorage.getItem(`product-${id}`)))
+    }
+    
+    showProductInfo();
+
+    document.getElementById("addComment").classList.add("show")
+    showTextArea();
+
+    for (let i = 0; i < ratingStars.length; ++i) {
+        ratingStars[i].className = "ratingStar fa fa-star checked";
+    }
+}
+
 
 /* Agrega con innerHTML los datos del JSON (nombre, descripción, costo,
 cuantos quedan, categoría, imagenes del producto y muestra productos
