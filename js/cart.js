@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const element = productArray[i];
                 element.stock = 9;
             }
+            localStorage.setItem("productBuyArray", JSON.stringify(productArray));
             showBuyList();
         }
     }
@@ -172,6 +173,8 @@ document.getElementById("free-shipping").addEventListener("click", function () {
     updateTotalCosts(productArray);
 })
 
+let creditCardName = "Ninguna"
+
 /* add modal checkout when click in "Comprar" */
 document.getElementById("buy").addEventListener("click", function () {
     if (localStorage.getItem("productBuyArray") && JSON.parse(localStorage.getItem("productBuyArray")).length !== 0) {
@@ -185,19 +188,19 @@ document.getElementById("buy").addEventListener("click", function () {
             <div class="modal-body">
                 <div class="form-group">
                     <label for="name">Nombre</label>
-                    <input type="text" class="form-control" id="name" placeholder="Ingrese su nombre">
+                    <input type="text" class="form-control" id="name" placeholder="Jane" onkeydown="return /[a-z]/i.test(event.key)">
                 </div>
                 <div class="form-group">
                     <label for="surname">Apellido</label>
-                    <input type="text" class="form-control" id="surname" placeholder="Ingrese su apellido">
+                    <input type="text" class="form-control" id="surname" placeholder="Doe" onkeydown="return /[a-z]/i.test(event.key)">
                 </div>
                 <div class="form-group">
                     <label for="phone">Teléfono</label>
-                    <input type="number" class="form-control" id="phone" placeholder="Ingrese su número de teléfono">
+                    <input type="number" class="form-control" id="phone" placeholder="099 999 999" min="0">
                 </div>
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" class="form-control" id="email" placeholder="Ingrese su email">
+                    <input type="email" class="form-control" id="email" placeholder="jane@example.com">
                 </div>
                 <div class="form-group">
                     <label for="address">Dirección</label>
@@ -205,11 +208,18 @@ document.getElementById("buy").addEventListener("click", function () {
                 </div>
                 <div class="form-group">
                     <label for="credit-card">Tarjeta de crédito</label>
-                    <input type="number" class="form-control" id="credit-card" placeholder="Ingrese su número de tarjeta de crédito">
+                    <div class="input-group">
+                        <input type="number" class="form-control" id="credit-card" placeholder="xxxx xxxx xxxx xxxx" min="0">
+                        <img src="https://www.svgrepo.com/show/400136/creditcard.svg" width="50px" id="creditCardID" class="imgCreditCard">
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="credit-card">CVV</label>
-                    <input type="number" class="form-control" id="cvv" placeholder="Ingrese su número de CVV">
+                    <input type="number" class="form-control" id="cvv" placeholder="xxx" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="credit-card">Fecha de vencimiento</label>
+                    <input type="month" class="form-control" id="date" placeholder="xx/xx" min="${diaDeHoy()}">
                 </div>
             </div>
             <div class="modal-footer">
@@ -223,31 +233,104 @@ document.getElementById("buy").addEventListener("click", function () {
     else {
         alert("No hay productos para comprar");
     }
+
+    document.getElementById("credit-card").addEventListener("keyup", function(e) {
+        let credit = "Otra"
+        if (e.target.value.startsWith("4")) {
+            credit = "Visa"
+        }
+        else if (e.target.value.startsWith("51") || e.target.value.startsWith("55")) {
+            credit = "MasterCard"
+        }
+        else {
+            credit = "Otra"
+        }
+        if (credit !== creditCardName) {
+            creditCardName = credit;
+            if (credit === "Visa") {
+                document.getElementById("creditCardID").src = "https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg"
+            }
+            else if (credit === "MasterCard") {
+                document.getElementById("creditCardID").src = "https://www.svgrepo.com/show/328141/mastercard.svg"
+            }
+            else  {
+                document.getElementById("creditCardID").src = "https://www.svgrepo.com/show/400136/creditcard.svg"
+            }
+        }
+    })
 })
 
+
+function diaDeHoy() {
+    const split_day = new Date().toISOString().slice(0, 10).split("-")
+    return split_day[0] + "-" + split_day[1];
+    
+}
+
+function validateEmail(email) {
+    const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/
+    return !emailReg.test(email)
+}
+
+function validatePhone(phone) {
+    const phoneReg = /^([0]{1})+([9]{1})+([0-9]{1})+([0-9]{3})+([0-9]{3})$/;
+    return !phoneReg.test(phone)
+}
+
+function validateCreditCard(creditCard) {
+    const creditCardReg = /^([0-9]{4})+([0-9]{4})+([0-9]{4})+([0-9]{4})$/;
+    return !creditCardReg.test(creditCard)
+}
+
+function validateCVV(cvv) {
+    const cvvReg = /^([0-9]{3})$/;
+    return !cvvReg.test(cvv)
+}
+
 function confirmBuy() {
-    localStorage.setItem("productBuyArray", JSON.stringify([]));
-    localStorage.setItem("hayJSONid", true);
-    document.getElementById("checkoutModal").innerHTML = `
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Resumen de compra</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="refresh()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Gracias por su compra!</p>
-                <p>Se le enviará un correo con los detalles de su compra.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="refresh()">Cerrar</button>
+    const name = document.getElementById("name").value;
+    const surname = document.getElementById("surname").value;
+    const phone = document.getElementById("phone").value;
+    const email = document.getElementById("email").value;
+    const address = document.getElementById("address").value;
+    const creditCard = document.getElementById("credit-card").value;
+    const cvv = document.getElementById("cvv").value;
+    const date = document.getElementById("date").value;
+
+    
+    if (!name) alert("Ingrese un nombre valido"); 
+    else if (!surname) alert("Ingrese un apellido valido");
+    else if (!phone || validatePhone(phone)) alert("Ingrese un número de teléfono valido");
+    else if (!email || validateEmail(email)) alert("Ingrese un email valido");
+    else if (!address) alert("Ingrese una dirección valida");
+    else if (!creditCard || validateCreditCard(creditCard)) alert("Ingrese un número de tarjeta de crédito valido");
+    else if (!cvv || validateCVV(cvv)) alert("Ingrese un número de CVV valido");
+    else if (!date) alert("Ingrese una fecha de vencimiento valida");
+    else {
+        localStorage.setItem("productBuyArray", JSON.stringify([]));
+        localStorage.setItem("hayJSONid", true);
+        document.getElementById("checkoutModal").innerHTML = `
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Resumen de compra</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="refresh()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Gracias por su compra!</p>
+                    <p>Se le enviará un correo con los detalles de su compra.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="refresh()">Cerrar</button>
+                </div>
             </div>
         </div>
-    </div>
-    `
-    document.getElementById("products-containers").innerHTML = `<p>No hay productos en el carrito</p>`;
+        `
+        document.getElementById("products-containers").innerHTML = `<p>No hay productos en el carrito</p>`;
+    }
+
 }
 
 function refresh() {
