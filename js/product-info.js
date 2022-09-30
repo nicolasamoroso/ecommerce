@@ -206,9 +206,9 @@ function showProductRelated () {
         let p_related = productInfoRelatedArray[i];
         htmlContentToAppend += `
         <div class="col-md-4 scale" onclick="product_info(${p_related.id})">
-            <div class="card mb-4 shadow-sm custom-card cursor-active card_hover">
+            <div class="card mb-4 shadow-sm custom-card cursor-active card_hover imgRelated">
                 <img class="bd-placeholder-img card-img-top" src="${p_related.image}">
-                <h3 class="m-3 text-center">${p_related.name}</h3>
+                <h4 class="m-3 text-center">${p_related.name}</h4>
             </div>
         </div>
         `

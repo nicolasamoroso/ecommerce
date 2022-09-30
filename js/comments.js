@@ -51,7 +51,7 @@ function comentarios(product) {
                 <small>${changeDayFormat(new Date(product.dateTime))}</small>
             </div>
             <div class="d-flex justify-content-between pt-2">
-                <p>${product.description}</p>
+                <p class="text-break box">${product.description}</p>
                 <div> ${ScoreToStars(product.score)} </div>
             </div>
         </div>
@@ -62,7 +62,7 @@ function comentarios(product) {
         htmlContentToAppend = `
         <div class="comments">
             <div class="py-2"> ${ScoreToStars(product.score)} </div>
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between titleAndDate">
                 <h6>
                     <img id="profile_pic_comments" class="rounded-circle" src="${product.profile_pic }">
                     ${product.user}
@@ -70,7 +70,7 @@ function comentarios(product) {
                 <small>${changeDayFormat(new Date(product.dateTime))}</small>
             </div>
             <div class="d-flex justify-content-between pt-2">
-                <p >${product.description}</p>
+                <p class="text-break box">${product.description}</p>
             </div>
         </div>
         <hr>
@@ -255,8 +255,10 @@ function removeAlertError() {
 
 function showTextArea() {
     let htmlContentToAppend = `
-    <textarea name="productComment" class="form-control" id="productComment" cols="10" rows="4" placeholder="Agrega un comentario al producto"  maxlength="90"></textarea>
-    <input id="btn-comment" class="mt-2 w-100" type="submit" onclick="addComment()"></input>
+    <div class="text_area">
+        <textarea name="productComment" class="form-control" id="productComment" cols="10" rows="4" placeholder="Agrega un comentario al producto"></textarea>
+        <input id="btn-comment" class="button_text_area btn btn-primary" type="submit" onclick="addComment()"></input>
+    </div>
     `
     document.getElementById("comentario").innerHTML = htmlContentToAppend;
 }
