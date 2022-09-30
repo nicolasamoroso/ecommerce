@@ -274,7 +274,7 @@ document.getElementById("searchBar").addEventListener("keyup", (e) => {
         return product.name.toLowerCase().includes(searchString.toLowerCase()) || 
                product.description.toLowerCase().includes(searchString.toLowerCase()) ||
                product.currency.toLowerCase().includes(searchString.toLowerCase()) ||
-               product.cost.toString().includes(searchString) ;
+               product.cost.toString().includes(searchString)
     })
 
     if (filteredProductsArray.length === 0) {
