@@ -14,7 +14,12 @@ let productInfoRelatedArray = [];
 
 //----------------------------------DOMContentLoaded---------------------------------//
 
-document.addEventListener("DOMContentLoaded", async (e) => {
+document.addEventListener("DOMContentLoaded", async () => {
+
+    if (!localStorage.getItem("product-info")) {
+        const location = JSON.parse(localStorage.getItem("prev_location"));
+        window.location.href = location;
+    }
 
     const start = JSON.parse(localStorage.getItem("productStart"));
     const end = JSON.parse(localStorage.getItem("productEnd"));
