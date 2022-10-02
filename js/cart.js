@@ -44,7 +44,7 @@ function showBuyList() {
                     <div class="col-3">
                         <img src="${product.image}" class="p-0 img-thumbnail cursor-active" onclick="tp(${product.id})">
                     </div>
-                    <div class="col-4 d-flex">
+                    <div class="col-5 d-flex">
                         <div class="d-flex w-100 justify-content-start align-items-center">
                             <div class="mb-1">
                                 <h4>${product.name}</h4> 
@@ -53,14 +53,14 @@ function showBuyList() {
                         </div>
                     </div>
                     <div class="col-2 d-flex">
-                        <div class="d-flex align-items-center justify-content-center">
+                        <div class="d-flex align-items-center">
                             <div class="input-group input-width">
                                 <input onchange="changeTotal(event, productArray[${i}])" type="number" class="form-control" id="onchangeInput"
                                 placeholder="1" min="0" max="${product.stock === null ? 9 : product.stock}" value="${product.count ? product.count : 1}">
                             </div>
                         </div>
                     </div>
-                    <div class="col-3 d-flex justify-content-end">
+                    <div class="col-2 d-flex justify-content-end">
                         <div class="d-flex align-items-center ">
                             <i class="fa fa-trash h1" onclick="remove(${product.id})"></i>
                         </div>
@@ -128,6 +128,8 @@ function changeTotal(e, info) {
 
 let perccentage = 0;
 
+let typeOfCurrency = "USD"
+
 /* actualiza el precio cuando se agrega un item */
 function updateTotalCosts(productA){
 
@@ -138,7 +140,7 @@ function updateTotalCosts(productA){
         subtotal = subtotal + (product.unitCost * product.count);
     }
 
-    document.getElementById("subtotal-value").innerHTML = `U$S ${subtotal}`
+    document.getElementById("subtotal-value").innerHTML = `${typeOfCurrency} ${subtotal}`
 
     let shipping = 0;
 
@@ -146,24 +148,24 @@ function updateTotalCosts(productA){
         shipping = subtotal * perccentage
     }
     
-    document.getElementById("total-value").innerHTML = `U$S ${Math.round(subtotal + shipping, -1)}`;
+    document.getElementById("total-value").innerHTML = `${typeOfCurrency} ${Math.round(subtotal + shipping, -1)}`;
 }
 
-document.getElementById("gold").addEventListener("click", function () {
-    document.getElementById("shipping-value").textContent = "3%";
-    perccentage = 0.03;
+document.getElementById("premium").addEventListener("click", function () {
+    document.getElementById("shipping-value").textContent = "15%";
+    perccentage = 0.15;
     updateTotalCosts(productArray);
 })
 
-document.getElementById("premium").addEventListener("click", function () {
+document.getElementById("express").addEventListener("click", function () {
     document.getElementById("shipping-value").textContent = "7%";
     perccentage = 0.07;
     updateTotalCosts(productArray);
 })
 
-document.getElementById("estandar").addEventListener("click", function () {
-    document.getElementById("shipping-value").textContent = "13%";
-    perccentage = 0.13;
+document.getElementById("standard").addEventListener("click", function () {
+    document.getElementById("shipping-value").textContent = "5%";
+    perccentage = 0.05;
     updateTotalCosts(productArray);
 })
 
