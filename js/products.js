@@ -157,7 +157,7 @@ function showProductsList(productsArray) {
                         
                     htmlContentToAppend += ` 
                     <div class="position-relative">
-                        <button class="btn btn-primary position-absolute btnAddCart" onclick="addProduct(productsArray[${i}])">Comprar</button>
+                        <button class="btn btn-success position-absolute btnAddCart" onclick="addProduct(productsArray[${i}])">Comprar</button>
                         <div class="list-group-item list-group-item-action cursor-active position-relative" onclick="product_info(${product.id})">
                             <div class="row">
                                 <div class="col-3">
@@ -199,7 +199,7 @@ function showProductsList(productsArray) {
                                 </div>
                             </div>
                         </div>
-                        <button class="btn btn-primary position-absolute btnAddCart" onclick="addProduct(productsArray[${i}])">Comprar</button>
+                        <button class="btn btn-success position-absolute btnAddCart" onclick="addProduct(productsArray[${i}])">Comprar</button>
                     </div>
                     `
                 }

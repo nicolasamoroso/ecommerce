@@ -115,19 +115,29 @@ function showProductInfo() {
 //  #-----------------------------Info básica-----------------------------#
 
     document.getElementById('product').innerHTML  = `
-    <h1 class="text-center mb-3">${productInfoArray.name}</h1>
-    <p><strong>Descripción:</strong> ${productInfoArray.description}</p>
-    <p><strong>Precio:</strong> ${productInfoArray.currency} ${productInfoArray.cost}</p>
-    <p><strong>Vendidos:</strong> ${productInfoArray.soldCount}</p>
-    <p><strong>Categoría:</strong> ${productInfoArray.category}</p>
-
-    <div id="carouselDark" class="carousel carousel-dark slide" data-bs-ride="carousel">   
+    <div class="d-flex w-100 justify-content-between">
+        <h1 class="">${productInfoArray.name}</h1>
+        <div class="d-flex align-items-center">
+            <button class="btn btn-success" onclick="addProduct(productInfoArray)">Comprar</button>
+        </div>
     </div>
     
-    <div class="d-flex w-100 justify-content-center">
-        <div class="mb-1 mt-4">
-            <button class="btn btn-primary" onclick="addProduct(productInfoArray)">Comprar</button>
-        </div>
+    <hr>
+    <div class="d-flex justify-content-between">
+        <strong>Precio:</strong>
+        <a href="products.html" class="prev"> <i class="fa-solid fa-arrow-left"></i> Volver al listado </a>   
+    </div>
+        
+    <p>${productInfoArray.currency} ${productInfoArray.cost}</p>
+    <strong>Descripción:</strong>
+    <p>${productInfoArray.description}</p>
+    <strong>Categoría:</strong>
+    <p>${productInfoArray.category}</p>
+    <strong>Cantidad de vendidos:</strong>
+    <p>${productInfoArray.soldCount}</p>
+
+    <h5 class="fw-bold mt-5">Imágenes ilustrativas</h5>
+    <div id="carouselDark" class="carousel carousel-dark slide" data-bs-ride="carousel">   
     </div>
     `
 
