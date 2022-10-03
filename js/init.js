@@ -139,7 +139,7 @@ const addProduct = async (info) => {
 
     let newElement = undefined;
     
-    let index = cartArray.findIndex(function( {id}) {
+    let index = cartArray.findIndex(function({id}) {
       return id === info.id
     })
 
@@ -161,7 +161,8 @@ const addProduct = async (info) => {
       currency: info.currency,
       image: img,
       count: newElement === undefined ? 1 : parseInt(newElement.count) + 1,
-      stock: info.stock === undefined ? null : info.stock
+      stock: info.stock ?? null,
+      description: info.description
     }
     cartArray.push(newProduct);
     localStorage.setItem("productBuyArray", JSON.stringify(cartArray));
@@ -175,7 +176,8 @@ const addProduct = async (info) => {
       currency: info.currency,
       image: img,
       count: 1,
-      stock: info.stock === undefined ? null : info.stock
+      stock: info.stock ?? null,
+      description: info.description
     }
 
     
