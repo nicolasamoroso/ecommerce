@@ -61,7 +61,7 @@ const getJSONData = async (url) => {
 
 document.addEventListener("DOMContentLoaded", function(){
 
-  showNavAndFooter();
+  showNavBarAndFooter();
 
   const profile = JSON.parse(localStorage.getItem("profile"))
   
@@ -190,7 +190,7 @@ const addProduct = async (info) => {
       });
       for (let i = 0; i < productArray.length; i++) {
         const element = productArray[i];
-        element.stock = 9;
+        element.stock = 99;
       }
       cartArray.push(newProduct);
     }
@@ -201,32 +201,34 @@ const addProduct = async (info) => {
 }
 
 
-function showNavAndFooter() {
-
-  document.getElementById("navbar").innerHTML = `
-  <div class="navbar navbar-expand-lg navbar-dark bg-dark p-1">
-    <div class="container">
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav w-100 justify-content-between">
-          <li class="nav-item">
-            <a class="nav-link active" href="index.html">Inicio</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="categories.html">Categorías</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="sell.html">Vender</a>
-          </li>
-          <li id="dropdown" class="nav-item dropdown"></li>
-        </ul>
+function showNavBarAndFooter() {
+  const nav = document.getElementById("navbar")
+  if (nav) {
+    nav.innerHTML = `
+    <div class="navbar navbar-expand-lg navbar-dark bg-dark p-1">
+      <div class="container">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav w-100 justify-content-between">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html" id="nav-index">Inicio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="categories.html" id="nav-categories">Categorías</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="sell.html" id="nav-sell">Vender</a>
+            </li>
+            <li id="dropdown" class="nav-item dropdown"></li>
+          </ul>
+        </div>
       </div>
     </div>
-  </div>
-  `
+    `
+  }
 
   document.getElementById("footer").innerHTML = `
   <div class="text-muted">
