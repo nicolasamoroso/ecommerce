@@ -20,17 +20,193 @@
 </head>
 
 <body>
-  <navbar id="navbar"></navbar>
+  <nav id="navbar"></nav>
 
   <main class="mt-5 cartmain">
     <div class="container">
       <h1 class="text-center mb-5">Carrito de compras</h1>
       <div class="row">
         <div class="col-lg-8 col-sm-12 cart_table" id="table"></div>
-        <div class="col-lg-4 col-sm-12 cart_summary" id="summary"></div>
+        <div class="col-lg-4 col-sm-12 cart_summary" id="summary">
+          <div class="card-body card">
+              <h4 class="card-title">Resumen de la compra</h4>
+              <hr>
+              <div>
+                  <div class="row">
+                      <div class="col-12">
+                          <div class="row">
+                              <div class="col-12">
+                                  <h6 class="card-subtitle mb-2">Tipo de moneda</h6>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-12">
+                                  <div class="form-check">
+                                      <input class="form-check-input" type="radio" name="currency" id="usd" value="USD" checked>
+                                      <label class="form-check-label" for="usd">
+                                          Dólares
+                                      </label>
+                                  </div>
+                                  <div class="form-check">
+                                      <input class="form-check-input" type="radio" name="currency" id="uyu" value="UYU">
+                                      <label class="form-check-label" for="uyu">
+                                          Pesos Uruguayos
+                                      </label>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <hr>
+              <div class="row">
+                  <div class="col-12">
+                      <p class="card-text" id="subtotal">Subtotal <span class="float-end" id="subtotal-value"></span> </p>
+                  </div>
+                  <div class="col-12">
+                      <p class="card-text">Envío <span class="float-end" id="shipping-value">Gratis </span>
+                      </p>
+                  </div>
+                  <div class="col-12">
+                      <p class="card-text fw-bold">Total <span class="float-end" id="total-value"></span> </p>
+                  </div>
+              </div>
+              <hr>
+              <div class="row">
+                  <h3 class="mb-3">Tipo de envío</h3>
+                  <div class="col-12">
+                      <div class="form-check">
+                          <input class="form-check-input" type="radio" name="shipping" id="free-shipping" checked>
+                          <label class="form-check-label" for="free-shipping">
+                              Retiro en el local (Gratis)
+                          </label>
+                      </div>
+                      <div class="col-12">
+                          <div class="form-check">
+                              <input class="form-check-input" type="radio" name="shipping" id="premium">
+                              <label class="form-check-label" for="premium">
+                                  Premium 2 a 5 días (15%)
+                              </label>
+                          </div>
+                      </div>
+                      <div class="col-12">
+                          <div class="form-check">
+                              <input class="form-check-input" type="radio" name="shipping" id="express">
+                              <label class="form-check-label" for="express">
+                                  Express 5 a 8 días (7%)
+                              </label>
+                          </div>
+                      </div>
+                      <div class="col-12">
+                          <div class="form-check">
+                              <input class="form-check-input" type="radio" name="shipping" id="standard">
+                              <label class="form-check-label" for="standard">
+                                  Standard 12 a 15 días (5%)
+                              </label>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <button id="buy" class="btn btn-success button_checkout mt-2" data-toggle="modal" data-target="#Modal">Checkout</button>
+          </div>
+        </div>
       </div>
     </div>
-    <div id="checkoutModal"></div>
+    <div id="checkoutModal">
+      <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h4 class="modal-title">Checkout</h4>
+                      <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                      <form accept-charset="utf-8">
+                          <div class="form-group">
+                              <label for="name" class="h6">Nombre</label>
+                              <input type="text" class="form-control" id="name" placeholder="Jane" onkeydown="return /[a-zA-ZÀ-ÿ\u00f1\u00d1]/i.test(event.key)">
+                          </div>
+                          <div class="form-group">
+                              <label for="surname" class="h6">Apellido</label>
+                              <input type="text" class="form-control" id="surname" placeholder="Doe" onkeydown="return /[a-zA-ZÀ-ÿ\u00f1\u00d1]/i.test(event.key)">
+                          </div>
+                          <div class="form-group">
+                              <label for="phone" class="h6">Teléfono</label>
+                              <input type="number" class="form-control" id="phone" placeholder="099 999 999" min="0">
+                          </div>
+                          <div class="form-group">
+                              <label for="email" class="h6">Email</label>
+                              <input type="email" class="form-control" id="email" placeholder="jane@example.com">
+                          </div>
+                          <div class="form-group">
+                              <label for="address" class="h6">Dirección</label>
+                              <div class="row">
+                                  <div class="col-6">
+                                      <label for="street" class="px-1">Calle</label>
+                                      <input type="text" class="form-control" id="street" placeholder="Calle">
+                                  </div>
+                                  <div class="col-4">
+                                      <label for="number" class="px-1">Número</label>
+                                      <input type="number" class="form-control" id="number" placeholder="9999" min="0">
+                                  </div>
+                                  <div class="col-2">
+                                      <label for="floor" class="px-1">Piso</label>
+                                      <input type="number" class="form-control" id="floor" placeholder="3" min="0">
+                                  </div>
+                                  <div class="col-6">
+                                      <label for="corner" class="px-1">Esquina</label>
+                                      <input type="text" class="form-control" id="corner" placeholder="Esquina">
+                                  </div>
+                                  <div class="col-6">
+                                      <label for="city" class="px-1">Ciudad</label>
+                                      <input type="text" class="form-control" id="city" placeholder="Ciudad">
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="form-group">
+                              <label for="credit-card" class="h6">Tarjeta de crédito</label>
+                              <div class="input-group">
+                                  <input type="number" class="form-control" id="credit-card" placeholder="xxxx xxxx xxxx xxxx" min="0">
+                                  <img src="https://www.svgrepo.com/show/400136/creditcard.svg" width="50px" id="creditCardID" class="imgCreditCard">
+                              </div>
+                          </div>
+                          <div class="form-group">
+                              <div class="row">
+                                  <div class="col-6">
+                                      <label for="credit-card" class="h6">CVV</label>
+                                      <input type="number" class="form-control" id="cvv" placeholder="xxx" min="0">
+                                  </div>
+                                  <div class="col-6">
+                                      <label for="credit-card" class="h6">Fecha de vencimiento</label>
+                                      <input type="month" class="form-control" id="date" placeholder="xx/xx" min="${diaDeHoy()}">
+                                  </div>
+                              </div>
+                          </div>
+                      </form>
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-success" onclick="confirmBuy()" data-toggle="modal" data-target="#Modal2">Comprar</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+    <div id="dayOfArrival">
+      <div class="modal fade" id="Modal2" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Gracias por su compra!</h4>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="days"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
   </main>
 
   <footer id="footer"></footer>
