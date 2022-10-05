@@ -90,7 +90,7 @@ function showCategoriesList(currentCategoriesArray){
                     <div onclick="setCatID(${category.id})" class="list-group-item list-group-item-action cursor-active">
                         <div class="row">
                             <div class="col-3">
-                                <img src="${category.imgSrc}" alt="${category.description}" class="p-0 img-thumbnail">
+                                <img src="${category.imgSrc}" alt="${category.description}" class="p-0 img-thumbnail imgCategories">
                             </div>
                             <div class="col">
                                 <div class="d-flex w-100 justify-content-between">
@@ -116,11 +116,11 @@ function showCategoriesList(currentCategoriesArray){
                     htmlContentToAppend += `
                     <div class="col-md-3" onclick="setCatID(${category.id})">
                         <div class="card mb-4 shadow-sm custom-card cursor-active card_hover" id="autos">
-                            <img class="bd-placeholder-img card-img-top" src="${category.imgSrc}" alt="${category.description}">
+                            <img class="bd-placeholder-img card-img-top imgCategories" src="${category.imgSrc}" alt="${category.description}">
                             <h4 class="m-3">${category.name}</h4>
                             <div class="card-body">
                                 <p class="card-text">${category.description}</p>
-                                <small class="text-muted">${category.productCount}vendidos</small> 
+                                <small class="text-muted">${category.productCount} artículos</small> 
                             </div>
                         </div>
                     </div> 
@@ -273,11 +273,11 @@ function X() {
 }
 
 window.addEventListener("resize" , function() {
-    if (this.window.innerWidth <= 760 && toggle === false) {
+    if (this.window.innerWidth <= 767 && toggle === false) {
         showCategoriesList(currentCategoriesArray);
         toggle = true;
     }
-    else if (this.window.innerWidth > 760 && toggle === true) {
+    else if (this.window.innerWidth > 767 && toggle === true) {
         showCategoriesList(currentCategoriesArray)
         toggle = false;
     }

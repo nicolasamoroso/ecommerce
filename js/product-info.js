@@ -71,8 +71,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (localStorage.getItem(`product-${id}`)) {
             showUserComments(JSON.parse(localStorage.getItem(`product-${id}`)))
         }
-        
-        showTextArea();
 
         for (let i = 0; i < ratingStars.length; ++i) {
             ratingStars[i].className = "ratingStar fa fa-star checked";
@@ -99,7 +97,6 @@ function showPage() {
     showProductInfo();
 
     document.getElementById("addComment").classList.add("show")
-    showTextArea();
 
     for (let i = 0; i < ratingStars.length; ++i) {
         ratingStars[i].className = "ratingStar fa fa-star checked";
@@ -150,7 +147,7 @@ function showProductInfo() {
     </div>
     `
 
-    const images = productInfoArray.images === undefined ? productInfoArray.image : productInfoArray.images;
+    const images = productInfoArray.images ?? productInfoArray.image;
 
     if (images.length > 1) {
         document.getElementById('carouselDark').innerHTML += `
@@ -180,17 +177,17 @@ function showProductInfo() {
 
     htmlContentToAppend = `
     <div class="carousel-item active">
-        <img src="${images[0].dataURL === undefined ? images[0] : images[0].dataURL}" class="d-block w-100">
+        <img src="${images[0].dataURL ?? images[0]}" class="imgCarousel">
     </div>
     `
     document.getElementById('c-inner').innerHTML = htmlContentToAppend;
 
     //Agrega cada imagen que se encuentre para esa id en el JSON
     for (let i = 1; i < images.length; i++) {
-        let img = images[i].dataURL === undefined ? images[i] : images[i].dataURL;
+        let img = images[i].dataURL ?? images[i];
         htmlContentToAppend += `
         <div class="carousel-item">
-            <img src="${img}" class="d-block w-100">
+            <img src="${img}" class="imgCarousel">
         </div>
         `
     }
@@ -198,28 +195,22 @@ function showProductInfo() {
 
 }
 
-
 //  #-----------------------------Productos relacionados-----------------------------#
 
 //Muestra los productos relacionados con el artículo "id"
 function showProductRelated () {
-
-    let htmlContentToAppend = `
+    document.getElementById('related').innerHTML = `
     <div class="container">
         <h3 class="text-center mt-5"><strong>Productos relacionados</strong></h3>
         <div id="container-related" class="row mt-5 justify-content-center">
         </div>
     </div>
     `
-
-    document.getElementById('related').innerHTML = htmlContentToAppend;
     
-    htmlContentToAppend = "";
-
     //agrega cada articulo relacionado que se encuentre para esa id en el JSON
     for (let i = 0; i < productInfoRelatedArray.length; i++) {
         let p_related = productInfoRelatedArray[i];
-        htmlContentToAppend += `
+        document.getElementById('container-related').innerHTML += `
         <div class="col-md-4 scale" onclick="product_info(${p_related.id})">
             <div class="card mb-4 shadow-sm custom-card cursor-active card_hover imgRelated">
                 <img class="bd-placeholder-img card-img-top" src="${p_related.image}">
@@ -228,7 +219,4 @@ function showProductRelated () {
         </div>
         `
     }
-    
-    document.getElementById('container-related').innerHTML = htmlContentToAppend;
 }
-

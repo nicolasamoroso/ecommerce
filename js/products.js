@@ -9,8 +9,6 @@ let maxPrice = undefined;
 let toggle = true;
     
 document.addEventListener("DOMContentLoaded", async (e) => {
-    
-
     toggle = media.matches ? false : true;
 
     /* 
@@ -32,7 +30,6 @@ document.addEventListener("DOMContentLoaded", async (e) => {
         "start" y "end" son almacenamientos locales que guardar los productos que se "vendieron" en "Vender (sell.js)"
         */
         if (start) {
-
             start = start.filter(function (product) {
                 return product.category === cat_name;
             });
@@ -40,13 +37,11 @@ document.addEventListener("DOMContentLoaded", async (e) => {
             start.forEach(element => {
                 let index = productsArray.findIndex(product => product.name == element.name);
                 if (index !== -1) 
-                    productsArray.splice(index, 1);
-                
+                    productsArray.splice(index, 1);  
             });
         }
 
         if (end) {
-
             end = end.filter(function (product) {
                 return product.category === cat_name;
             });
@@ -70,19 +65,16 @@ document.addEventListener("DOMContentLoaded", async (e) => {
     //Sort
     document.getElementById("sortRelDesc").addEventListener("click", () => {
         sortAndShowProducts(ORDER_DESC_BY_REL);
-
         changeColor("desc", "count-up", "count-down");
     });
 
     document.getElementById("sortByPriceDown").addEventListener("click", () => {
         sortAndShowProducts(ORDER_BY_PROD_PRICE_MAX);
-
         changeColor("count-down", "desc", "count-up");
     });
 
     document.getElementById("sortByPriceUp").addEventListener("click", () => {
         sortAndShowProducts(ORDER_BY_PROD_PRICE_MIN);
-
         changeColor("count-up", "desc", "count-down");
     });
 
@@ -97,7 +89,6 @@ document.addEventListener("DOMContentLoaded", async (e) => {
     });
 
     document.getElementById("rangeFilterPrice").addEventListener("click", () => {
-
         /* 
         Obtengo el mínimo y máximo de los intervalos para filtrar por el precio
         de productos. 
@@ -161,7 +152,7 @@ function showProductsList(productsArray) {
                         <div class="list-group-item list-group-item-action cursor-active position-relative" onclick="product_info(${product.id})">
                             <div class="row">
                                 <div class="col-3">
-                                    <img src="${product.image[0].dataURL === undefined ? product.image : product.image[0].dataURL}" alt="${product.description}" class="p-0 img-thumbnail">
+                                    <img src="${product.image[0].dataURL ?? product.image}" alt="${product.description}" class="p-0 img-thumbnail imgProduct">
                                 </div>
                                 <div class="col">
                                     <div class="d-flex w-100 justify-content-between">
@@ -169,7 +160,7 @@ function showProductsList(productsArray) {
                                             <h4> ${product.name} - ${product.currency} ${product.cost} </h4> 
                                             <p class="mb-1"> ${product.description} </p> 
                                         </div>
-                                        <small class="text-muted p-soldcount"> ${product.soldCount === undefined ? 0 : product.soldCount} vendidos</small> 
+                                        <small class="text-muted p-soldcount"> ${product.soldCount ?? 0} vendidos</small> 
                                     </div>
                                 </div>
                             </div>
@@ -190,7 +181,7 @@ function showProductsList(productsArray) {
                         <div class="row d-flex justify-content-center">
                             <div class="col-md-4" onclick="product_info(${product.id})">
                                 <div class="card mb-4 shadow-sm custom-card cursor-active card_hover">
-                                    <img class="bd-placeholder-img card-img-top" src="${product.image[0].dataURL === undefined ? product.image : product.image[0].dataURL}" alt="${product.description}">
+                                    <img class="bd-placeholder-img card-img-top imgProduct" src="${product.image[0].dataURL === undefined ? product.image : product.image[0].dataURL}" alt="${product.description}">
                                     <h4 class="m-3">${product.name} - ${product.currency} ${product.cost}</h4>
                                     <div class="card-body">
                                         <p class="card-text">${product.description}</p>
@@ -303,11 +294,11 @@ function X() {
 
 
 window.addEventListener("resize" , function(e) {
-    if (this.window.innerWidth <= 760 && toggle === false) {
+    if (this.window.innerWidth <= 767 && toggle === false) {
         showProductsList(productsArray);
         toggle = true;
     }
-    else if (this.window.innerWidth > 760 && toggle === true) {
+    else if (this.window.innerWidth > 767 && toggle === true) {
         showProductsList(productsArray);
         toggle = false;
     }
