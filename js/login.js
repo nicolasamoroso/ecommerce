@@ -72,7 +72,9 @@ function signIn(n_email, name = undefined, picture = undefined) {
         email: catchProfile.email,
         picture: catchProfile.picture,
         phone: catchProfile.phone,
-        address: catchProfile.address,
+        street: catchProfile.street,
+        number: catchProfile.number,
+        department: catchProfile.department,
         age: catchProfile.age,
         name_lastname: catchProfile.name_lastnme,
         logged : true
@@ -94,7 +96,9 @@ function signIn(n_email, name = undefined, picture = undefined) {
     email: n_email,
     picture: picture ? picture : "img/img_perfil.png",
     phone: null,
-    address: null,
+    street: null,
+    number: null,
+    department: null,
     age: null,
     name_lastname: null,
     logged : true

@@ -30,26 +30,33 @@ document.addEventListener("DOMContentLoaded", async (e) => {
         "start" y "end" son almacenamientos locales que guardar los productos que se "vendieron" en "Vender (sell.js)"
         */
         if (start) {
-            start = start.filter(function (product) {
-                return product.category === cat_name;
-            });
+            start = start.filter((product) =>  product.category === cat_name )
 
             start.forEach(element => {
-                let index = productsArray.findIndex(product => product.name == element.name);
-                if (index !== -1) 
-                    productsArray.splice(index, 1);  
+                let index = productsArray.findIndex(product => 
+                    product.name === element.name && 
+                    product.category === element.category && 
+                    product.description === element.description &&
+                    product.currency === element.currency &&
+                    product.cost === element.cost
+                )
+
+                if (index !== -1) productsArray.splice(index, 1)
             });
         }
 
         if (end) {
-            end = end.filter(function (product) {
-                return product.category === cat_name;
-            });
+            end = end.filter((product) => product.category === cat_name)
             
             end.forEach(element => {
-                let index = productsArray.findIndex(product => product.name == element.name);
-                if (index !== -1) 
-                    productsArray.splice(index, 1);
+                let index = productsArray.findIndex(product => 
+                    product.name === element.name && 
+                    product.category === element.category && 
+                    product.description === element.description &&
+                    product.currency === element.currency &&
+                    product.cost === element.cost
+                )
+                if (index !== -1) productsArray.splice(index, 1);
                 
             });
         }
@@ -181,11 +188,11 @@ function showProductsList(productsArray) {
                         <div class="row d-flex justify-content-center">
                             <div class="col-md-4" onclick="product_info(${product.id})">
                                 <div class="card mb-4 shadow-sm custom-card cursor-active card_hover">
-                                    <img class="bd-placeholder-img card-img-top imgProduct" src="${product.image[0].dataURL === undefined ? product.image : product.image[0].dataURL}" alt="${product.description}">
+                                    <img class="bd-placeholder-img card-img-top imgProduct" src="${product.image[0].dataURL ?? product.image}" alt="${product.description}">
                                     <h4 class="m-3">${product.name} - ${product.currency} ${product.cost}</h4>
                                     <div class="card-body">
                                         <p class="card-text">${product.description}</p>
-                                        <small class="text-muted"> ${product.soldCount === undefined ? 0 : product.soldCount} vendidos</small> 
+                                        <small class="text-muted"> ${product.soldCount ?? 0} vendidos</small> 
                                     </div>
                                 </div>
                             </div>

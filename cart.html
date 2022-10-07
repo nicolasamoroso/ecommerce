@@ -19,7 +19,7 @@
   <script src="https://kit.fontawesome.com/95b02ed607.js" crossorigin="anonymous"></script>
 </head>
 
-<body>
+<body onmouseup="mouseUp()">
   <nav id="navbar"></nav>
 
   <main class="mt-5 cartmain">
@@ -64,7 +64,7 @@
                       <p class="card-text" id="subtotal">Subtotal <span class="float-end" id="subtotal-value"></span> </p>
                   </div>
                   <div class="col-12">
-                      <p class="card-text">Envío <span class="float-end" id="shipping-value">Gratis </span>
+                      <p class="card-text text-muted">Envío <span class="float-end" id="shipping-value">Gratis </span>
                       </p>
                   </div>
                   <div class="col-12">
@@ -107,7 +107,7 @@
                       </div>
                   </div>
               </div>
-              <button id="buy" class="btn btn-success button_checkout mt-2" data-toggle="modal" data-target="#Modal">Checkout</button>
+              <button id="buy" class="btn btn-success button_checkout mt-2">Checkout</button>
           </div>
         </div>
       </div>
@@ -121,92 +121,76 @@
                       <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                      <form accept-charset="utf-8">
-                          <div class="form-group">
-                              <label for="name" class="h6">Nombre</label>
-                              <input type="text" class="form-control" id="name" placeholder="Jane" onkeydown="return /[a-zA-ZÀ-ÿ\u00f1\u00d1]/i.test(event.key)">
-                          </div>
-                          <div class="form-group">
-                              <label for="surname" class="h6">Apellido</label>
-                              <input type="text" class="form-control" id="surname" placeholder="Doe" onkeydown="return /[a-zA-ZÀ-ÿ\u00f1\u00d1]/i.test(event.key)">
-                          </div>
-                          <div class="form-group">
-                              <label for="phone" class="h6">Teléfono</label>
-                              <input type="number" class="form-control" id="phone" placeholder="099 999 999" min="0">
-                          </div>
-                          <div class="form-group">
-                              <label for="email" class="h6">Email</label>
-                              <input type="email" class="form-control" id="email" placeholder="jane@example.com">
-                          </div>
-                          <div class="form-group">
-                              <label for="address" class="h6">Dirección</label>
-                              <div class="row">
-                                  <div class="col-6">
-                                      <label for="street" class="px-1">Calle</label>
-                                      <input type="text" class="form-control" id="street" placeholder="Calle">
-                                  </div>
-                                  <div class="col-4">
-                                      <label for="number" class="px-1">Número</label>
-                                      <input type="number" class="form-control" id="number" placeholder="9999" min="0">
-                                  </div>
-                                  <div class="col-2">
-                                      <label for="floor" class="px-1">Piso</label>
-                                      <input type="number" class="form-control" id="floor" placeholder="3" min="0">
-                                  </div>
-                                  <div class="col-6">
-                                      <label for="corner" class="px-1">Esquina</label>
-                                      <input type="text" class="form-control" id="corner" placeholder="Esquina">
-                                  </div>
-                                  <div class="col-6">
-                                      <label for="city" class="px-1">Ciudad</label>
-                                      <input type="text" class="form-control" id="city" placeholder="Ciudad">
-                                  </div>
-                              </div>
-                          </div>
-                          <div class="form-group">
-                              <label for="credit-card" class="h6">Tarjeta de crédito</label>
-                              <div class="input-group">
-                                  <input type="number" class="form-control" id="credit-card" placeholder="xxxx xxxx xxxx xxxx" min="0">
-                                  <img src="https://www.svgrepo.com/show/400136/creditcard.svg" width="50px" id="creditCardID" class="imgCreditCard">
-                              </div>
-                          </div>
-                          <div class="form-group">
-                              <div class="row">
-                                  <div class="col-6">
-                                      <label for="credit-card" class="h6">CVV</label>
-                                      <input type="number" class="form-control" id="cvv" placeholder="xxx" min="0">
-                                  </div>
-                                  <div class="col-6">
-                                      <label for="credit-card" class="h6">Fecha de vencimiento</label>
-                                      <input type="month" class="form-control" id="date" placeholder="xx/xx" min="${diaDeHoy()}">
-                                  </div>
-                              </div>
-                          </div>
-                      </form>
+                        <div class="form-group">
+                            <label for="name" class="h6">Nombre</label>
+                            <input type="text" class="form-control" id="name" placeholder="Jane" onkeydown="return /[a-zA-ZÀ-ÿ\u00f1\u00d1]/i.test(event.key)">
+                        </div>
+                        <div class="form-group">
+                            <label for="surname" class="h6">Apellido</label>
+                            <input type="text" class="form-control" id="surname" placeholder="Doe" onkeydown="return /[a-zA-ZÀ-ÿ\u00f1\u00d1]/i.test(event.key)">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone" class="h6">Teléfono</label>
+                            <input type="text" class="form-control" id="phone" placeholder="099 999 999" min="0" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1').slice(0,9)">
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="h6">Email</label>
+                            <input type="email" class="form-control" id="email" placeholder="jane@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="address" class="h6">Dirección</label>
+                            <div class="row">
+                                <div class="col-6">
+                                    <label for="street" class="px-1">Calle</label>
+                                    <input type="text" class="form-control" id="street" placeholder="Calle" onkeydown="return /[a-zA-ZÀ-ÿ\u00f1\u00d1, ]/i.test(event.key)">
+                                </div>
+                                <div class="col-4">
+                                    <label for="number" class="px-1">Número</label>
+                                    <input type="text" class="form-control" id="number" placeholder="9999" min="0" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1').slice(0,4)">
+                                </div>
+                                <div class="col-2">
+                                    <label for="floor" class="px-1">Piso</label>
+                                    <input type="text" class="form-control" id="floor" placeholder="3" min="0" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1').slice(0,2)">
+                                </div>
+                                <div class="col-6">
+                                    <label for="corner" class="px-1">Esquina</label>
+                                    <input type="text" class="form-control" id="corner" placeholder="Esquina" onkeydown="return /[a-zA-ZÀ-ÿ\u00f1\u00d1, ]/i.test(event.key)">
+                                </div>
+                                <div class="col-6">
+                                    <label for="city" class="px-1">Departamento</label>
+                                    <input type="text" class="form-control" id="department" placeholder="Departamento" onkeydown="return /[a-zA-ZÀ-ÿ\u00f1\u00d1, ]/i.test(event.key)">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="credit-card" class="h6">Tarjeta de crédito</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="credit-card" placeholder="xxxx xxxx xxxx xxxx" min="0" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1').slice(0, 16)">
+                                <img src="https://www.svgrepo.com/show/400136/creditcard.svg" width="50px" id="creditCardID" class="imgCreditCard">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label for="credit-card" class="h6">CVV</label>
+                                    <input type="text" class="form-control" id="cvv" placeholder="xxx" min="0" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1').slice(0,3)">
+                                </div>
+                                <div class="col-6">
+                                    <label for="credit-card" class="h6">Fecha de vencimiento</label>
+                                    <input type="month" class="form-control" id="date" placeholder="xx/xx">
+                                </div>
+                            </div>
+                        </div>
                   </div>
                   <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                       <button type="button" class="btn btn-success" onclick="confirmBuy()" data-toggle="modal" data-target="#Modal2">Comprar</button>
                   </div>
               </div>
           </div>
       </div>
     </div>
-    <div id="dayOfArrival">
-      <div class="modal fade" id="Modal2" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Gracias por su compra!</h4>
-                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p id="days"></p>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
+    <div id="dayOfArrival"></div>
   </main>
 
   <footer id="footer"></footer>

@@ -135,8 +135,15 @@ const addProduct = async (info) => {
 
   const img = info.images ? info.images[0] : info.image[0].dataURL ? info.image[0].dataURL : info.image;
   
-  if (cartArray) {
+  let stock = info.stock
+    
+  if (!stock)  {
+    stock = Math.round(40000/info.cost)
+    if (info.currency === "UYU") stock *= 23
+  }
+  
 
+  if (cartArray) {
     let newElement = undefined;
     
     let index = cartArray.findIndex(function({id}) {
@@ -161,14 +168,12 @@ const addProduct = async (info) => {
       currency: info.currency,
       image: img,
       count: newElement === undefined ? 1 : parseInt(newElement.count) + 1,
-      stock: info.stock ?? null,
-      description: info.description
+      stock: stock === 0 ? 1 : stock
     }
     cartArray.push(newProduct);
     localStorage.setItem("productBuyArray", JSON.stringify(cartArray));
   }
   else {
-
     const newProduct = {
       id: info.id,
       name: info.name,
@@ -176,22 +181,18 @@ const addProduct = async (info) => {
       currency: info.currency,
       image: img,
       count: 1,
-      stock: info.stock ?? null,
-      description: info.description
+      stock: stock === 0 ? 1 : stock
     }
 
-    
     const productJSON = await getJSONData(CART_INFO);
     if (productJSON.status === "ok") {
       productArray = productJSON.data.articles;
+      productArray[0].stock = 4
       cartArray = [];
       productArray.forEach(function(product) {
         cartArray.push(product);
       });
-      for (let i = 0; i < productArray.length; i++) {
-        const element = productArray[i];
-        element.stock = 99;
-      }
+
       cartArray.push(newProduct);
     }
     localStorage.setItem("productBuyArray", JSON.stringify(cartArray));

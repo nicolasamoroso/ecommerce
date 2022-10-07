@@ -7,6 +7,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("subtotal-value").innerText = typeOfCurrency + " 0"
     document.getElementById("total-value").innerText = typeOfCurrency + " 0"
 
+    document.getElementById("date").min = diaDeHoy()
+
     if (productBuyArray && productBuyArray.length !== 0) {
         productArray = productBuyArray;
         showBuyList(productArray.length)  
@@ -15,6 +17,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const productJSON = await getJSONData(CART_INFO)
         if (productJSON.status === "ok") {
             productArray = productJSON.data.articles
+            productArray[0].stock = Math.round(40000/productArray[0].unitCost) === 0 ? 1 : Math.round(40000/productArray[0].unitCost)
             localStorage.setItem("productBuyArray", JSON.stringify(productArray));
             showBuyList(1)
         }
@@ -55,9 +58,40 @@ document.getElementById("uyu").addEventListener("click", function () {
 
 let creditCardName = "Ninguna"
 document.getElementById("buy").addEventListener("click", function () {
-    if (localStorage.getItem("productBuyArray") && JSON.parse(localStorage.getItem("productBuyArray")).length !== 0)
-        document.getElementById("Modal").classList.add = "show"
-    else return alert("No hay productos para comprar")
+    const btnBuy = document.getElementById("buy")
+
+    if (!localStorage.getItem("productBuyArray") || JSON.parse(localStorage.getItem("productBuyArray")).length === 0) {
+        btnBuy.removeAttribute("data-toggle")
+        btnBuy.removeAttribute("data-target")
+        return alert("No hay productos para comprar")
+    }
+
+    document.getElementById("Modal").classList.add = "show"
+
+    btnBuy.setAttribute("data-toggle", "modal")
+    btnBuy.setAttribute("data-target", "#Modal")
+
+    const profileArray = JSON.parse(localStorage.getItem("profile"))
+
+    if (profileArray) {
+        const profile = profileArray.find(({logged}) => {
+            return  logged === true
+        })
+
+        if (profile) {
+            const name_lastname = profile.name_lastname.split(" ")
+            const name = name_lastname[0]
+            const lastname = name_lastname[1]
+
+            document.getElementById("name").value = name ?? ""
+            document.getElementById("surname").value = lastname ?? ""
+            document.getElementById("email").value = profile.email ?? ""
+            document.getElementById("phone").value = profile.phone ?? ""
+            document.getElementById("street").value = profile.street ?? ""
+            document.getElementById("number").value = profile.number ?? ""
+            document.getElementById("department").value = profile.department ?? ""
+        }
+    }
 
     document.getElementById("credit-card").addEventListener("keyup", function(e) {
         let credit = "Otra"
@@ -84,7 +118,9 @@ function showBuyList(lenght) {
         <h4 class="card-title">Mi Carrito (${lenght} Artículos)</h4>
         <hr>
         <div id="items"></div>
-        <a href="products.html" class="prev"> <i class="fa-solid fa-arrow-left"></i> Continuar comprando </a>    
+        <div class="col-3">
+            <a href="products.html" class="prev"> <i class="fa-solid fa-arrow-left"></i> Continuar comprando </a>    
+        </div>
     </div>
     `
 
@@ -92,7 +128,7 @@ function showBuyList(lenght) {
         updateTotalCosts(productArray)
 
         for (let i = 0; i < productArray.length; i++) {
-            let {image, id, name, currency, unitCost, description, count} = productArray[i];
+            let {image, id, name, currency, unitCost, stock, count} = productArray[i];
             document.getElementById("items").innerHTML += `
             <div class="row">
                 <div class="col-4">
@@ -101,37 +137,89 @@ function showBuyList(lenght) {
                 <div class="col-8">
                     <div class="d-flex justify-content-between">
                         <h5 class="card-title cursor-active" onclick="goBack(${id})">${name}</h5>
-                        <h5 class="card-title text-muted">${typeOfCurrency} ${verifyCurrency(currency, unitCost, i)}</h5>
+                        <h5 class="card-title fw-bold" id="totalPerProduct-${i}">${typeOfCurrency} ${verifyCurrency(currency, unitCost, i) * count}</h5>
                     </div>
-                    <p class="card-text text-muted">${description ?? 'El modelo de auto que se sigue renovando y manteniendo su prestigio en comodidad.'}</p>
-                    <div class="d-flex justify-content-between align-items-end">
-                        <div class="d-flex justify-content-start count_delete">
-                            <div>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <button class="btn" type="button" onclick="changeTotal('negative', ${id})">-</button>
-                                    </div>
-                                    <label class="cart_counter" id="countProduct-${i}">${count ?? 1}</label>
-                                    <div class="input-group-append">
-                                        <button class="btn" type="button" onclick="changeTotal('positive', ${id})">+</button>
-                                    </div>
+                    <h5 class="card-title text-muted">${typeOfCurrency} ${verifyCurrency(currency, unitCost, i)}</h5>
+                    <p class="card-text text-success fw-bold">${stock} In Stock</p>
+                    <div class="d-flex justify-content-between cartList align-items-end flex-column">
+                        <div class="d-flex count_delete">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <button class="btn minus" type="button" onmouseup="mouseUp()" onmousedown="mouseDown('negative', ${id})">-</i></button>
+                                </div>
+                                <label class="cart_counter" id="countProduct-${i}">${count ?? 1}</label>
+                                <div class="input-group-append">
+                                    <button class="btn plus" type="button" onmouseup="mouseUp()" onmousedown="mouseDown('positive', ${id})">+</button>
                                 </div>
                             </div>
-                            <div>
-                                <i class="fa-solid fa-trash h2 mt-1" onclick="remove(${id})"></i>
-                            </div>
+                            <i class="fa-solid fa-trash h2 mt-2" onclick="remove(${id})"></i>
                         </div>
-                    </div>
-                    <div class="d-flex justify-content-end align-items-end">
-                        <h5 class="card-title fw-bold" id="totalPerProduct-${i}">Subtotal: ${typeOfCurrency} ${verifyCurrency(currency, unitCost, i) * count}</h5>
                     </div>
                 </div>
             </div>
-            <hr>
+            <hr>        
             `
         }
     }
     else document.getElementById("table").innerHTML = noHayProductos()
+}
+
+let startTime = 0
+let stepInterval = 1;
+let intTime = "500"
+let count = 0
+
+function mouseUp() {
+    clearTimeout(count)
+    }
+
+    function mouseDown(type, id) {
+        startTime = new Date().getTime()
+        const i = productArray.findIndex(product => product.id === id)
+
+        stepInterval = () => {
+            const newTime = new Date().getTime();
+            const elapsedTime = newTime - startTime;
+            if (productArray[i].count === 1 && type === "negative") {
+                remove(id)
+                return
+            }
+            
+            if (elapsedTime < 1000) {
+                productArray[i].count = type === "positive" ? productArray[i].count + 1 : productArray[i].count - 1
+                intTime = "500"
+            }
+            else if (elapsedTime < 2000) {
+                productArray[i].count = type === "positive" ? productArray[i].count + 2 : productArray[i].count - 2
+            intTime = "250"
+        }
+        else if (elapsedTime < 3000) {
+            productArray[i].count = type === "positive" ? productArray[i].count + 3 : productArray[i].count - 3
+            intTime = "150"
+        }
+        else if (elapsedTime < 6000) {
+            productArray[i].count = type === "positive" ? productArray[i].count + 5 : productArray[i].count - 5
+            intTime = "70"
+        }
+        else if (elapsedTime > 6000) {
+            console.log("entro")
+            productArray[i].count = type === "positive" ? productArray[i].count + 10 : productArray[i].count - 10
+            intTime = "40"
+        }
+        
+        if (productArray[i].count < 1) productArray[i].count = 1
+        if (!productArray[i].stock) productArray[i].stock = 99
+        if (productArray[i].count > productArray[i].stock) productArray[i].count = productArray[i].stock
+
+        document.getElementById(`countProduct-${i}`).innerText = productArray[i].count
+        localStorage.setItem("productBuyArray", JSON.stringify(productArray))
+        
+        updateTotalCosts(productArray)
+        changeProductTotal(productArray[i].unitCost, productArray[i].count, i)
+
+        count = setTimeout(stepInterval, intTime);
+    }
+    stepInterval()
 }
 
 function verifyCurrency(currency, unitCost) {
@@ -185,7 +273,7 @@ function changeTotal(type, id) {
 }
 
 function changeProductTotal(unitCost, count, i) {
-    document.getElementById(`totalPerProduct-${i}`).innerText = `Total: ${typeOfCurrency} ${
+    document.getElementById(`totalPerProduct-${i}`).innerText = `${typeOfCurrency} ${
         verifyCurrency(productArray[i].currency, unitCost, i) * count
     }
     `
@@ -236,7 +324,6 @@ function validateCVV(cvv) {
 }
 
 function confirmBuy() {
-
     const name = document.getElementById("name").value
     const surname = document.getElementById("surname").value
     const phone = document.getElementById("phone").value
@@ -245,20 +332,20 @@ function confirmBuy() {
     const number = document.getElementById("number").value
     const floor = document.getElementById("floor").value
     const corner = document.getElementById("corner").value
-    const city = document.getElementById("city").value
+    const department = document.getElementById("department").value
     const creditCard = document.getElementById("credit-card").value
     const cvv = document.getElementById("cvv").value
     const date = document.getElementById("date").value
-    
+
     if (!name) alert("Ingrese un nombre valido")
     else if (!surname) alert("Ingrese un apellido valido")
-    else if (!phone || validatePhone(phone)) alert("Ingrese un número de teléfono valido (ej: 099999999)")
+    else if (!phone || validatePhone(phone)) alert("Ingrese un número de teléfono valido (ej: 09XXXXXXXX)")
     else if (!email || validateEmail(email)) alert("Ingrese un email valido (ej: jane@example.com)")
     else if (!street) alert("Ingrese una calle valida")
     else if (!number || validateNumber(number)) alert("Ingrese un número valido")
     else if (!floor || floor.lenght > 15) alert("Ingrese un piso valido")
     else if (!corner) alert("Ingrese un esquina valida")
-    else if (!city) alert("Ingrese una ciudad valida")
+    else if (!department) alert("Ingrese una ciudad valida")
     else if (!creditCard || validateCreditCard(creditCard)) alert("Ingrese un número de tarjeta de crédito valido (ej: 9999999999999999)")
     else if (!cvv || validateCVV(cvv)) alert("Ingrese un número de CVV valido (ej: 999)")
     else if (!date) alert("Ingrese una fecha de vencimiento valida")
@@ -290,9 +377,23 @@ function confirmBuy() {
             0 : [0]
         }
 
+        document.getElementById("dayOfArrival").innerHTML = `
+        <div class="modal fade show" id="Modal2" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Gracias por su compra!</h4>
+                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="days"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `
+
         document.getElementById("days").innerText = DiaDeLlegada(dia, envio, day, date)
-        const modal2 = document.getElementById("Modal2");
-        modal2.classList.add("show")
 
         setTimeout(() => {
             modal2.classList.remove("show")
@@ -300,6 +401,8 @@ function confirmBuy() {
         }, 4000)
 
         document.getElementById("table").innerHTML = noHayProductos()
+        document.getElementById("subtotal-value").innerText = typeOfCurrency + " 0"
+        document.getElementById("total-value").innerText = typeOfCurrency + " 0"
     }
 }
 
