@@ -3,11 +3,10 @@ const profile = JSON.parse(localStorage.getItem("profile")).find(function({logge
     return logged === true
 })
 
-document.addEventListener("DOMContentLoaded", async (e) => {
-
-    pic()
+document.addEventListener("DOMContentLoaded", async () => {
+    document.getElementById("profile_img").src = profile.picture
     info()
-    
+
     //guarda la ubicación actual por si llega a ir a un lugar no permitido.
     const location = window.location.href
     localStorage.setItem("prev_location", JSON.stringify(location))
@@ -26,7 +25,6 @@ document.addEventListener("DOMContentLoaded", async (e) => {
     
     //Función que abre el editor con la imagen seleccionada
     function abrirEditor(e) {
-        
         if(!e.target.files[0]) {
             document.getElementById("Modal").classList.add("d-none")
             document.querySelector(".modal-backdrop").remove()
@@ -59,7 +57,6 @@ document.addEventListener("DOMContentLoaded", async (e) => {
     
     //Función que recorta la imagen con las coordenadas proporcionadas con croppr.js
     function recortarImagen(data) {
-
         const inicioX = data.x
         const inicioY = data.y
         const nuevoAncho = data.width
@@ -94,146 +91,65 @@ document.addEventListener("DOMContentLoaded", async (e) => {
 
 })
 
-function pic() {
-    let htmlContentToAppend = `
-
-    <div class="row mb-2">
-        <div class="text-center">
-            <img id="profile_img" src="${profile.picture}" alt="${profile.name}" class="mb-2 shadow">
-            <canvas id="preview" class="d-none" width="0"></canvas>
-            <!-- boton para editar foto de perfil -->
-            <div class="d-flex justify-content-center mb-2">
-            <label class="d-none btn btn-primary mt-1" id="image" data-toggle="modal" data-target="#Modal">
-                Editar
-                <input class="d-none" type="file" name="image">
-            </label>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="ModalLabel">Editar imagen de perfil</h5>
-                </div>
-                <div class="modal-body">
-                    <p class="text-muted">
-                        Para cambiar la imagen de perfil, ajuste el tamaño.
-                        <small class="text-muted">(Sino no se cambiará)</small>
-                    </p>
-                    <div id="editor"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancel-pic" onclick="cancel_pic">Close</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="save-pic">Save changes</button>
-                </div>
-            </div>    
-        </div>
-    </div>
-    `
-
-    document.getElementById("img").innerHTML = htmlContentToAppend
-}
-
 function cancel_pic() {
     document.getElementById("profile_img").src = profile.picture
 }
 
-
 function info() {
-
-    let htmlContentToAppend = `
-    <form class="row mb-4 card-body row">
-        <p class="mb-0 col-sm-5"><strong>Nombre de usuario</strong></p>
-        <small class="col-sm-7" id="username" >${profile.name}</small>
+    document.getElementById("info-perfil").innerHTML = `
+    <form class="row mb-4 card-body">
+        <p class="mb-0 col-sm-5 text-break"><strong>Nombre de usuario</strong></p>
+        <small class="col-sm-7 text-break">${profile.name}</small>
         <hr>
 
-        <p class="mb-0 col-sm-5"><strong>Email</strong></p>
-        <small class="col-sm-7" id="email">${profile.email}</small>
+        <p class="mb-0 col-sm-5 text-break"><strong>Email</strong></p>
+        <small class="col-sm-7 text-break">${profile.email}</small>
         <hr>
 
-        <p class="mb-0 col-sm-5"><strong>Nombre y Apellido</strong></p>
-        <small class="col-sm-7" id="nombre-apellido">${profile.name_lastname ? profile.name_lastname : "Debe completar este campo"}</small>
+        <p class="mb-0 col-sm-5 text-break"><strong>Nombre y Apellido</strong></p>
+        <small class="col-sm-7 text-break">${profile.name_lastname ?? "Debe completar este campo"}</small>
         <hr>
 
-        <p class="mb-0 col-sm-5"><strong>Celular</strong></p>
-        <small class="col-sm-7" id="celular">${profile.phone ? profile.phone : "Debe completar este campo"}</small>
+        <p class="mb-0 col-sm-5 text-break"><strong>Celular</strong></p>
+        <small class="col-sm-7 text-break">${profile.phone ?? "Debe completar este campo"}</small>
         <hr>
 
-        <p class="mb-0 col-sm-5"><strong>Dirección</strong></p>
-        <small class="col-sm-7" id="direccion">${profile.address ? profile.address : "Debe completar este campo"}</small>
+        <p class="mb-0 col-sm-5 text-break"><strong>Dirección</strong></p>
+        <small class="col-sm-7 text-break">${profile.address ?? "Debe completar este campo"}</small>
         <hr>
 
-        <p class="mb-0 col-sm-5"><strong>Edad</strong></p>
-        <small class="col-sm-7" id="edad">${profile.age ? profile.age : "Debe completar este campo"}</small>
+        <p class="mb-0 col-sm-5 text-break"><strong>Edad</strong></p>
+        <small class="col-sm-7 text-break">${profile.age ?? "Debe completar este campo"}</small>
         <hr>
 
-        <button type="button" onclick="modifyInfo()" id="modificarD" class="btn btn-dark">Modificar mis datos</button>
+        <button type="button" id="modificarInfo" class="btn btn-dark">Modificar mis datos</button>
     </form>
     `
-    
-    document.getElementById("info-perfil").innerHTML = htmlContentToAppend
+
+    document.getElementById("modificarInfo").addEventListener("click", function () {
+        document.getElementById("image").classList.remove("d-none")
+        document.getElementById("info-perfil").classList.add("d-none")
+        document.getElementById("info-perfil-edit").classList.remove("d-none")
+        document.getElementById("emailEdit").innerText = profile.email
+
+        document.getElementById("nombre").value = profile.name ?? ""
+        document.getElementById("nombre-apellido").value = profile.name_lastname ?? ""
+        document.getElementById("celular").value = profile.phone ?? ""
+        document.getElementById("calle").value = profile.street ?? ""
+        document.getElementById("numero").value = profile.number ?? ""
+        document.getElementById("departamento").value = profile.department ?? ""
+        document.getElementById("edad").value = profile.age ?? ""
+    })
 }
 
+function validatePhone(phone) {
+    const phoneReg = /^([0]{1})+([9]{1})+([0-9]{1})+([0-9]{3})+([0-9]{3})$/
+    return !phoneReg.test(phone)
+}
 
-
-function modifyInfo() {
-
-    document.getElementById("image").classList.remove("d-none")
-
-
-    let htmlContentToAppend = `
-
-    <form class="row mb-4 card-body row ">
-        <p class="mb-0 col-sm-5"><strong>Nombre de usuario</strong></p>
-        <div class="form-group col-sm-7">
-            <input type="text" class="form-control form-focus" id="nombre" placeholder="Username">
-        </div>
-        <hr>
-
-        <p class="mb-0 col-sm-5"><strong>Email</strong></p>
-        <small class="col-sm-7" id="email">${profile.email}</small>
-        <hr>
-
-        <p class="mb-0 col-sm-5"><strong>Nombre y Apellido</strong></p>
-        <div class="form-group col-sm-7">
-            <input type="text" class="form-control form-focus" id="nombre-apellido" placeholder="Jane Doe">
-        </div>
-        <hr>
-
-        <p class="mb-0 col-sm-5"><strong>Celular</strong></p>
-        <div class="form-group col-sm-7">
-            <input type="number" class="form-control form-focus" id="celular" min="0" placeholder="099999999">
-        </div>
-        <hr>
-
-        <p class="mb-0 col-sm-5"><strong>Dirección</strong></p>
-        <div class="form-group col-sm-7">
-            <input type="text" class="form-control form-focus " id="direccion" placeholder="City, Country">
-        </div>
-        <hr>
-
-        <p class="mb-0 col-sm-5"><strong>Edad</strong></p>
-        <div class="form-group col-sm-7">
-            <input type="number" class="form-control form-focus " id="edad" min="0" placeholder="18">
-        </div>
-        <hr>
-
-        <button type="button" onclick="saveInfo()" id="actualizarD" class="btn btn-success">Actualizar mis datos</button>
-        <button type="button" onclick="cancel()" id="actualizarD" class="btn btn-danger mt-2">Cancelar</button>
-        
-    </form>
-    `
-
-    document.getElementById("info-perfil").innerHTML = htmlContentToAppend
-
-    document.getElementById("nombre").value = profile.name
-    document.getElementById("nombre-apellido").value = profile.name_lastname ? profile.name_lastname : ""
-    document.getElementById("celular").value = parseInt(profile.phone)
-    document.getElementById("direccion").value = profile.address ? profile.address : ""
-    document.getElementById("edad").value = parseInt(profile.age)
-
+function validateNumber(number) {
+    const numberReg = /^([0-9]{3,4})$/
+    return !numberReg.test(number)
 }
 
 function saveInfo() {
@@ -241,48 +157,35 @@ function saveInfo() {
     let picture = document.getElementById("profile_img").src
     let name_lastname = document.getElementById("nombre-apellido").value
     let phone = document.getElementById("celular").value
-    let address = document.getElementById("direccion").value
+    let street = document.getElementById("calle").value
+    let number = document.getElementById("numero").value
+    let department = document.getElementById("departamento").value
     let age = document.getElementById("edad").value
-
-    if (name && name_lastname && phone && address && age) {
-
-        if(name.length > 20) {
-            alert("El nombre es muy largo")
-            return
-        }
-        if(phone.length > 10) {
-            alert("El celular es muy largo")
-            return
-        }
-        if(address.length > 30) {
-            alert("La dirección es muy larga")
-            return
-        }
-        if(age.length > 3 && age > 120) {
-            alert("La edad es muy larga")
-            return
-        }
-        if(age < 0) {
-            alert("La edad no puede ser negativa")
-            return
-        }
-        if (name_lastname.length > 33) {
-            alert("El nombre y apellido es muy largo")
-            return
-        }
-
-
+    
+    if (!name) alert("Debe completar el campo nombre")
+    else if (!name_lastname) alert("Debe completar el campo nombre y apellido")
+    else if (!phone) alert("Debe completar el campo celular")
+    else if (validatePhone(phone)) alert("El celular debe tener el formato 09XXXXXXXX")
+    else if (!street) alert("Debe completar el campo dirección")
+    else if (!number) alert("Debe completar el campo número")
+    else if (validateNumber(number)) alert("El número debe tener el formato XXXX")
+    else if (!department) alert("Debe completar el campo departamento")
+    else if (!age) alert("Debe completar el campo edad")
+    else  {
         const catchProfile = JSON.parse(localStorage.getItem("profile")).find(function({email}) {
             return email === profile.email
         })
-
         if (catchProfile) {
+            const address = street + " " + number + ", " + department
             const newProfile = {
                 name,
                 email: catchProfile.email,
                 name_lastname,
                 picture,
                 phone,
+                street,
+                number,
+                department,
                 address,
                 age,
                 logged : catchProfile.logged
@@ -295,20 +198,10 @@ function saveInfo() {
             window.location.href = "my-profile.html"
         }
     }
-    else {
-        alert("Por favor complete todos los campos")
-    }
-
 }
 
 function cancel() {
     document.getElementById("image").classList.add("d-none")
     document.getElementById("profile_img").src = profile.picture
-    info()
+    window.location.href = "my-profile.html"
 }
-
-document.addEventListener("keypress", (event) => {
-  if (event.code == "Enter") {
-    saveInfo()
-  }
-})

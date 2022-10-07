@@ -41,10 +41,92 @@
 
   <main class="adaptable">
     <h2 class="text-center mt-3">Perfil</h2>
-    <div id="datos" class="container py-3 p_100 pb-0 shadow">
-      <div id="img">
+    <div id="datos" class="pt-3 shadow m-auto card-items">
+      <div class="text-center">
+        <img id="profile_img" alt="Foto de perfil" class="img-fluid mb-2 shadow">
+        <canvas id="preview" class="d-none" width="0"></canvas>
+        <div class="d-flex justify-content-center mb-2">
+          <label class="d-none btn btn-primary mt-1" id="image" data-toggle="modal" data-target="#Modal">
+              Editar
+              <input class="d-none" type="file" name="image">
+          </label>
+        </div>
       </div>
-      <div id="info-perfil">
+      <div id="info-perfil" class="p-3"></div>
+      <div id="info-perfil-edit" class="p-3 d-none">
+        <div class="row mb-4 card-body">
+          <p class="mb-0 col-sm-5 text-break"><strong>Nombre de usuario</strong></p>
+          <div class="col-sm-7">
+              <input type="text" class="form-control form-focus" id="nombre" placeholder="JaneDoe" 
+              oninput="this.value = this.value.replace(/(\..*?)\..*/g, '$1').slice(0,20)">
+          </div>
+          <hr>
+  
+          <p class="mb-0 col-sm-5 "><strong>Email</strong></p>
+          <small class="col-sm-7 emailProfile text-break" id="emailEdit"></small>
+          <hr>
+
+          <p class="mb-0 col-sm-5 text-break"><strong>Nombre y Apellido</strong></p>
+          <div class="col-sm-7">
+            <input type="text" class="form-control form-focus" id="nombre-apellido" placeholder="Jane Doe" 
+            onkeydown="return /[a-zA-ZÀ-ÿ\u00f1\u00d1, ]/i.test(event.key)">
+          </div>
+          <hr>
+  
+          <p class="mb-0 col-sm-5 text-break"><strong>Celular</strong></p>
+          <div class="col-sm-7">
+            <input type="text" class="form-control form-focus" id="celular" placeholder="099 999 999" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1').slice(0,9)">
+          </div>
+          <hr>
+
+          <p class="mb-0 col-sm-5 text-break"><strong>Calle</strong></p>
+          <div class="col-sm-7">
+            <input type="text" class="form-control form-focus" id="calle" placeholder="Calle" onkeydown="return /[a-zA-ZÀ-ÿ\u00f1\u00d1, ]/i.test(event.key)">
+          </div>
+          <hr>
+
+          <p class="mb-0 col-sm-5 text-break"><strong>Número</strong></p>
+          <div class="col-sm-7">
+            <input type="text" class="form-control form-focus" id="numero" placeholder="9999" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1').slice(0,4)">
+          </div>
+          <hr>
+          
+          <p class="mb-0 col-sm-5 text-break"><strong>Departamento</strong></p>
+          <div class="col-sm-7">
+            <input type="text" class="form-control form-focus" id="departamento" placeholder="Departamento" onkeydown="return /[a-zA-ZÀ-ÿ\u00f1\u00d1, ]/i.test(event.key)">
+          </div>
+          <hr>
+  
+          <p class="mb-0 col-sm-5 text-break"><strong>Edad</strong></p>
+          <div class="col-sm-7">
+            <input type="text" class="form-control form-focus " id="edad" placeholder="18" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1').slice(0,2)">
+          </div>
+          <hr>
+  
+          <button type="button" onclick="saveInfo()" class="btn btn-success">Actualizar mis datos</button>
+          <button type="button" onclick="cancel()" id="cancelarEdit" class="btn btn-danger mt-2">Cancelar</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="ModalLabel">Editar imagen de perfil</h5>
+          </div>
+          <div class="modal-body">
+            <p class="text-muted">
+              Para cambiar la imagen de perfil, ajuste el tamaño.
+              <small class="text-muted">(Sino no se cambiará)</small>
+            </p>
+            <div id="editor"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancel-pic" onclick="cancel_pic">Close</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" id="save-pic">Save changes</button>
+          </div>
+        </div>    
       </div>
     </div>
   </main>
